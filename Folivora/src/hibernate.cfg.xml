@@ -9,10 +9,13 @@
     	<property name="hibernate.ogm.datastore.provider">mongodb</property>
 	    <property name="hibernate.ogm.datastore.database">folivora</property>
 	    <property name="hibernate.ogm.datastore.username">folivora</property>
-        <property name="hibernate.ogm.datastore.password">3dn2g4ni9sd8</property>
+        <property name="hibernate.ogm.datastore.password">3fdonl2igv4onria8</property>
         <property name="hibernate.current_session_context_class">thread</property>
        	<property name="hibernate.ogm.datastore.create_database">true</property>
         
 		<mapping class="de.folivora.model.User"></mapping>
+		<mapping class="de.folivora.model.Feedback"></mapping>
+		<mapping class="de.folivora.model.UserCredit"></mapping>
+		<mapping class="de.folivora.model.Transaction"></mapping>
     </session-factory>
 </hibernate-configuration>

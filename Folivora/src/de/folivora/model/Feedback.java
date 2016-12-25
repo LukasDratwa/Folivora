@@ -1,14 +1,24 @@
 package de.folivora.model;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+
+@Entity
 public class Feedback {
+	@Id
 	private long id;
 	private Rating rating;
 	private String description;
 	
-	public Feedback(long id, Rating rating, String description) {
+	@ManyToOne(targetEntity=User.class)
+	private User feedbackCreator;
+	
+	public Feedback(long id, Rating rating, String description, User feedbackCreator) {
 		this.id = id;
 		this.rating = rating;
 		this.description = description;
+		this.feedbackCreator = feedbackCreator;
 	}
 	
 	/**
@@ -51,5 +61,19 @@ public class Feedback {
 	 */
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	/**
+	 * @return the feedbackCreator
+	 */
+	public User getFeedbackCreator() {
+		return feedbackCreator;
+	}
+
+	/**
+	 * @param feedbackCreator the feedbackCreator to set
+	 */
+	public void setFeedbackCreator(User feedbackCreator) {
+		this.feedbackCreator = feedbackCreator;
 	}
 }

@@ -2,13 +2,13 @@ package de.folivora.storage;
 
 import org.hibernate.Session;
 
-public class HibernateSave {
-	public static void saveObject(Object o) {
+public class HibernateUpdate {
+	public static void updateObject(Object o) {
 		Session session = HibernateUtil.getSessionFactory().openSession();  
         session.getTransaction().setTimeout(600);
         session.getTransaction().begin();
         
-		session.persist(o);
+		session.saveOrUpdate(o);
 		
 		session.getTransaction().commit();
         session.close();

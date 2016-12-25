@@ -2,7 +2,13 @@ package de.folivora.model;
 
 import java.util.Date;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+
+@Entity
 public class Transaction {
+	@Id
 	private long id;
 	private Date executionDate;
 	private double value;
@@ -10,6 +16,7 @@ public class Transaction {
 	/**
 	 * userFrom = item searching person, userTo = delivering person
 	 */
+	@OneToOne(targetEntity=User.class)
 	private User userFrom,
 				 userTo;
 	
@@ -17,6 +24,7 @@ public class Transaction {
 	 * feedbackFrom = feedback of the searching for the delivering person,
 	 * feedbackTo = feedback of the delivering for the searching person
 	 */
+	@OneToOne(targetEntity=Feedback.class)
 	private Feedback feedbackFrom = null,
 					 feedbackTo = null;
 	

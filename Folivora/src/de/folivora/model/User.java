@@ -4,28 +4,43 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 import javax.servlet.http.HttpSession;
 
+@Entity
 public class User {
+	@Id
 	private long id;
 	private String name;
 	private String hashedPwd;
 	private Date birthday;
 	private Gender gender;
 	private String email;
+	
+	@OneToOne(cascade=CascadeType.ALL, fetch=FetchType.EAGER, targetEntity=UserCredit.class, mappedBy="owner")
 	private UserCredit credit;
+	
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, targetEntity=Feedback.class, mappedBy="feedbackCreator")
 	private List<Feedback> feedbacks = new ArrayList<Feedback>();
+	
+	@Transient
 	private HttpSession session = null;
 	
 	public User(long id, String name, String hashedPwd, Date birthday, Gender gender,
-			String email, UserCredit credit) {
+			String email, UserCredit userCredit) {
 		this.id = id;
 		this.name = name;
 		this.hashedPwd = hashedPwd;
 		this.birthday = birthday;
 		this.gender = gender;
 		this.email = email;
-		this.credit = credit;
+		this.credit = userCredit;
 	}
 	
 	/**
