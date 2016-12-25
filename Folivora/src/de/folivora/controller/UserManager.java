@@ -15,8 +15,8 @@ public class UserManager {
 	
 	public User factory_createUser(String name, String hashedPwd, Date birthday, Gender gender,
 			String email, double initialBalance) {
-		User u = new User(dC.getNewUserId(), name, hashedPwd, birthday, gender, email, null);
-		u.setCredit(new UserCredit(dC.getNewUserCreditId(), initialBalance, u));
+		User u = new User(dC.getIdStorage().getNewUserId(), name, hashedPwd, birthday, gender, email, null);
+		u.setCredit(new UserCredit(dC.getIdStorage().getNewUserCreditId(), initialBalance, u));
 		dC.getUserList().add(u);
 		return u;
 	}

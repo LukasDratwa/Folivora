@@ -3,9 +3,11 @@ package de.folivora.storage;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 
+import de.folivora.model.IdStorage;
 import de.folivora.model.User;
 
 /** 
@@ -16,13 +18,29 @@ import de.folivora.model.User;
  * @author Lukas Dratwa
 */
 public class HibernateLoad {
+	private static final Logger logger = Logger.getLogger(HibernateLoad.class);
+	
+	public static IdStorage loadIdStorage(long id) {
+		IdStorage idStorage = null;
+		
+		try {
+			Session session = HibernateUtil.getSessionFactory().openSession();	
+	        idStorage = (IdStorage) session.createQuery("from IdStorage where id = '" + id + "'").uniqueResult();
+	        session.close();
+		} catch(HibernateException e) {
+			logger.error("Failed to load the id storage!", e);
+		}
+		
+		return idStorage;
+	}
+	
 	/**
 	 * Method to load an User of the database
 	 * 
 	 * @param id - the userId
 	 * @return - the loaded User or null, if there is no User with the given id in the database
 	 */
-	public User loadUser(long id) {
+	public static User loadUser(long id) {
 		User usr = null;
 		
 		try {
@@ -30,27 +48,27 @@ public class HibernateLoad {
 	        usr = (User) session.createQuery("from User where id = '" + id + "'").uniqueResult();
 	        session.close();
 		} catch(HibernateException e) {
-			e.printStackTrace();
+			logger.error("Failed to load user with the id " + id + "!", e);
 		}
 		
 		return usr;
 	}
 	
 	/**
-	 * Method to load an User with his name of the database
+	 * Method to load an User with his email of the database
 	 * 
-	 * @param name - the name
-	 * @return loaded User or null, if there is no User with the given name in the database
+	 * @param email - the email
+	 * @return loaded User or null, if there is no User with the given email in the database
 	 */
-	public User loadUser(String name) {
+	public static User loadUser(String email) {
 		User usr = null;
 		
 		try {
 			Session session = HibernateUtil.getSessionFactory().openSession();	
-	        usr = (User) session.createQuery("from User where name = '" + name + "'").uniqueResult();
+	        usr = (User) session.createQuery("from User where email = '" + email + "'").uniqueResult();
 	        session.close();
 		} catch(HibernateException e) {
-			e.printStackTrace();
+			logger.error("Failed to load user with email \"" + email + "\"!", e);
 		}
 		
 		return usr;
@@ -62,7 +80,7 @@ public class HibernateLoad {
 	 * 
 	 * @return the loaded list of users which are saved in the database
 	 */
-	public List<User> loadUserList() {
+	public static List<User> loadUserList() {
 		ArrayList<User> userList = null;
 		
 		try {
@@ -72,11 +90,11 @@ public class HibernateLoad {
 			
 			if(userList != null) {
 				for(User user : userList) {
-					System.out.println(user.getName());
+					logger.info("Loaded user \"" + user.getName() + "\" (Id: " + user.getId() + ")");
 				}
 			}
 		} catch(HibernateException e) {
-			e.printStackTrace();
+			logger.error("Failed to load user list!", e);
 		}
 		
 		return userList;

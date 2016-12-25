@@ -2,6 +2,7 @@ package de.folivora.model;
 
 import java.util.Date;
 
+// TODO Transform to hibernate and OneToMany with User
 public class SearchRequest {
 	private long id;
 	private String title;
