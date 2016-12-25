@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+		"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+		"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+    	<property name="hibernate.transaction.factory_class">org.hibernate.transaction.JTATransactionFactory</property>
+    	<property name="hibernate.transaction.jta.platform">org.hibernate.service.jta.platform.internal.JBossStandAloneJtaPlatform</property>
+    	<property name="hibernate.ogm.datastore.provider">mongodb</property>
+	    <property name="hibernate.ogm.datastore.database">folivora</property>
+	    <property name="hibernate.ogm.datastore.username">folivora</property>
+        <property name="hibernate.ogm.datastore.password">3dn2g4ni9sd8</property>
+        <property name="hibernate.current_session_context_class">thread</property>
+       	<property name="hibernate.ogm.datastore.create_database">true</property>
+        
+		<mapping class="de.folivora.model.User"></mapping>
+    </session-factory>
+</hibernate-configuration>
