@@ -2,7 +2,9 @@ package de.folivora.model;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
@@ -12,28 +14,23 @@ public class Transaction {
 	private long id;
 	private Date executionDate;
 	private double value;
+	private boolean executed;
 	
-	/**
-	 * userFrom = item searching person, userTo = delivering person
-	 */
 	@OneToOne(targetEntity=User.class)
-	private User userFrom,
-				 userTo;
+	private User userSearching,
+				 userDelivering;
+
+	@OneToOne(cascade=CascadeType.ALL, fetch=FetchType.EAGER, targetEntity=Feedback.class)
+	private Feedback feedbackOfSearchingUser = null,
+					 feedbackOfDeliveringUser = null;
 	
-	/**
-	 * feedbackFrom = feedback of the searching for the delivering person,
-	 * feedbackTo = feedback of the delivering for the searching person
-	 */
-	@OneToOne(targetEntity=Feedback.class)
-	private Feedback feedbackFrom = null,
-					 feedbackTo = null;
-	
-	public Transaction(long id, Date executionDate, double value, User userFrom, User userTo) {
+	public Transaction(long id, Date executionDate, double value, User userSearching, User userDelivering) {
 		this.id = id;
 		this.executionDate = executionDate;
 		this.value = value;
-		this.userFrom = userFrom;
-		this.userTo = userTo;
+		this.userSearching = userSearching;
+		this.userDelivering = userDelivering;
+		this.setExecuted(false);
 	}
 	
 	/**
@@ -84,60 +81,74 @@ public class Transaction {
 	public void setValue(double value) {
 		this.value = value;
 	}
-	
+
 	/**
-	 * @return the userFrom
+	 * @return the userSearching
 	 */
-	public User getUserFrom() {
-		return userFrom;
-	}
-	
-	/**
-	 * @param userFrom the userFrom to set
-	 */
-	public void setUserFrom(User userFrom) {
-		this.userFrom = userFrom;
-	}
-	
-	/**
-	 * @return the userTo
-	 */
-	public User getUserTo() {
-		return userTo;
-	}
-	
-	/**
-	 * @param userTo the userTo to set
-	 */
-	public void setUserTo(User userTo) {
-		this.userTo = userTo;
+	public User getUserSearching() {
+		return userSearching;
 	}
 
 	/**
-	 * @return the feedbackTo
+	 * @param userSearching the userSearching to set
 	 */
-	public Feedback getFeedbackTo() {
-		return feedbackTo;
+	public void setUserSearching(User userSearching) {
+		this.userSearching = userSearching;
 	}
 
 	/**
-	 * @param feedbackTo the feedbackTo to set
+	 * @return the userDelivering
 	 */
-	public void setFeedbackTo(Feedback feedbackTo) {
-		this.feedbackTo = feedbackTo;
+	public User getUserDelivering() {
+		return userDelivering;
 	}
 
 	/**
-	 * @return the feedbackFrom
+	 * @param userDelivering the userDelivering to set
 	 */
-	public Feedback getFeedbackFrom() {
-		return feedbackFrom;
+	public void setUserDelivering(User userDelivering) {
+		this.userDelivering = userDelivering;
 	}
 
 	/**
-	 * @param feedbackFrom the feedbackFrom to set
+	 * @return the feedbackOfSearchingUser
 	 */
-	public void setFeedbackFrom(Feedback feedbackFrom) {
-		this.feedbackFrom = feedbackFrom;
+	public Feedback getFeedbackOfSearchingUser() {
+		return feedbackOfSearchingUser;
+	}
+
+	/**
+	 * @param feedbackOfSearchingUser the feedbackOfSearchingUser to set
+	 */
+	public void setFeedbackOfSearchingUser(Feedback feedbackOfSearchingUser) {
+		this.feedbackOfSearchingUser = feedbackOfSearchingUser;
+	}
+
+	/**
+	 * @return the feedbackOfDeliveringUser
+	 */
+	public Feedback getFeedbackOfDeliveringUser() {
+		return feedbackOfDeliveringUser;
+	}
+
+	/**
+	 * @param feedbackOfDeliveringUser the feedbackOfDeliveringUser to set
+	 */
+	public void setFeedbackOfDeliveringUser(Feedback feedbackOfDeliveringUser) {
+		this.feedbackOfDeliveringUser = feedbackOfDeliveringUser;
+	}
+
+	/**
+	 * @return the executed
+	 */
+	public boolean isExecuted() {
+		return executed;
+	}
+
+	/**
+	 * @param executed the executed to set
+	 */
+	public void setExecuted(boolean executed) {
+		this.executed = executed;
 	}
 }

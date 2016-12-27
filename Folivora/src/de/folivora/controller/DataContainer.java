@@ -5,11 +5,13 @@ import java.util.List;
 
 import de.folivora.model.IdStorage;
 import de.folivora.model.SearchRequest;
+import de.folivora.model.Transaction;
 import de.folivora.model.User;
 
 public class DataContainer {
 	private List<User> userList;
 	private List<SearchRequest> searchRequestList;
+	private List<Transaction> transactionList;
 	private IdStorage idStorage;
 	
 	public DataContainer(List<User> userList, List<SearchRequest> searchRequestList, IdStorage idStorage) {
@@ -21,6 +23,7 @@ public class DataContainer {
 	public DataContainer() {
 		this.userList = new ArrayList<User>();
 		this.searchRequestList = new ArrayList<SearchRequest>();
+		this.transactionList = new ArrayList<Transaction>();
 		this.idStorage = new IdStorage(0, 0, 0, 0, 0);
 	}
 	
@@ -64,5 +67,19 @@ public class DataContainer {
 	 */
 	public void setIdStorage(IdStorage idStorage) {
 		this.idStorage = idStorage;
+	}
+
+	/**
+	 * @return the transactionList
+	 */
+	public List<Transaction> getTransactionList() {
+		return transactionList;
+	}
+
+	/**
+	 * @param transactionList the transactionList to set
+	 */
+	public void setTransactionList(List<Transaction> transactionList) {
+		this.transactionList = transactionList;
 	}
 }

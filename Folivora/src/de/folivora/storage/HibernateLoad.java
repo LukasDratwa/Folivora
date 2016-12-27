@@ -8,6 +8,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 
 import de.folivora.model.IdStorage;
+import de.folivora.model.Transaction;
 import de.folivora.model.User;
 
 /** 
@@ -86,12 +87,13 @@ public class HibernateLoad {
 		return usr;
 	}
 	
-	@SuppressWarnings("unchecked")
+	
 	/**
 	 * Method to load all Users of the database
 	 * 
 	 * @return the loaded list of users which are saved in the database
 	 */
+	@SuppressWarnings("unchecked")
 	public static List<User> loadUserList() {
 		ArrayList<User> userList = null;
 		
@@ -110,5 +112,57 @@ public class HibernateLoad {
 		}
 		
 		return userList;
+	}
+	
+	/**
+	 * Method to load a specific Transaction of the database
+	 * 
+	 * @param id - the transaction id
+	 * @return - the loaded Transaction or null, if there is no Transaction with the given id in the database
+	 */
+	public static Transaction loadTransaction(long id) {
+		Transaction t = null;
+		
+		try {
+			Session session = HibernateUtil.getSessionFactory().openSession();	
+	        t = (Transaction) session.createQuery("from Transaction where id = '" + id + "'").uniqueResult();
+	        session.close();
+		} catch(HibernateException e) {
+			logger.error("Failed to load transaction with the id " + id + "!", e);
+		}
+		
+		if(t == null) {
+			logger.warn("Transaction with ID " + id + " could not be loaded.");
+		} else {
+			logger.info("Loaded transaction: " + t);
+		}
+		
+		return t;
+	}
+	
+	/**
+	 * Method to load all Transactions of the database
+	 * 
+	 * @return the loaded Transactions 
+	 */
+	@SuppressWarnings("unchecked")
+	public static List<Transaction> loadTransactionList() {
+		ArrayList<Transaction> transList = null;
+		
+		try {
+			Session session = HibernateUtil.getSessionFactory().openSession();		      
+			transList = (ArrayList<Transaction>) session.createQuery("from Transaction order by id asc").list();
+			session.close();
+			
+			if(transList != null) {
+				for(Transaction transaction : transList) {
+					logger.info("Loaded transaction: " + transaction);
+				}
+			}
+		} catch(HibernateException e) {
+			logger.error("Failed to load transaction list!", e);
+		}
+		
+		return transList;
 	}
 }

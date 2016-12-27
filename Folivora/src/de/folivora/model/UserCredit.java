@@ -16,6 +16,9 @@ public class UserCredit {
 	private double balance;
 	private Date lastModification;
 	
+	/**
+	 * List<Long> to save any transaction-ids which affected the balance of this usercredit
+	 */
 	@ElementCollection
 	private List<Long> transactionIds = new ArrayList<Long>();
 	

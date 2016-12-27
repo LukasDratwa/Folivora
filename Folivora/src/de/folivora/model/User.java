@@ -34,9 +34,6 @@ public class User {
 	@OneToOne(cascade=CascadeType.ALL, fetch=FetchType.EAGER, targetEntity=UserCredit.class, mappedBy="owner")
 	private UserCredit credit;
 	
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, targetEntity=Feedback.class, mappedBy="feedbackCreator")
-	private List<Feedback> feedbacks = new ArrayList<Feedback>();
-	
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, targetEntity=SearchRequest.class, mappedBy="userCreator")
 	private List<SearchRequest> createdSearchRequests = new ArrayList<SearchRequest>();
 	
@@ -167,20 +164,6 @@ public class User {
 	 */
 	public void setCredit(UserCredit credit) {
 		this.credit = credit;
-	}
-	
-	/**
-	 * @return the feedbacks
-	 */
-	public List<Feedback> getFeedbacks() {
-		return feedbacks;
-	}
-	
-	/**
-	 * @param feedbacks the feedbacks to set
-	 */
-	public void setFeedbacks(List<Feedback> feedbacks) {
-		this.feedbacks = feedbacks;
 	}
 	
 	/**

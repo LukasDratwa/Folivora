@@ -4,7 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 @Entity
 public class Feedback {
@@ -15,7 +15,7 @@ public class Feedback {
 	@Enumerated(EnumType.STRING)
 	private Rating rating;
 	
-	@ManyToOne(targetEntity=User.class)
+	@OneToOne(targetEntity=User.class)
 	private User feedbackCreator;
 	
 	public Feedback(long id, Rating rating, String description, User feedbackCreator) {

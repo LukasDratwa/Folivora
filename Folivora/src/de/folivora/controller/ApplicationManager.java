@@ -35,8 +35,8 @@ public class ApplicationManager {
 		return new Feedback(dC.getIdStorage().getNewFeedbackId(), rating, description, feedbackCreator);
 	}
 	
-	public Transaction factory_createTransaction(Date executionDate, double value, User userFrom, User userTo) {
-		return new Transaction(dC.getIdStorage().getNewTransactionId(), executionDate, value, userFrom, userTo);
+	public Transaction factory_createTransaction(Date executionDate, double value, User userSearching, User userDelivering) {
+		return new Transaction(dC.getIdStorage().getNewTransactionId(), executionDate, value, userSearching, userDelivering);
 	}
 	
 	public SearchRequest factory_createSearchRequest(String title, String description, String pathToDefaultImg,
