@@ -1,5 +1,7 @@
 package de.folivora.storage;
 
+import org.apache.log4j.Logger;
+
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.Mongo;
@@ -12,6 +14,8 @@ import com.mongodb.Mongo;
  * @author Lukas Dratwa
 */
 public class HibernateDrop {
+	private static final Logger logger = Logger.getLogger(HibernateDrop.class);
+	
 	/**
 	 * Method to drop our database "folivora" in the MongoDB.
 	 */
@@ -24,7 +28,7 @@ public class HibernateDrop {
 			
 			mongo.close();
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.error("Failed to drop database \"folivora\"!", e);
 		}
 	}
 	
@@ -42,7 +46,7 @@ public class HibernateDrop {
 			
 			mongo.close();
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.error("Failed to drop the collection \"" + collectionName + "\" in db \"folivora\"!", e);;
 		}
 	}
 }

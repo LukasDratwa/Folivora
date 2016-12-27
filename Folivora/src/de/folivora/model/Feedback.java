@@ -1,6 +1,8 @@
 package de.folivora.model;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
@@ -8,8 +10,10 @@ import javax.persistence.ManyToOne;
 public class Feedback {
 	@Id
 	private long id;
-	private Rating rating;
 	private String description;
+	
+	@Enumerated(EnumType.STRING)
+	private Rating rating;
 	
 	@ManyToOne(targetEntity=User.class)
 	private User feedbackCreator;
@@ -19,6 +23,13 @@ public class Feedback {
 		this.rating = rating;
 		this.description = description;
 		this.feedbackCreator = feedbackCreator;
+	}
+	
+	/**
+	 * Protected default constructor for hibernate mapping.
+	 */
+	public Feedback() {
+		
 	}
 	
 	/**

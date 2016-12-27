@@ -24,7 +24,10 @@ public class IdStorage {
 		this.lastUsedTransactionId = lastUsedTransactionId;
 	}
 	
-	public IdStorage() {
+	/**
+	 * Protected default constructor for hibernate mapping.
+	 */
+	protected IdStorage() {
 		
 	}
 	

@@ -18,5 +18,6 @@
 		<mapping class="de.folivora.model.UserCredit"></mapping>
 		<mapping class="de.folivora.model.Transaction"></mapping>
 		<mapping class="de.folivora.model.IdStorage"></mapping>
+		<mapping class="de.folivora.model.SearchRequest"></mapping>
     </session-factory>
 </hibernate-configuration>

@@ -32,6 +32,13 @@ public class UserCredit {
 	}
 	
 	/**
+	 * Protected default constructor for hibernate mapping.
+	 */
+	protected UserCredit() {
+		
+	}
+	
+	/**
 	 * @return the balance
 	 */
 	public double getBalance() {

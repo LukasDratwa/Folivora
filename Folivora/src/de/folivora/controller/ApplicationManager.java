@@ -5,6 +5,7 @@ import java.util.Date;
 import de.folivora.model.Feedback;
 import de.folivora.model.IdStorage;
 import de.folivora.model.Rating;
+import de.folivora.model.SearchRequest;
 import de.folivora.model.Transaction;
 import de.folivora.model.User;
 
@@ -36,6 +37,12 @@ public class ApplicationManager {
 	
 	public Transaction factory_createTransaction(Date executionDate, double value, User userFrom, User userTo) {
 		return new Transaction(dC.getIdStorage().getNewTransactionId(), executionDate, value, userFrom, userTo);
+	}
+	
+	public SearchRequest factory_createSearchRequest(String title, String description, String pathToDefaultImg,
+			Date[]	possibleDelivery, Date[] preferredDelivery, double costsAndReward, long lat, long lng, User userCreator) {
+		return new SearchRequest(dC.getIdStorage().getNewSearchRequestId(), title, description, pathToDefaultImg,
+				possibleDelivery, preferredDelivery, costsAndReward, lat, lng, true, userCreator);
 	}
 
 	/**

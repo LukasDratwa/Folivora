@@ -37,6 +37,13 @@ public class Transaction {
 	}
 	
 	/**
+	 * Protected default constructor for hibernate mapping.
+	 */
+	protected Transaction() {
+		
+	}
+	
+	/**
 	 * @return the id
 	 */
 	public long getId() {

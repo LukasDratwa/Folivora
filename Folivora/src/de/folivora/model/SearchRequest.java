@@ -2,35 +2,63 @@ package de.folivora.model;
 
 import java.util.Date;
 
-// TODO Transform to hibernate and OneToMany with User
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+
+@Entity
 public class SearchRequest {
+	@Id
 	private long id;
 	private String title;
 	private String description;
 	private String pathToDefaultImg;
-	private Date[] possibleDelivery,
-				   preferredDelivery;
 	private double costsAndReward;
 	private double lat,
 				   lng;
 	private boolean active;
-	private User userCreator,
-				 userStasisfier = null;
+	
+	private Date possibleDelivery_from,
+				 possibleDelivery_to,
+	   			 preferredDelivery_from,
+	   			 preferredDelivery_to;
+	
+	@ManyToOne(targetEntity=User.class)
+	private User userCreator;
+	
+	private long userStasisfier_id = -1;
 	
 	public SearchRequest(long id, String title, String description, String pathToDefaultImg,
-			Date[] possibleDelivery, Date[] preferredDelivery, double costsAndReward, double lat, double lng,
+			Date possibleDelivery_from, Date possibleDelivery_to, Date preferredDelivery_from, Date preferredDelivery_to,
+			double costsAndReward, double lat, double lng,
 			boolean active, User userCreator) {
 		this.id = id;
 		this.title = title;
 		this.description = description;
 		this.pathToDefaultImg = pathToDefaultImg;
-		this.possibleDelivery = possibleDelivery;
-		this.preferredDelivery = preferredDelivery;
+		this.possibleDelivery_from = possibleDelivery_from;
+		this.possibleDelivery_to = possibleDelivery_to;
+		this.preferredDelivery_from = preferredDelivery_from;
+		this.preferredDelivery_to = preferredDelivery_to;
 		this.costsAndReward = costsAndReward;
 		this.lat = lat;
 		this.lng = lng;
 		this.active = active;
 		this.userCreator = userCreator;
+	}
+	
+	public SearchRequest(long id, String title, String description, String pathToDefaultImg,
+			Date[] possibleDelivery, Date[] preferredDelivery, double costsAndReward, double lat, double lng,
+			boolean active, User userCreator) {
+		this(id, title, description, pathToDefaultImg, possibleDelivery[0], possibleDelivery[1],
+				preferredDelivery[0], preferredDelivery[1], costsAndReward, lat, lng, active, userCreator);
+	}
+	
+	/**
+	 * Protected default constructor for hibernate mapping.
+	 */
+	protected SearchRequest() {
+		
 	}
 	
 	/**
@@ -88,35 +116,6 @@ public class SearchRequest {
 	public void setPathToDefaultImg(String pathToDefaultImg) {
 		this.pathToDefaultImg = pathToDefaultImg;
 	}
-	
-	/**
-	 * @return the possibleDelivery
-	 */
-	public Date[] getPossibleDelivery() {
-		return possibleDelivery;
-	}
-	
-	/**
-	 * @param possibleDelivery the possibleDelivery to set
-	 */
-	public void setPossibleDelivery(Date[] possibleDelivery) {
-		this.possibleDelivery = possibleDelivery;
-	}
-	
-	/**
-	 * @return the preferredDelivery
-	 */
-	public Date[] getPreferredDelivery() {
-		return preferredDelivery;
-	}
-	
-	/**
-	 * @param preferredDelivery the preferredDelivery to set
-	 */
-	public void setPreferredDelivery(Date[] preferredDelivery) {
-		this.preferredDelivery = preferredDelivery;
-	}
-	
 	/**
 	 * @return the costsAndReward
 	 */
@@ -186,18 +185,74 @@ public class SearchRequest {
 	public void setUserCreator(User userCreator) {
 		this.userCreator = userCreator;
 	}
-	
+
 	/**
-	 * @return the userStasisfier
+	 * @return the possibleDelivery_from
 	 */
-	public User getUserStasisfier() {
-		return userStasisfier;
+	public Date getPossibleDelivery_from() {
+		return possibleDelivery_from;
 	}
-	
+
 	/**
-	 * @param userStasisfier the userStasisfier to set
+	 * @param possibleDelivery_from the possibleDelivery_from to set
 	 */
-	public void setUserStasisfier(User userStasisfier) {
-		this.userStasisfier = userStasisfier;
+	public void setPossibleDelivery_from(Date possibleDelivery_from) {
+		this.possibleDelivery_from = possibleDelivery_from;
+	}
+
+	/**
+	 * @return the possibleDelivery_to
+	 */
+	public Date getPossibleDelivery_to() {
+		return possibleDelivery_to;
+	}
+
+	/**
+	 * @param possibleDelivery_to the possibleDelivery_to to set
+	 */
+	public void setPossibleDelivery_to(Date possibleDelivery_to) {
+		this.possibleDelivery_to = possibleDelivery_to;
+	}
+
+	/**
+	 * @return the preferredDelivery_from
+	 */
+	public Date getPreferredDelivery_from() {
+		return preferredDelivery_from;
+	}
+
+	/**
+	 * @param preferredDelivery_from the preferredDelivery_from to set
+	 */
+	public void setPreferredDelivery_from(Date preferredDelivery_from) {
+		this.preferredDelivery_from = preferredDelivery_from;
+	}
+
+	/**
+	 * @return the preferredDelivery_to
+	 */
+	public Date getPreferredDelivery_to() {
+		return preferredDelivery_to;
+	}
+
+	/**
+	 * @param preferredDelivery_to the preferredDelivery_to to set
+	 */
+	public void setPreferredDelivery_to(Date preferredDelivery_to) {
+		this.preferredDelivery_to = preferredDelivery_to;
+	}
+
+	/**
+	 * @return the userStasisfier_id
+	 */
+	public long getUserStasisfier_id() {
+		return userStasisfier_id;
+	}
+
+	/**
+	 * @param userStasisfier_id the userStasisfier_id to set
+	 */
+	public void setUserStasisfier_id(long userStasisfier_id) {
+		this.userStasisfier_id = userStasisfier_id;
 	}
 }

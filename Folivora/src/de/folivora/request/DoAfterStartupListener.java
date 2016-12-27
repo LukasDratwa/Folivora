@@ -14,8 +14,10 @@ import de.folivora.model.Feedback;
 import de.folivora.model.Gender;
 import de.folivora.model.IdStorage;
 import de.folivora.model.Rating;
+import de.folivora.model.SearchRequest;
 import de.folivora.model.Transaction;
 import de.folivora.model.User;
+import de.folivora.model.UserType;
 import de.folivora.storage.HibernateLoad;
 import de.folivora.storage.HibernateSave;
 import de.folivora.storage.HibernateUpdate;
@@ -40,20 +42,29 @@ public class DoAfterStartupListener implements ServletContextListener {
 			loadIdStorage(aManager);
 			loadAndInitData(aManager);
 			
-			User u1 = uManager.factory_createUser("Lukas Test", "123", new Date(), Gender.MALE, "test@das.de", 100);
-			User u2 = uManager.factory_createUser("Hubertus Maximus", "123", new Date(), Gender.Female, "hubert@das.de", 100);
+			User u1 = uManager.factory_createUser("Lukas Test", "123", new Date(), Gender.MALE, "test@das.de", 100, UserType.NORMAL);
+			User u2 = uManager.factory_createUser("Hubertus Maximus", "123", new Date(), Gender.Female, "hubert@das.de", 100, UserType.NORMAL);
 			
 			Feedback f1 = aManager.factory_createFeedback(Rating.BAD, "War schlecht!", u1);
 			u1.getFeedbacks().add(f1);
 			
 			Transaction t1 = aManager.factory_createTransaction(new Date(), 50, u1, u2);
-			HibernateSave.saveObject(t1);
+			HibernateSave.persistObject(t1);
 			
 			u1.getCredit().getTransactionIds().add(t1.getId());
 			u2.getCredit().getTransactionIds().add(t1.getId());
 			
-			HibernateSave.saveObject(u1);
-			HibernateSave.saveObject(u2);
+			Date[] possibleDelivery = {new Date(), new Date()};
+			Date[] preferredDelivery = {new Date(), new Date()};
+			SearchRequest sr1 = aManager.factory_createSearchRequest("Suche Brot", "Bis Mittag Brot.", "",
+					possibleDelivery, preferredDelivery, 3.56, 0, 0, u1);
+			u1.getCreatedSearchRequests().add(sr1);
+			
+			sr1.setUserStasisfier_id(u2.getId());
+			u2.getStasisfiedSearchRequestIds().add(sr1.getId());
+			
+			HibernateSave.saveOrUpdateObject(u1);
+			HibernateSave.saveOrUpdateObject(u2);
 			
 			u1.setName("Manuel Neumann");
 			HibernateUpdate.updateObject(u1);
@@ -76,7 +87,7 @@ public class DoAfterStartupListener implements ServletContextListener {
 	}
 	
 	private void loadAndInitData(ApplicationManager aManager) {
-		// TODO Load users, transactions
+		aManager.getdC().setUserList(HibernateLoad.loadUserList());
 	}
 	
 	@Override

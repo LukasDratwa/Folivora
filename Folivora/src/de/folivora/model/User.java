@@ -5,7 +5,10 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -20,8 +23,13 @@ public class User {
 	private String name;
 	private String hashedPwd;
 	private Date birthday;
-	private Gender gender;
 	private String email;
+	
+	@Enumerated(EnumType.STRING)
+	private Gender gender;
+	
+	@Enumerated(EnumType.STRING)
+	private UserType userType;
 	
 	@OneToOne(cascade=CascadeType.ALL, fetch=FetchType.EAGER, targetEntity=UserCredit.class, mappedBy="owner")
 	private UserCredit credit;
@@ -29,11 +37,17 @@ public class User {
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, targetEntity=Feedback.class, mappedBy="feedbackCreator")
 	private List<Feedback> feedbacks = new ArrayList<Feedback>();
 	
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, targetEntity=SearchRequest.class, mappedBy="userCreator")
+	private List<SearchRequest> createdSearchRequests = new ArrayList<SearchRequest>();
+	
+	@ElementCollection
+	private List<Long> stasisfiedSearchRequestIds = new ArrayList<Long>();
+	
 	@Transient
 	private HttpSession session = null;
 	
 	public User(long id, String name, String hashedPwd, Date birthday, Gender gender,
-			String email, UserCredit userCredit) {
+			String email, UserCredit userCredit, UserType userType) {
 		this.id = id;
 		this.name = name;
 		this.hashedPwd = hashedPwd;
@@ -41,6 +55,20 @@ public class User {
 		this.gender = gender;
 		this.email = email;
 		this.credit = userCredit;
+		this.userType = userType;
+	}
+	
+	/**
+	 * Protected default constructor for hibernate mapping.
+	 */
+	protected User() {
+		
+	}
+	
+	@Override
+	public String toString() {
+		return "[name=\"" + this.getName() + "\", email=\"" + this.getEmail() + "\", "
+				+ "id=" + this.getId() + "]";
 	}
 	
 	/**
@@ -167,5 +195,47 @@ public class User {
 	 */
 	public void setSession(HttpSession session) {
 		this.session = session;
+	}
+
+	/**
+	 * @return the userType
+	 */
+	public UserType getUserType() {
+		return userType;
+	}
+
+	/**
+	 * @param userType the userType to set
+	 */
+	public void setUserType(UserType userType) {
+		this.userType = userType;
+	}
+
+	/**
+	 * @return the createdSearchRequests
+	 */
+	public List<SearchRequest> getCreatedSearchRequests() {
+		return createdSearchRequests;
+	}
+
+	/**
+	 * @param createdSearchRequests the createdSearchRequests to set
+	 */
+	public void setCreatedSearchRequests(List<SearchRequest> createdSearchRequests) {
+		this.createdSearchRequests = createdSearchRequests;
+	}
+
+	/**
+	 * @return the stasisfiedSearchRequestIds
+	 */
+	public List<Long> getStasisfiedSearchRequestIds() {
+		return stasisfiedSearchRequestIds;
+	}
+
+	/**
+	 * @param stasisfiedSearchRequestIds the stasisfiedSearchRequestIds to set
+	 */
+	public void setStasisfiedSearchRequestIds(List<Long> stasisfiedSearchRequestIds) {
+		this.stasisfiedSearchRequestIds = stasisfiedSearchRequestIds;
 	}
 }

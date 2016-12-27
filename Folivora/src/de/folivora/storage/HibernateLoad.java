@@ -51,6 +51,12 @@ public class HibernateLoad {
 			logger.error("Failed to load user with the id " + id + "!", e);
 		}
 		
+		if(usr == null) {
+			logger.warn("User with ID " + id + " could not be loaded.");
+		} else {
+			logger.info("Loaded user: " + usr);
+		}
+		
 		return usr;
 	}
 	
@@ -69,6 +75,12 @@ public class HibernateLoad {
 	        session.close();
 		} catch(HibernateException e) {
 			logger.error("Failed to load user with email \"" + email + "\"!", e);
+		}
+		
+		if(usr == null) {
+			logger.warn("User with email " + email + " could not be loaded.");
+		} else {
+			logger.info("Loaded user: " + usr);
 		}
 		
 		return usr;
@@ -90,7 +102,7 @@ public class HibernateLoad {
 			
 			if(userList != null) {
 				for(User user : userList) {
-					logger.info("Loaded user \"" + user.getName() + "\" (Id: " + user.getId() + ")");
+					logger.info("Loaded user: " + user);
 				}
 			}
 		} catch(HibernateException e) {
