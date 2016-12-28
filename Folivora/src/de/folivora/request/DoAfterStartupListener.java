@@ -9,11 +9,13 @@ import org.apache.log4j.Logger;
 
 import de.folivora.controller.ApplicationManager;
 import de.folivora.controller.DataContainer;
+import de.folivora.controller.UserManager;
 import de.folivora.model.Feedback;
 import de.folivora.model.IdStorage;
 import de.folivora.model.SearchRequest;
 import de.folivora.model.Transaction;
 import de.folivora.model.User;
+import de.folivora.model.UserType;
 import de.folivora.storage.HibernateLoad;
 import de.folivora.storage.HibernateSave;
 
@@ -36,10 +38,13 @@ public class DoAfterStartupListener implements ServletContextListener {
 			loadIdStorage(aManager);
 			loadAndInitData(aManager);
 			
-			// 3. Collect all search request and save them
+			// 3. Be sure standard users are saved
+			checkForStandardUsers(aManager);
+			
+			// 4. Collect all search request and save them
 			enrichLoadedDatabaseData(aManager);
 			
-			// 4. Check for corrupted data
+			// 5. Check for corrupted data
 			// TODO
 			
 			// aManager.createAndSaveTestData();
@@ -78,6 +83,39 @@ public class DoAfterStartupListener implements ServletContextListener {
 		List<SearchRequest> searchRequests = HibernateLoad.loadSearchRequestList();
 		if(searchRequests != null && searchRequests.size() > 0) {
 			aManager.getdC().setSearchRequestList(searchRequests);
+		}
+	}
+	
+	private void checkForStandardUsers(ApplicationManager aManager) {
+		UserManager uManager = aManager.getuManager();
+		boolean foundAdmin = false,
+				foundFolivoraUser = false,
+				foundPaypalUser = false;
+		
+		for(User u : aManager.getdC().getUserList()) {
+			if(u.getName().equals("admin") && u.getUserType() == UserType.ADMIN) {
+				foundAdmin = true;
+			}
+			
+			if(u.getUserType() == UserType.FOLIVORA) {
+				foundFolivoraUser = true;
+			}
+			
+			if(u.getUserType() == UserType.PAYPAL) {
+				foundPaypalUser = true;
+			}
+		}
+		
+		if(! foundAdmin) {
+			uManager.createAndSaveUser("admin", "admin", null, null, null, 0, UserType.ADMIN);
+		}
+		
+		if(! foundFolivoraUser) {
+			uManager.createAndSaveUser("folivora", "folivora", null, null, null, 0, UserType.FOLIVORA);
+		}
+		
+		if(! foundPaypalUser) {
+			uManager.createAndSaveUser("paypal", "paypal", null, null, null, 0, UserType.PAYPAL);
 		}
 	}
 	

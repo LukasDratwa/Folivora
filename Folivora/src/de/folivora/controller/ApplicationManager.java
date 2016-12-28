@@ -9,6 +9,7 @@ import de.folivora.model.Rating;
 import de.folivora.model.SearchRequest;
 import de.folivora.model.Transaction;
 import de.folivora.model.User;
+import de.folivora.model.UserCredit;
 import de.folivora.model.UserType;
 import de.folivora.storage.HibernateSave;
 import de.folivora.storage.HibernateUpdate;
@@ -60,18 +61,33 @@ public class ApplicationManager {
 	}
 	
 	public void executeTransaction(Transaction t) {
-		// TODO
+		UserCredit userCreditSearching = t.getUserSearching().getCredit();
+		UserCredit userCreditDelivering = t.getUserDelivering().getCredit();
+		
+		userCreditSearching.setBalance(userCreditSearching.getBalance() - t.getValue());
+		userCreditDelivering.setBalance(userCreditDelivering.getBalance() + t.getValue());
+		
+		userCreditSearching.setLastModification(new Date());
+		userCreditDelivering.setLastModification(new Date());
+		
+		userCreditSearching.getExecutedTransactions().add(t);
+		userCreditDelivering.getExecutedTransactions().add(t);
+		
+		t.setExecutionDate(new Date());
+		t.setExecuted(true);
+		
+		HibernateUpdate.updateObject(t);
 	}
 	
-	public Transaction createAndSaveTransaction(Date executionDate, double value, User userSearching, User userDelivering) {
-		Transaction t = factory_createTransaction(executionDate, value, userSearching, userDelivering);
+	public Transaction createAndSaveTransaction(double value, User userSearching, User userDelivering) {
+		Transaction t = factory_createTransaction(value, userSearching, userDelivering);
 		HibernateSave.saveOrUpdateObject(t);
 		dC.getTransactionList().add(t);
 		return t;
 	}
 	
-	private Transaction factory_createTransaction(Date executionDate, double value, User userSearching, User userDelivering) {
-		return new Transaction(dC.getIdStorage().getNewTransactionId(), executionDate, value, userSearching, userDelivering);
+	private Transaction factory_createTransaction(double value, User userSearching, User userDelivering) {
+		return new Transaction(dC.getIdStorage().getNewTransactionId(), value, userSearching, userDelivering);
 	}
 	
 	public SearchRequest createAndSaveSearchRequest(String title, String description, String pathToDefaultImg,
@@ -93,7 +109,7 @@ public class ApplicationManager {
 		User u1 = uManager.createAndSaveUser("Lukas Test", "123", new Date(), Gender.MALE, "test@das.de", 100, UserType.NORMAL);
 		User u2 = uManager.createAndSaveUser("Hubertus Maximus", "123", new Date(), Gender.Female, "hubert@das.de", 100, UserType.NORMAL);
 		
-		Transaction t1 = createAndSaveTransaction(new Date(), 50, u1, u2);
+		Transaction t1 = createAndSaveTransaction(50, u1, u2);
 		
 		createAndSaveFeedback(Rating.BAD, "War schlecht, Lieferant kam viel zu spät!", u1, t1);
 		createAndSaveFeedback(Rating.VERY_BAD, "Kam nur 5 Minuten zu spät und er war super unfreundlich!", u2, t1);

@@ -26,9 +26,8 @@ public class Transaction {
 	private Feedback feedbackOfSearchingUser = null,
 					 feedbackOfDeliveringUser = null;
 	
-	public Transaction(long id, Date executionDate, double value, User userSearching, User userDelivering) {
+	public Transaction(long id, double value, User userSearching, User userDelivering) {
 		this.id = id;
-		this.executionDate = executionDate;
 		this.value = value;
 		this.userSearching = userSearching;
 		this.userDelivering = userDelivering;

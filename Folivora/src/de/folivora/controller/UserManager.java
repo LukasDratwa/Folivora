@@ -1,6 +1,8 @@
 package de.folivora.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import de.folivora.model.Gender;
 import de.folivora.model.User;
@@ -24,6 +26,38 @@ public class UserManager {
 		}
 		
 		return true;
+	}
+	
+	public User getFolivoraUser() {
+		for(User user : dC.getUserList()) {
+			if(user.getUserType() == UserType.FOLIVORA) {
+				return user;
+			}
+		}
+		
+		return null;
+	}
+	
+	public User getPaypalUser() {
+		for(User user : dC.getUserList()) {
+			if(user.getUserType() == UserType.PAYPAL) {
+				return user;
+			}
+		}
+		
+		return null;
+	}
+	
+	public List<User> getAdminUsers() {
+		List<User> result = new ArrayList<User>();
+		
+		for(User user : dC.getUserList()) {
+			if(user.getUserType() == UserType.ADMIN) {
+				result.add(user);
+			}
+		}
+		
+		return result;
 	}
 	
 	public User createAndSaveUser(String name, String pwd, Date birthday, Gender gender,
