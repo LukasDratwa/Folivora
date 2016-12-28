@@ -1,10 +1,13 @@
 package de.folivora.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 
 @Entity
 public class UserCredit {
@@ -13,10 +16,11 @@ public class UserCredit {
 	private double balance;
 	private Date lastModification;
 	
-	private Long lastExecutedTransactionId = null;
-	
 	@OneToOne(targetEntity=User.class)
 	private User owner;
+	
+	@Transient
+	private List<Transaction> executedTransactions = new ArrayList<Transaction>();
 	
 	public UserCredit(long id, double balance, User owner) {
 		this.id = id;
@@ -86,16 +90,16 @@ public class UserCredit {
 	}
 
 	/**
-	 * @return the lastExecutedTransactionId
+	 * @return the executedTransactions
 	 */
-	public Long getLastExecutedTransactionId() {
-		return lastExecutedTransactionId;
+	public List<Transaction> getExecutedTransactions() {
+		return executedTransactions;
 	}
 
 	/**
-	 * @param lastExecutedTransactionId the lastExecutedTransactionId to set
+	 * @param executedTransactions the executedTransactions to set
 	 */
-	public void setLastExecutedTransactionId(Long lastExecutedTransactionId) {
-		this.lastExecutedTransactionId = lastExecutedTransactionId;
+	public void setExecutedTransactions(List<Transaction> executedTransactions) {
+		this.executedTransactions = executedTransactions;
 	}
 }

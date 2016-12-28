@@ -14,7 +14,10 @@ import org.apache.log4j.Logger;
 
 import com.google.gson.Gson;
 
+import de.folivora.controller.ApplicationManager;
+import de.folivora.controller.UserManager;
 import de.folivora.model.User;
+import de.folivora.model.UserType;
 import de.folivora.util.Constants;
 
 /** 
@@ -64,10 +67,26 @@ public class SignUpServlet extends HttpServlet {
 		
 		// Map inputdata
 		Gson gson = new Gson();
-		User signUpData = null;
+		User user = null;
 		try {
-			signUpData = gson.fromJson(sB.toString(), User.class);
-			System.out.println(signUpData);
+			user = gson.fromJson(sB.toString(), User.class);
+				
+			if(user.getName() != null && user.getEmail() != null) {
+				ApplicationManager aManager = ApplicationManager.getApplicationManagerInstance();
+				UserManager uManager = aManager.getuManager();
+				if(uManager.isUniqueUser(user)) {
+					uManager.createAndSaveUser(user.getName(), user.getPassword(), user.getBirthday(), user.getGender(),
+							user.getEmail(), 0, UserType.NORMAL);
+					new ResponseObject(200, "Successfully signed up!", response).writeResponse();
+					logger.info("Successfully signed up user: " + user);
+				} else {
+					new ResponseObject(400, "User exists already! Change \"name\" and/or \"email\"", response).writeResponse();
+					logger.warn("User exists already, cant save user: " + user);
+				}
+			} else {
+				new ResponseObject(400, "Missing credentials \"name\" and \"email\"", response).writeResponse();
+				logger.info("Missing data to create new user.");
+			}
 		} catch(Exception e) {
 			logger.error("Failed to map inputdata!", e);
 			response.setStatus(403);

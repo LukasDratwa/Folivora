@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 
 import de.folivora.controller.ApplicationManager;
 import de.folivora.controller.DataContainer;
+import de.folivora.model.Feedback;
 import de.folivora.model.IdStorage;
 import de.folivora.model.SearchRequest;
 import de.folivora.model.Transaction;
@@ -41,7 +42,7 @@ public class DoAfterStartupListener implements ServletContextListener {
 			// 4. Check for corrupted data
 			// TODO
 			
-			aManager.createAndSaveTestData();
+			// aManager.createAndSaveTestData();
 		} catch(Exception e) {
 			logger.error("Error while startup!", e);
 		}
@@ -81,7 +82,25 @@ public class DoAfterStartupListener implements ServletContextListener {
 	}
 	
 	private void enrichLoadedDatabaseData(ApplicationManager aManager) {
-		// TODO
+		DataContainer dC = aManager.getdC();
+		
+		for(Transaction t : dC.getTransactionList()) {
+			// Save executed transactions
+			if(t.isExecuted()) {
+				t.getUserSearching().getCredit().getExecutedTransactions().add(t);
+				t.getUserDelivering().getCredit().getExecutedTransactions().add(t);
+			}
+			
+			// Save received feedbacks
+			Feedback fOfSearchingUser = t.getFeedbackOfSearchingUser();
+			if(fOfSearchingUser != null) {
+				t.getUserDelivering().getReceivedFeedbacks().add(fOfSearchingUser);
+			}
+			Feedback fOfDeliveringUser = t.getFeedbackOfDeliveringUser();
+			if(fOfDeliveringUser != null) {
+				t.getUserSearching().getReceivedFeedbacks().add(fOfDeliveringUser);
+			}
+		}
 	}
 	
 	@Override

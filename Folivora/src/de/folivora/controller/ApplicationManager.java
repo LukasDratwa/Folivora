@@ -31,7 +31,7 @@ public class ApplicationManager {
 		return instance;
 	}
 	
-	protected static ApplicationManager getApplicationManagerInstance() {
+	public static ApplicationManager getApplicationManagerInstance() {
 		return getApplicationManagerInstance(null);
 	}
 	
@@ -39,12 +39,16 @@ public class ApplicationManager {
 			User feedbackCreator, Transaction referencedTransaction) {
 		Feedback f = factory_createFeedback(rating, description, feedbackCreator, referencedTransaction);
 		
-		// Save the given feedback in the transaction
+		// Save the given feedback in the transaction and in the list of received feedbacks
+		User feedbackReceiver = null;
 		if(referencedTransaction.getUserSearching().equals(feedbackCreator)) {
 			referencedTransaction.setFeedbackOfSearchingUser(f);
+			feedbackReceiver = referencedTransaction.getUserDelivering();
 		} else {
 			referencedTransaction.setFeedbackOfDeliveringUser(f);
+			feedbackReceiver = referencedTransaction.getUserSearching();
 		}
+		feedbackReceiver.getReceivedFeedbacks().add(f);
 		
 		HibernateSave.saveOrUpdateObject(referencedTransaction);
 		return f;
@@ -62,6 +66,7 @@ public class ApplicationManager {
 	public Transaction createAndSaveTransaction(Date executionDate, double value, User userSearching, User userDelivering) {
 		Transaction t = factory_createTransaction(executionDate, value, userSearching, userDelivering);
 		HibernateSave.saveOrUpdateObject(t);
+		dC.getTransactionList().add(t);
 		return t;
 	}
 	
@@ -74,6 +79,7 @@ public class ApplicationManager {
 		SearchRequest sr = factory_createSearchRequest(title, description, pathToDefaultImg, possibleDelivery,
 				preferredDelivery, costsAndReward, lat, lng, userCreator);
 		HibernateSave.saveOrUpdateObject(sr);
+		dC.getSearchRequestList().add(sr);
 		return sr;
 	}
 	

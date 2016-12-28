@@ -1,6 +1,8 @@
 package de.folivora.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -32,6 +34,9 @@ public class User {
 	
 	@Transient
 	private HttpSession session = null;
+	
+	@Transient
+	private List<Feedback> receivedFeedbacks = new ArrayList<Feedback>();
 	
 	public User(long id, String name, String password, Date birthday, Gender gender,
 			String email, UserCredit userCredit, UserType userType) {
@@ -182,5 +187,19 @@ public class User {
 	 */
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	/**
+	 * @return the receivedFeedbacks
+	 */
+	public List<Feedback> getReceivedFeedbacks() {
+		return receivedFeedbacks;
+	}
+
+	/**
+	 * @param receivedFeedbacks the receivedFeedbacks to set
+	 */
+	public void setReceivedFeedbacks(List<Feedback> receivedFeedbacks) {
+		this.receivedFeedbacks = receivedFeedbacks;
 	}
 }

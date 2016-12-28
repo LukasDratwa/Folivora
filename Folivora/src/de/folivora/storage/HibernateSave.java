@@ -3,8 +3,6 @@ package de.folivora.storage;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 
-import de.folivora.model.IdStorage;
-
 public class HibernateSave {
 	private static final Logger logger = Logger.getLogger(HibernateSave.class);
 	
