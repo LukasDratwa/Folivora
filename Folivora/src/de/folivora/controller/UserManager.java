@@ -6,6 +6,7 @@ import de.folivora.model.Gender;
 import de.folivora.model.User;
 import de.folivora.model.UserCredit;
 import de.folivora.model.UserType;
+import de.folivora.storage.HibernateSave;
 
 public class UserManager {
 	private DataContainer dC;
@@ -14,9 +15,16 @@ public class UserManager {
 		this.dC = dC;
 	}
 	
-	public User factory_createUser(String name, String hashedPwd, Date birthday, Gender gender,
+	public User createAndSaveUser(String name, String pwd, Date birthday, Gender gender,
 			String email, double initialBalance, UserType userType) {
-		User u = new User(dC.getIdStorage().getNewUserId(), name, hashedPwd, birthday, gender, email, null, userType);
+		User u = factory_createUser(name, pwd, birthday, gender, email, initialBalance, userType);
+		HibernateSave.saveOrUpdateObject(u);
+		return u;
+	}
+	
+	protected User factory_createUser(String name, String pwd, Date birthday, Gender gender,
+			String email, double initialBalance, UserType userType) {
+		User u = new User(dC.getIdStorage().getNewUserId(), name, pwd, birthday, gender, email, null, userType);
 		u.setCredit(new UserCredit(dC.getIdStorage().getNewUserCreditId(), initialBalance, u));
 		dC.getUserList().add(u);
 		return u;

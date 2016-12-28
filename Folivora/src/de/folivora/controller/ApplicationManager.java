@@ -3,11 +3,15 @@ package de.folivora.controller;
 import java.util.Date;
 
 import de.folivora.model.Feedback;
+import de.folivora.model.Gender;
 import de.folivora.model.IdStorage;
 import de.folivora.model.Rating;
 import de.folivora.model.SearchRequest;
 import de.folivora.model.Transaction;
 import de.folivora.model.User;
+import de.folivora.model.UserType;
+import de.folivora.storage.HibernateSave;
+import de.folivora.storage.HibernateUpdate;
 
 public class ApplicationManager {
 	private UserManager uManager = null;
@@ -27,22 +31,77 @@ public class ApplicationManager {
 		return instance;
 	}
 	
-	public static ApplicationManager getApplicationManagerInstance() {
+	protected static ApplicationManager getApplicationManagerInstance() {
 		return getApplicationManagerInstance(null);
 	}
 	
-	public Feedback factory_createFeedback(Rating rating, String description, User feedbackCreator) {
-		return new Feedback(dC.getIdStorage().getNewFeedbackId(), rating, description, feedbackCreator);
+	public Feedback createAndSaveFeedback(Rating rating, String description,
+			User feedbackCreator, Transaction referencedTransaction) {
+		Feedback f = factory_createFeedback(rating, description, feedbackCreator, referencedTransaction);
+		
+		// Save the given feedback in the transaction
+		if(referencedTransaction.getUserSearching().equals(feedbackCreator)) {
+			referencedTransaction.setFeedbackOfSearchingUser(f);
+		} else {
+			referencedTransaction.setFeedbackOfDeliveringUser(f);
+		}
+		
+		HibernateSave.saveOrUpdateObject(referencedTransaction);
+		return f;
 	}
 	
-	public Transaction factory_createTransaction(Date executionDate, double value, User userSearching, User userDelivering) {
+	private Feedback factory_createFeedback(Rating rating, String description,
+			User feedbackCreator, Transaction referencedTransaction) {
+		return new Feedback(dC.getIdStorage().getNewFeedbackId(), rating, description, feedbackCreator, referencedTransaction);
+	}
+	
+	public void executeTransaction(Transaction t) {
+		// TODO
+	}
+	
+	public Transaction createAndSaveTransaction(Date executionDate, double value, User userSearching, User userDelivering) {
+		Transaction t = factory_createTransaction(executionDate, value, userSearching, userDelivering);
+		HibernateSave.saveOrUpdateObject(t);
+		return t;
+	}
+	
+	private Transaction factory_createTransaction(Date executionDate, double value, User userSearching, User userDelivering) {
 		return new Transaction(dC.getIdStorage().getNewTransactionId(), executionDate, value, userSearching, userDelivering);
 	}
 	
-	public SearchRequest factory_createSearchRequest(String title, String description, String pathToDefaultImg,
-			Date[]	possibleDelivery, Date[] preferredDelivery, double costsAndReward, long lat, long lng, User userCreator) {
+	public SearchRequest createAndSaveSearchRequest(String title, String description, String pathToDefaultImg,
+			Date[] possibleDelivery, Date[] preferredDelivery, double costsAndReward, long lat, long lng, User userCreator) {
+		SearchRequest sr = factory_createSearchRequest(title, description, pathToDefaultImg, possibleDelivery,
+				preferredDelivery, costsAndReward, lat, lng, userCreator);
+		HibernateSave.saveOrUpdateObject(sr);
+		return sr;
+	}
+	
+	private SearchRequest factory_createSearchRequest(String title, String description, String pathToDefaultImg,
+			Date[] possibleDelivery, Date[] preferredDelivery, double costsAndReward, long lat, long lng, User userCreator) {
 		return new SearchRequest(dC.getIdStorage().getNewSearchRequestId(), title, description, pathToDefaultImg,
 				possibleDelivery, preferredDelivery, costsAndReward, lat, lng, true, userCreator);
+	}
+	
+	public void createAndSaveTestData() {
+		User u1 = uManager.createAndSaveUser("Lukas Test", "123", new Date(), Gender.MALE, "test@das.de", 100, UserType.NORMAL);
+		User u2 = uManager.createAndSaveUser("Hubertus Maximus", "123", new Date(), Gender.Female, "hubert@das.de", 100, UserType.NORMAL);
+		
+		Transaction t1 = createAndSaveTransaction(new Date(), 50, u1, u2);
+		
+		createAndSaveFeedback(Rating.BAD, "War schlecht, Lieferant kam viel zu spät!", u1, t1);
+		createAndSaveFeedback(Rating.VERY_BAD, "Kam nur 5 Minuten zu spät und er war super unfreundlich!", u2, t1);
+		
+		Date[] possibleDelivery = {new Date(), new Date()};
+		Date[] preferredDelivery = {new Date(), new Date()};
+		SearchRequest sr1 = createAndSaveSearchRequest("Suche Brot", "Bis Mittag Brot.", "",
+				possibleDelivery, preferredDelivery, 3.56, 0, 0, u1);
+		
+		sr1.setUserStasisfier(u2);
+		HibernateUpdate.updateObject(sr1);
+		
+		u1.setName("Manuel Neumann");
+		HibernateUpdate.updateObject(u1);
 	}
 
 	/**

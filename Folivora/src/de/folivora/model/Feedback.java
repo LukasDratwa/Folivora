@@ -18,11 +18,15 @@ public class Feedback {
 	@OneToOne(targetEntity=User.class)
 	private User feedbackCreator;
 	
-	public Feedback(long id, Rating rating, String description, User feedbackCreator) {
+	@OneToOne(targetEntity=Transaction.class)
+	private Transaction referencedTransaction;
+	
+	public Feedback(long id, Rating rating, String description, User feedbackCreator, Transaction referencedTransaction) {
 		this.id = id;
 		this.rating = rating;
 		this.description = description;
 		this.feedbackCreator = feedbackCreator;
+		this.referencedTransaction = referencedTransaction;
 	}
 	
 	/**
@@ -30,6 +34,12 @@ public class Feedback {
 	 */
 	public Feedback() {
 		
+	}
+	
+	@Override
+	public String toString() {
+		return "[id=" + this.id + ", transactionRef=" + this.referencedTransaction.getId()
+			+ ", userCreatorRef=" + this.feedbackCreator.getId() + ", rating=" + this.rating + "]";
 	}
 	
 	/**
@@ -86,5 +96,19 @@ public class Feedback {
 	 */
 	public void setFeedbackCreator(User feedbackCreator) {
 		this.feedbackCreator = feedbackCreator;
+	}
+
+	/**
+	 * @return the referencedTransaction
+	 */
+	public Transaction getReferencedTransaction() {
+		return referencedTransaction;
+	}
+
+	/**
+	 * @param referencedTransaction the referencedTransaction to set
+	 */
+	public void setReferencedTransaction(Transaction referencedTransaction) {
+		this.referencedTransaction = referencedTransaction;
 	}
 }

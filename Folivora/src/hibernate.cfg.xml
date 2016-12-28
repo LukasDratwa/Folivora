@@ -12,10 +12,12 @@
         <property name="hibernate.ogm.datastore.password">3fdonl2igv4onria8</property>
         <property name="hibernate.current_session_context_class">thread</property>
        	<property name="hibernate.ogm.datastore.create_database">true</property>
+       	
+       	<property name="hibernate.ogm.datastore.grid_dialect">de.folivora.storage.HibernateMongoDBDialect</property>
         
 		<mapping class="de.folivora.model.User"></mapping>
-		<mapping class="de.folivora.model.Feedback"></mapping>
 		<mapping class="de.folivora.model.UserCredit"></mapping>
+		<mapping class="de.folivora.model.Feedback"></mapping>
 		<mapping class="de.folivora.model.Transaction"></mapping>
 		<mapping class="de.folivora.model.IdStorage"></mapping>
 		<mapping class="de.folivora.model.SearchRequest"></mapping>

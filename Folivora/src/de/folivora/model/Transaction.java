@@ -15,6 +15,8 @@ public class Transaction {
 	private Date executionDate;
 	private double value;
 	private boolean executed;
+	private boolean cancelled;
+	private Long cacelTransactionId;
 	
 	@OneToOne(targetEntity=User.class)
 	private User userSearching,
@@ -30,7 +32,15 @@ public class Transaction {
 		this.value = value;
 		this.userSearching = userSearching;
 		this.userDelivering = userDelivering;
-		this.setExecuted(false);
+		this.executed = false;
+		this.cancelled = false;
+	}
+	
+	@Override
+	public String toString() {
+		return "[userSearchingRef=\"" + this.userSearching.getName() + "\" (" + this.userSearching.getId() + ")"
+			+ ", userDeliveringRef=\"" + this.userDelivering.getName() + "\" (" + this.userDelivering.getId() + ")"
+			+ ", value=" + this.value + ", executed=" + this.executed + "]";
 	}
 	
 	/**
@@ -150,5 +160,33 @@ public class Transaction {
 	 */
 	public void setExecuted(boolean executed) {
 		this.executed = executed;
+	}
+
+	/**
+	 * @return the cancelled
+	 */
+	public boolean isCancelled() {
+		return cancelled;
+	}
+
+	/**
+	 * @param cancelled the cancelled to set
+	 */
+	public void setCancelled(boolean cancelled) {
+		this.cancelled = cancelled;
+	}
+
+	/**
+	 * @return the cacelTransactionId
+	 */
+	public Long getCacelTransactionId() {
+		return cacelTransactionId;
+	}
+
+	/**
+	 * @param cacelTransactionId the cacelTransactionId to set
+	 */
+	public void setCacelTransactionId(Long cacelTransactionId) {
+		this.cacelTransactionId = cacelTransactionId;
 	}
 }

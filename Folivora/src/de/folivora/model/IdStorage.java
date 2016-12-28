@@ -3,7 +3,7 @@ package de.folivora.model;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-import de.folivora.storage.HibernateSave;
+import de.folivora.storage.HibernateUpdate;
 
 @Entity
 public class IdStorage {
@@ -31,6 +31,13 @@ public class IdStorage {
 		
 	}
 	
+	@Override
+	public String toString() {
+		return "[lUserId=" + this.lastUsedUserId + ", lUserCreditId=" + this.lastUsedUserCreditId 
+					+ ", lSearchReqId=" + this.lastUsedSearchRequestId + ", lTransactionId=" + this.lastUsedTransactionId
+					+ ", lFeedbackId=" + this.lastUsedFeedbackId + "]";
+	}
+	
 	/**
 	 * Method to get a new unique id for a new {@link User}.
 	 * 
@@ -38,7 +45,7 @@ public class IdStorage {
 	 */
 	public long getNewUserId() {
 		setLastUsedUserId(getLastUsedUserId() + 1);
-		HibernateSave.saveOrUpdateIdStorage(this);
+		HibernateUpdate.updateObject(this);
 		return getLastUsedUserId();
 	}
 	
@@ -49,7 +56,7 @@ public class IdStorage {
 	 */
 	public long getNewUserCreditId() {
 		setLastUsedUserCreditId(getLastUsedUserCreditId() + 1);
-		HibernateSave.saveOrUpdateIdStorage(this);
+		HibernateUpdate.updateObject(this);
 		return getLastUsedUserCreditId();
 	}
 	
@@ -60,7 +67,7 @@ public class IdStorage {
 	 */
 	public long getNewSearchRequestId() {
 		setLastUsedSearchRequestId(getLastUsedSearchRequestId() + 1);
-		HibernateSave.saveOrUpdateIdStorage(this);
+		HibernateUpdate.updateObject(this);
 		return getLastUsedSearchRequestId();
 	}
 	
@@ -71,7 +78,7 @@ public class IdStorage {
 	 */
 	public long getNewFeedbackId() {
 		setLastUsedFeedbackId(getLastUsedFeedbackId() + 1);
-		HibernateSave.saveOrUpdateIdStorage(this);
+		HibernateUpdate.updateObject(this);
 		return getLastUsedFeedbackId();
 	}
 	
@@ -82,7 +89,7 @@ public class IdStorage {
 	 */
 	public long getNewTransactionId() {
 		setLastUsedTransactionId(getLastUsedTransactionId() + 1);
-		HibernateSave.saveOrUpdateIdStorage(this);
+		HibernateUpdate.updateObject(this);
 		return getLastUsedTransactionId();
 	}
 

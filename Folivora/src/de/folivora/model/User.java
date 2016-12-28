@@ -1,17 +1,13 @@
 package de.folivora.model;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.CascadeType;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import javax.servlet.http.HttpSession;
@@ -21,7 +17,7 @@ public class User {
 	@Id
 	private long id;
 	private String name;
-	private String hashedPwd;
+	private String password;
 	private Date birthday;
 	private String email;
 	
@@ -34,20 +30,14 @@ public class User {
 	@OneToOne(cascade=CascadeType.ALL, fetch=FetchType.EAGER, targetEntity=UserCredit.class, mappedBy="owner")
 	private UserCredit credit;
 	
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, targetEntity=SearchRequest.class, mappedBy="userCreator")
-	private List<SearchRequest> createdSearchRequests = new ArrayList<SearchRequest>();
-	
-	@ElementCollection
-	private List<Long> stasisfiedSearchRequestIds = new ArrayList<Long>();
-	
 	@Transient
 	private HttpSession session = null;
 	
-	public User(long id, String name, String hashedPwd, Date birthday, Gender gender,
+	public User(long id, String name, String password, Date birthday, Gender gender,
 			String email, UserCredit userCredit, UserType userType) {
 		this.id = id;
 		this.name = name;
-		this.hashedPwd = hashedPwd;
+		this.password = password;
 		this.birthday = birthday;
 		this.gender = gender;
 		this.email = email;
@@ -65,7 +55,7 @@ public class User {
 	@Override
 	public String toString() {
 		return "[name=\"" + this.getName() + "\", email=\"" + this.getEmail() + "\", "
-				+ "id=" + this.getId() + "]";
+				+ "id=" + this.getId() + ", credit=" + this.credit + "]";
 	}
 	
 	/**
@@ -94,20 +84,6 @@ public class User {
 	 */
 	public void setName(String name) {
 		this.name = name;
-	}
-	
-	/**
-	 * @return the hashedPwd
-	 */
-	public String getHashedPwd() {
-		return hashedPwd;
-	}
-	
-	/**
-	 * @param hashedPwd the hashedPwd to set
-	 */
-	public void setHashedPwd(String hashedPwd) {
-		this.hashedPwd = hashedPwd;
 	}
 	
 	/**
@@ -195,30 +171,16 @@ public class User {
 	}
 
 	/**
-	 * @return the createdSearchRequests
+	 * @return the password
 	 */
-	public List<SearchRequest> getCreatedSearchRequests() {
-		return createdSearchRequests;
+	public String getPassword() {
+		return password;
 	}
 
 	/**
-	 * @param createdSearchRequests the createdSearchRequests to set
+	 * @param password the password to set
 	 */
-	public void setCreatedSearchRequests(List<SearchRequest> createdSearchRequests) {
-		this.createdSearchRequests = createdSearchRequests;
-	}
-
-	/**
-	 * @return the stasisfiedSearchRequestIds
-	 */
-	public List<Long> getStasisfiedSearchRequestIds() {
-		return stasisfiedSearchRequestIds;
-	}
-
-	/**
-	 * @param stasisfiedSearchRequestIds the stasisfiedSearchRequestIds to set
-	 */
-	public void setStasisfiedSearchRequestIds(List<Long> stasisfiedSearchRequestIds) {
-		this.stasisfiedSearchRequestIds = stasisfiedSearchRequestIds;
+	public void setPassword(String password) {
+		this.password = password;
 	}
 }

@@ -4,7 +4,7 @@ import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 @Entity
 public class SearchRequest {
@@ -23,10 +23,11 @@ public class SearchRequest {
 	   			 preferredDelivery_from,
 	   			 preferredDelivery_to;
 	
-	@ManyToOne(targetEntity=User.class)
+	@OneToOne(targetEntity=User.class)
 	private User userCreator;
 	
-	private long userStasisfier_id = -1;
+	@OneToOne(targetEntity=User.class)
+	private User userStasisfier;
 	
 	public SearchRequest(long id, String title, String description, String pathToDefaultImg,
 			Date possibleDelivery_from, Date possibleDelivery_to, Date preferredDelivery_from, Date preferredDelivery_to,
@@ -59,6 +60,17 @@ public class SearchRequest {
 	 */
 	protected SearchRequest() {
 		
+	}
+	
+	@Override
+	public String toString() {
+		return "[id=" + this.id + ", title=" + this.title
+				+ ", userCreatorRef=\"" + this.userCreator.getName() + "\" (" + this.userCreator.getId() + ")"
+				+ ", userStatisfier="
+					+ ((this.userStasisfier != null)
+						? "\"" + this.userStasisfier.getName() + "\" (" + this.userStasisfier.getId() + ")"
+						: "null")
+				+ "]";
 	}
 	
 	/**
@@ -243,16 +255,16 @@ public class SearchRequest {
 	}
 
 	/**
-	 * @return the userStasisfier_id
+	 * @return the userStasisfier
 	 */
-	public long getUserStasisfier_id() {
-		return userStasisfier_id;
+	public User getUserStasisfier() {
+		return userStasisfier;
 	}
 
 	/**
-	 * @param userStasisfier_id the userStasisfier_id to set
+	 * @param userStasisfier the userStasisfier to set
 	 */
-	public void setUserStasisfier_id(long userStasisfier_id) {
-		this.userStasisfier_id = userStasisfier_id;
+	public void setUserStasisfier(User userStasisfier) {
+		this.userStasisfier = userStasisfier;
 	}
 }

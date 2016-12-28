@@ -1,10 +1,18 @@
 package de.folivora.storage;
 
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 
 import de.folivora.model.IdStorage;
 
 public class HibernateSave {
+	private static final Logger logger = Logger.getLogger(HibernateSave.class);
+	
+	/**
+	 * Method to persist a object in the database. 
+	 * 
+	 * @param o - the object
+	 */
 	public static void persistObject(Object o) {
 		Session session = HibernateUtil.getSessionFactory().openSession();  
         session.getTransaction().setTimeout(600);
@@ -14,6 +22,8 @@ public class HibernateSave {
 		
 		session.getTransaction().commit();
         session.close();
+        
+        logger.info("Persisted [" + o.getClass().getSimpleName() + "]: " + o);
 	}
 	
 	public static void saveOrUpdateObject(Object o) {
@@ -25,16 +35,7 @@ public class HibernateSave {
 		
 		session.getTransaction().commit();
         session.close();
-	}
-	
-	public static void saveOrUpdateIdStorage(IdStorage idStorage) {
-		Session session = HibernateUtil.getSessionFactory().openSession();  
-        session.getTransaction().setTimeout(600);
-        session.getTransaction().begin();
         
-		session.saveOrUpdate(idStorage);
-		
-		session.getTransaction().commit();
-        session.close();
+        logger.info("Saved/updated [" + o.getClass().getSimpleName() + "]: " + o);
 	}
 }

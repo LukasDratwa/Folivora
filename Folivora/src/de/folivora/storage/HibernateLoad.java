@@ -8,6 +8,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 
 import de.folivora.model.IdStorage;
+import de.folivora.model.SearchRequest;
 import de.folivora.model.Transaction;
 import de.folivora.model.User;
 
@@ -27,6 +28,7 @@ public class HibernateLoad {
 		try {
 			Session session = HibernateUtil.getSessionFactory().openSession();	
 	        idStorage = (IdStorage) session.createQuery("from IdStorage where id = '" + id + "'").uniqueResult();
+	        logger.info("Loaded idStorage: " + idStorage);
 	        session.close();
 		} catch(HibernateException e) {
 			logger.error("Failed to load the id storage!", e);
@@ -164,5 +166,57 @@ public class HibernateLoad {
 		}
 		
 		return transList;
+	}
+	
+	/**
+	 * Method to load a specific SearchRequest of the database
+	 * 
+	 * @param id - the search request id
+	 * @return - the loaded SearchRequest or null, if there is no SearchRequest with the given id in the database
+	 */
+	public static SearchRequest loadSearchRequest(long id) {
+		SearchRequest sr = null;
+		
+		try {
+			Session session = HibernateUtil.getSessionFactory().openSession();	
+	        sr = (SearchRequest) session.createQuery("from SearchRequest where id = '" + id + "'").uniqueResult();
+	        session.close();
+		} catch(HibernateException e) {
+			logger.error("Failed to load search request with the id " + id + "!", e);
+		}
+		
+		if(sr == null) {
+			logger.warn("SearchRequest with ID " + id + " could not be loaded.");
+		} else {
+			logger.info("Loaded search request: " + sr);
+		}
+		
+		return sr;
+	}
+	
+	/**
+	 * Method to load all SearchRequest of the database
+	 * 
+	 * @return the loaded SearchRequest 
+	 */
+	@SuppressWarnings("unchecked")
+	public static List<SearchRequest> loadSearchRequestList() {
+		ArrayList<SearchRequest> srList = null;
+		
+		try {
+			Session session = HibernateUtil.getSessionFactory().openSession();		      
+			srList = (ArrayList<SearchRequest>) session.createQuery("from SearchRequest order by id asc").list();
+			session.close();
+			
+			if(srList != null) {
+				for(SearchRequest sr : srList) {
+					logger.info("Loaded search request: " + sr);
+				}
+			}
+		} catch(HibernateException e) {
+			logger.error("Failed to load search request list!", e);
+		}
+		
+		return srList;
 	}
 }

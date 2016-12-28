@@ -1,10 +1,7 @@
 package de.folivora.model;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
@@ -16,14 +13,7 @@ public class UserCredit {
 	private double balance;
 	private Date lastModification;
 	
-	/**
-	 * List<Long> to save any transaction-ids which affected the balance of this usercredit
-	 */
-	@ElementCollection
-	private List<Long> transactionIds = new ArrayList<Long>();
-	
-	@OneToOne(targetEntity=Transaction.class)
-	private Transaction lastExecutedTransaction;
+	private Long lastExecutedTransactionId = null;
 	
 	@OneToOne(targetEntity=User.class)
 	private User owner;
@@ -41,6 +31,11 @@ public class UserCredit {
 		
 	}
 	
+	@Override
+	public String toString() {
+		return this.balance + " €";
+	}
+	
 	/**
 	 * @return the balance
 	 */
@@ -55,13 +50,6 @@ public class UserCredit {
 		return lastModification;
 	}
 	
-	/**
-	 * @return the lastExecutedTransaction
-	 */
-	public Transaction getLastExecutedTransaction() {
-		return lastExecutedTransaction;
-	}
-
 	/**
 	 * @return the id
 	 */
@@ -84,16 +72,30 @@ public class UserCredit {
 	}
 
 	/**
-	 * @return the transactionIds
+	 * @param balance the balance to set
 	 */
-	public List<Long> getTransactionIds() {
-		return transactionIds;
+	public void setBalance(double balance) {
+		this.balance = balance;
 	}
 
 	/**
-	 * @param transactionIds the transactionIds to set
+	 * @param lastModification the lastModification to set
 	 */
-	public void setTransactionIds(List<Long> transactionIds) {
-		this.transactionIds = transactionIds;
+	public void setLastModification(Date lastModification) {
+		this.lastModification = lastModification;
+	}
+
+	/**
+	 * @return the lastExecutedTransactionId
+	 */
+	public Long getLastExecutedTransactionId() {
+		return lastExecutedTransactionId;
+	}
+
+	/**
+	 * @param lastExecutedTransactionId the lastExecutedTransactionId to set
+	 */
+	public void setLastExecutedTransactionId(Long lastExecutedTransactionId) {
+		this.lastExecutedTransactionId = lastExecutedTransactionId;
 	}
 }
