@@ -123,11 +123,9 @@ public class DoAfterStartupListener implements ServletContextListener {
 		DataContainer dC = aManager.getdC();
 		
 		for(Transaction t : dC.getTransactionList()) {
-			// Save executed transactions
-			if(t.isExecuted()) {
-				t.getUserSearching().getCredit().getExecutedTransactions().add(t);
-				t.getUserDelivering().getCredit().getExecutedTransactions().add(t);
-			}
+			// Save transaction which influence the user credits
+			t.getUserSearching().getCredit().getExecutedTransactions().add(t);
+			t.getUserDelivering().getCredit().getExecutedTransactions().add(t);
 			
 			// Save received feedbacks
 			Feedback fOfSearchingUser = t.getFeedbackOfSearchingUser();

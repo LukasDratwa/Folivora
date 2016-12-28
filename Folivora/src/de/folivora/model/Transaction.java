@@ -17,6 +17,7 @@ public class Transaction {
 	private boolean executed;
 	private boolean cancelled;
 	private Long cacelTransactionId;
+	private String unlockToken;
 	
 	@OneToOne(targetEntity=User.class)
 	private User userSearching,
@@ -26,13 +27,14 @@ public class Transaction {
 	private Feedback feedbackOfSearchingUser = null,
 					 feedbackOfDeliveringUser = null;
 	
-	public Transaction(long id, double value, User userSearching, User userDelivering) {
+	public Transaction(long id, double value, User userSearching, User userDelivering, String unlockToken) {
 		this.id = id;
 		this.value = value;
 		this.userSearching = userSearching;
 		this.userDelivering = userDelivering;
 		this.executed = false;
 		this.cancelled = false;
+		this.unlockToken = unlockToken;
 	}
 	
 	@Override
@@ -187,5 +189,16 @@ public class Transaction {
 	 */
 	public void setCacelTransactionId(Long cacelTransactionId) {
 		this.cacelTransactionId = cacelTransactionId;
+	}
+
+	/**
+	 * Get the token which the delivering user has to enter in the application to
+	 * execute the transaction and get his money. The searching user has to provide
+	 * this token.
+	 * 
+	 * @return the unlockToken
+	 */
+	public String getUnlockToken() {
+		return unlockToken;
 	}
 }

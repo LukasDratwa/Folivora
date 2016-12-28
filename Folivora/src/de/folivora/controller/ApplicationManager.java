@@ -1,6 +1,10 @@
 package de.folivora.controller;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.Date;
+
+import org.apache.log4j.Logger;
 
 import de.folivora.model.Feedback;
 import de.folivora.model.Gender;
@@ -19,6 +23,8 @@ public class ApplicationManager {
 	private static ApplicationManager instance = null;
 	private DataContainer dC;
 	private IdStorage idStorage;
+	private SecureRandom secureRandom = new SecureRandom();
+	private Logger logger = Logger.getLogger(ApplicationManager.class);
 	
 	private ApplicationManager(DataContainer dC) {
 		this.dC = dC;
@@ -34,6 +40,28 @@ public class ApplicationManager {
 	
 	public static ApplicationManager getApplicationManagerInstance() {
 		return getApplicationManagerInstance(null);
+	}
+	
+	public String getToken(boolean uppercase) {
+		if(uppercase) {
+			return new BigInteger(130, secureRandom).toString(32).toUpperCase();
+		} else {
+			return new BigInteger(130, secureRandom).toString(32);
+		}
+	}
+	
+	public String getTrimmedToken(boolean uppercase, int length, String inputString) {
+		String token = getToken(uppercase);
+		
+		if(length <= token.length()) {
+			return token.substring(0, length);
+		} else {
+			if(length >= length + inputString.length()) {
+				return getTrimmedToken(uppercase, length, token);
+			} else {
+				return (inputString + token).substring(0, length);
+			}
+		}
 	}
 	
 	public Feedback createAndSaveFeedback(Rating rating, String description,
@@ -60,7 +88,12 @@ public class ApplicationManager {
 		return new Feedback(dC.getIdStorage().getNewFeedbackId(), rating, description, feedbackCreator, referencedTransaction);
 	}
 	
-	public void executeTransaction(Transaction t) {
+	public void executeTransaction(String executionUnlockToken, Transaction t) {
+		if(! executionUnlockToken.equals(t.getUnlockToken())) {
+			logger.warn("Invalid unlock token! Couldn't execute transaction: " + t);
+			return;
+		}
+		
 		UserCredit userCreditSearching = t.getUserSearching().getCredit();
 		UserCredit userCreditDelivering = t.getUserDelivering().getCredit();
 		
@@ -70,8 +103,12 @@ public class ApplicationManager {
 		userCreditSearching.setLastModification(new Date());
 		userCreditDelivering.setLastModification(new Date());
 		
-		userCreditSearching.getExecutedTransactions().add(t);
-		userCreditDelivering.getExecutedTransactions().add(t);
+		if(! userCreditSearching.getExecutedTransactions().contains(t)) {
+			userCreditSearching.getExecutedTransactions().add(t);
+		}
+		if(! userCreditDelivering.getExecutedTransactions().contains(t)) {
+			userCreditDelivering.getExecutedTransactions().add(t);
+		}
 		
 		t.setExecutionDate(new Date());
 		t.setExecuted(true);
@@ -79,15 +116,15 @@ public class ApplicationManager {
 		HibernateUpdate.updateObject(t);
 	}
 	
-	public Transaction createAndSaveTransaction(double value, User userSearching, User userDelivering) {
-		Transaction t = factory_createTransaction(value, userSearching, userDelivering);
+	public Transaction createAndSaveTransaction(double value, User userSearching, User userDelivering, String unlockToken) {
+		Transaction t = factory_createTransaction(value, userSearching, userDelivering, unlockToken);
 		HibernateSave.saveOrUpdateObject(t);
 		dC.getTransactionList().add(t);
 		return t;
 	}
 	
-	private Transaction factory_createTransaction(double value, User userSearching, User userDelivering) {
-		return new Transaction(dC.getIdStorage().getNewTransactionId(), value, userSearching, userDelivering);
+	private Transaction factory_createTransaction(double value, User userSearching, User userDelivering, String unlockToken) {
+		return new Transaction(dC.getIdStorage().getNewTransactionId(), value, userSearching, userDelivering, unlockToken);
 	}
 	
 	public SearchRequest createAndSaveSearchRequest(String title, String description, String pathToDefaultImg,
@@ -109,7 +146,7 @@ public class ApplicationManager {
 		User u1 = uManager.createAndSaveUser("Lukas Test", "123", new Date(), Gender.MALE, "test@das.de", 100, UserType.NORMAL);
 		User u2 = uManager.createAndSaveUser("Hubertus Maximus", "123", new Date(), Gender.Female, "hubert@das.de", 100, UserType.NORMAL);
 		
-		Transaction t1 = createAndSaveTransaction(50, u1, u2);
+		Transaction t1 = createAndSaveTransaction(50, u1, u2, getTrimmedToken(true, 5, ""));
 		
 		createAndSaveFeedback(Rating.BAD, "War schlecht, Lieferant kam viel zu spät!", u1, t1);
 		createAndSaveFeedback(Rating.VERY_BAD, "Kam nur 5 Minuten zu spät und er war super unfreundlich!", u2, t1);
