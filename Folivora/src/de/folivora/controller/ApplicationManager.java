@@ -1,7 +1,5 @@
 package de.folivora.controller;
 
-import java.math.BigInteger;
-import java.security.SecureRandom;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
@@ -23,7 +21,6 @@ public class ApplicationManager {
 	private static ApplicationManager instance = null;
 	private DataContainer dC;
 	private IdStorage idStorage;
-	private SecureRandom secureRandom = new SecureRandom();
 	private Logger logger = Logger.getLogger(ApplicationManager.class);
 	
 	private ApplicationManager(DataContainer dC) {
@@ -42,27 +39,7 @@ public class ApplicationManager {
 		return getApplicationManagerInstance(null);
 	}
 	
-	public String getToken(boolean uppercase) {
-		if(uppercase) {
-			return new BigInteger(130, secureRandom).toString(32).toUpperCase();
-		} else {
-			return new BigInteger(130, secureRandom).toString(32);
-		}
-	}
 	
-	public String getTrimmedToken(boolean uppercase, int length, String inputString) {
-		String token = getToken(uppercase);
-		
-		if(length <= token.length()) {
-			return token.substring(0, length);
-		} else {
-			if(length >= length + inputString.length()) {
-				return getTrimmedToken(uppercase, length, token);
-			} else {
-				return (inputString + token).substring(0, length);
-			}
-		}
-	}
 	
 	public Feedback createAndSaveFeedback(Rating rating, String description,
 			User feedbackCreator, Transaction referencedTransaction) {
@@ -103,11 +80,11 @@ public class ApplicationManager {
 		userCreditSearching.setLastModification(new Date());
 		userCreditDelivering.setLastModification(new Date());
 		
-		if(! userCreditSearching.getExecutedTransactions().contains(t)) {
-			userCreditSearching.getExecutedTransactions().add(t);
+		if(! userCreditSearching.getReferencedTransactions().contains(t)) {
+			userCreditSearching.getReferencedTransactions().add(t);
 		}
-		if(! userCreditDelivering.getExecutedTransactions().contains(t)) {
-			userCreditDelivering.getExecutedTransactions().add(t);
+		if(! userCreditDelivering.getReferencedTransactions().contains(t)) {
+			userCreditDelivering.getReferencedTransactions().add(t);
 		}
 		
 		t.setExecutionDate(new Date());
@@ -146,7 +123,7 @@ public class ApplicationManager {
 		User u1 = uManager.createAndSaveUser("Lukas Test", "123", new Date(), Gender.MALE, "test@das.de", 100, UserType.NORMAL);
 		User u2 = uManager.createAndSaveUser("Hubertus Maximus", "123", new Date(), Gender.Female, "hubert@das.de", 100, UserType.NORMAL);
 		
-		Transaction t1 = createAndSaveTransaction(50, u1, u2, getTrimmedToken(true, 5, ""));
+		Transaction t1 = createAndSaveTransaction(50, u1, u2, uManager.getTrimmedToken(true, 5, ""));
 		
 		createAndSaveFeedback(Rating.BAD, "War schlecht, Lieferant kam viel zu spät!", u1, t1);
 		createAndSaveFeedback(Rating.VERY_BAD, "Kam nur 5 Minuten zu spät und er war super unfreundlich!", u2, t1);

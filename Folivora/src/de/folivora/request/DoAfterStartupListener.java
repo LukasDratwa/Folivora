@@ -107,15 +107,15 @@ public class DoAfterStartupListener implements ServletContextListener {
 		}
 		
 		if(! foundAdmin) {
-			uManager.createAndSaveUser("admin", "admin", null, null, null, 0, UserType.ADMIN);
+			uManager.createAndSaveUser("admin", "admin", null, null, "", 0, UserType.ADMIN);
 		}
 		
 		if(! foundFolivoraUser) {
-			uManager.createAndSaveUser("folivora", "folivora", null, null, null, 0, UserType.FOLIVORA);
+			uManager.createAndSaveUser("folivora", "folivora", null, null, "", 0, UserType.FOLIVORA);
 		}
 		
 		if(! foundPaypalUser) {
-			uManager.createAndSaveUser("paypal", "paypal", null, null, null, 0, UserType.PAYPAL);
+			uManager.createAndSaveUser("paypal", "paypal", null, null, "", 0, UserType.PAYPAL);
 		}
 	}
 	
@@ -124,8 +124,8 @@ public class DoAfterStartupListener implements ServletContextListener {
 		
 		for(Transaction t : dC.getTransactionList()) {
 			// Save transaction which influence the user credits
-			t.getUserSearching().getCredit().getExecutedTransactions().add(t);
-			t.getUserDelivering().getCredit().getExecutedTransactions().add(t);
+			t.getUserSearching().getCredit().getReferencedTransactions().add(t);
+			t.getUserDelivering().getCredit().getReferencedTransactions().add(t);
 			
 			// Save received feedbacks
 			Feedback fOfSearchingUser = t.getFeedbackOfSearchingUser();

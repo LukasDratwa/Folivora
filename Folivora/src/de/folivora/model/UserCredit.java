@@ -20,7 +20,7 @@ public class UserCredit {
 	private User owner;
 	
 	@Transient
-	private List<Transaction> executedTransactions = new ArrayList<Transaction>();
+	private List<Transaction> referencedTransactions = new ArrayList<Transaction>();
 	
 	public UserCredit(long id, double balance, User owner) {
 		this.id = id;
@@ -90,16 +90,16 @@ public class UserCredit {
 	}
 
 	/**
-	 * @return the executedTransactions
+	 * @return the referencedTransactions
 	 */
-	public List<Transaction> getExecutedTransactions() {
-		return executedTransactions;
+	public List<Transaction> getReferencedTransactions() {
+		return referencedTransactions;
 	}
 
 	/**
-	 * @param executedTransactions the executedTransactions to set
+	 * @param referencedTransactions the executedTransactions to set
 	 */
-	public void setExecutedTransactions(List<Transaction> executedTransactions) {
-		this.executedTransactions = executedTransactions;
+	public void setReferencedTransactions(List<Transaction> referencedTransactions) {
+		this.referencedTransactions = referencedTransactions;
 	}
 }

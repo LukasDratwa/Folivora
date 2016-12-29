@@ -1,5 +1,7 @@
 package de.folivora.controller;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -9,12 +11,52 @@ import de.folivora.model.User;
 import de.folivora.model.UserCredit;
 import de.folivora.model.UserType;
 import de.folivora.storage.HibernateSave;
+import de.folivora.storage.HibernateUpdate;
+import de.folivora.util.Constants;
 
 public class UserManager {
 	private DataContainer dC;
+	private SecureRandom secureRandom = new SecureRandom();
 	
 	protected UserManager(DataContainer dC) {
 		this.dC = dC;
+	}
+	
+	public boolean authenticate(String nameOrEmail, String pwd) {
+		for(User user : dC.getUserList()) {
+			if(user.getName().equals(nameOrEmail)
+					|| user.getEmail().equals(nameOrEmail)) {
+				if(user.getPassword().equals(pwd)) {
+					user.refreshTokenStorage(getTrimmedToken(false, Constants.TOKEN_SESSION_LENGTH, ""));
+					HibernateUpdate.updateObject(user.getTokenStorage());
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+	
+	public String getToken(boolean uppercase) {
+		if(uppercase) {
+			return new BigInteger(130, secureRandom).toString(32).toUpperCase();
+		} else {
+			return new BigInteger(130, secureRandom).toString(32);
+		}
+	}
+	
+	public String getTrimmedToken(boolean uppercase, int length, String inputString) {
+		String token = getToken(uppercase);
+		
+		if(length <= token.length()) {
+			return token.substring(0, length);
+		} else {
+			if(length >= length + inputString.length()) {
+				return getTrimmedToken(uppercase, length, token);
+			} else {
+				return (inputString + token).substring(0, length);
+			}
+		}
 	}
 	
 	public boolean isUniqueUser(User inputUser) {
@@ -26,6 +68,16 @@ public class UserManager {
 		}
 		
 		return true;
+	}
+	
+	public User getUserWithNameOrEmail(String nameOrEmail) {
+		for(User user : dC.getUserList()) {
+			if(user.getName().equals(nameOrEmail) || user.getEmail().equals(nameOrEmail)) {
+				return user;
+			}
+		}
+		
+		return null;
 	}
 	
 	public User getFolivoraUser() {

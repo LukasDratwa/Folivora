@@ -14,6 +14,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import javax.servlet.http.HttpSession;
 
+import de.folivora.util.Constants;
+
 @Entity
 public class User {
 	@Id
@@ -31,6 +33,9 @@ public class User {
 	
 	@OneToOne(cascade=CascadeType.ALL, fetch=FetchType.EAGER, targetEntity=UserCredit.class, mappedBy="owner")
 	private UserCredit credit;
+	
+	@OneToOne(cascade=CascadeType.ALL, fetch=FetchType.EAGER, targetEntity=TokenStorage.class)
+	private TokenStorage tokenStorage = new TokenStorage(this.getId());
 	
 	@Transient
 	private HttpSession session = null;
@@ -54,7 +59,12 @@ public class User {
 	 * Protected default constructor for hibernate mapping.
 	 */
 	protected User() {
-		
+	}
+	
+	public void refreshTokenStorage(String token) {
+		this.tokenStorage.setToken(token);
+		this.tokenStorage.setDateCreation(new Date());
+		this.tokenStorage.setDateExpiration(new Date(System.currentTimeMillis() + Constants.TOKEN_SESSION_EXPIRATION_TIME));
 	}
 	
 	@Override
@@ -201,5 +211,19 @@ public class User {
 	 */
 	public void setReceivedFeedbacks(List<Feedback> receivedFeedbacks) {
 		this.receivedFeedbacks = receivedFeedbacks;
+	}
+
+	/**
+	 * @return the tokenStorage
+	 */
+	public TokenStorage getTokenStorage() {
+		return tokenStorage;
+	}
+
+	/**
+	 * @param tokenStorage the tokenStorage to set
+	 */
+	public void setTokenStorage(TokenStorage tokenStorage) {
+		this.tokenStorage = tokenStorage;
 	}
 }

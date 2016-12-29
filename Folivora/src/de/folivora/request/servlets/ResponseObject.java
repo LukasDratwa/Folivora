@@ -12,6 +12,7 @@ import com.google.gson.GsonBuilder;
 public class ResponseObject {
 	private int httpStatus;
 	private String msg;
+	private String token = null;
 	private transient HttpServletResponse response;
 	
 	private transient static final Logger logger = Logger.getLogger(ResponseObject.class);
@@ -24,6 +25,7 @@ public class ResponseObject {
 	
 	public void writeResponse() {
 		response.setStatus(this.httpStatus);
+		response.setContentType("application/json");
 		
 		try {
 			ServletOutputStream sos = response.getOutputStream();
@@ -70,5 +72,19 @@ public class ResponseObject {
 	 */
 	public void setMsg(String msg) {
 		this.msg = msg;
+	}
+
+	/**
+	 * @return the token
+	 */
+	public String getToken() {
+		return token;
+	}
+
+	/**
+	 * @param token the token to set
+	 */
+	public void setToken(String token) {
+		this.token = token;
 	}
 }
