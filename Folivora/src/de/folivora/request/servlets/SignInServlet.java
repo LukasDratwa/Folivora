@@ -86,7 +86,7 @@ public class SignInServlet extends HttpServlet {
 				ro.writeResponse();
 				logger.info("Successfully signed in user: " + user);
 			} else {
-				new ResponseObject(400, "Failed to sign in user! Wron credentials.", response).writeResponse();
+				new ResponseObject(400, "Failed to sign in user! Wrong credentials.", response).writeResponse();
 				logger.info("Faild to sign in: " + user);
 			}
 		} catch(JsonSyntaxException e) {

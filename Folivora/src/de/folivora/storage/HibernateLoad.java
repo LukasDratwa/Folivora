@@ -9,6 +9,7 @@ import org.hibernate.Session;
 
 import de.folivora.model.IdStorage;
 import de.folivora.model.SearchRequest;
+import de.folivora.model.TokenStorage;
 import de.folivora.model.Transaction;
 import de.folivora.model.User;
 
@@ -218,5 +219,31 @@ public class HibernateLoad {
 		}
 		
 		return srList;
+	}
+	
+	/**
+	 * Method to load a specific TokenStorage of the database
+	 * 
+	 * @param id - the TokenStorage id
+	 * @return - the loaded TokenStorage or null, if there is no TokenStorage with the given id in the database
+	 */
+	public static TokenStorage loadTokenStorage(long id) {
+		TokenStorage ts = null;
+		
+		try {
+			Session session = HibernateUtil.getSessionFactory().openSession();	
+	        ts = (TokenStorage) session.createQuery("from TokenStorage where id = '" + id + "'").uniqueResult();
+	        session.close();
+		} catch(HibernateException e) {
+			logger.error("Failed to load token storage with the id " + id + "!", e);
+		}
+		
+		if(ts == null) {
+			logger.warn("TokenStorage with ID " + id + " could not be loaded.");
+		} else {
+			logger.info("Loaded token storage: " + ts);
+		}
+		
+		return ts;
 	}
 }

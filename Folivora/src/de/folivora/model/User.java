@@ -35,7 +35,7 @@ public class User {
 	private UserCredit credit;
 	
 	@OneToOne(cascade=CascadeType.ALL, fetch=FetchType.EAGER, targetEntity=TokenStorage.class)
-	private TokenStorage tokenStorage = new TokenStorage(this.getId());
+	private TokenStorage tokenStorage;
 	
 	@Transient
 	private HttpSession session = null;
@@ -53,6 +53,7 @@ public class User {
 		this.email = email;
 		this.credit = userCredit;
 		this.userType = userType;
+		this.tokenStorage = new TokenStorage(id);
 	}
 	
 	/**
@@ -70,7 +71,7 @@ public class User {
 	@Override
 	public String toString() {
 		return "[name=\"" + this.getName() + "\", email=\"" + this.getEmail() + "\", "
-				+ "id=" + this.getId() + ", credit=" + this.credit + "]";
+				+ "id=" + this.getId() + ", credit=" + this.credit + ", httpSession=" + this.session + "]";
 	}
 	
 	/**

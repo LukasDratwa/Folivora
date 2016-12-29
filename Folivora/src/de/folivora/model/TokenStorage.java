@@ -26,6 +26,12 @@ public class TokenStorage {
 		
 	}
 	
+	@Override
+	public String toString() {
+		return "[UserRef=" + this.ownerId + ", created=" + this.dateCreation
+				+ ", expiration=" + this.dateExpiration + ", token=" + this.token + "]";
+	}
+	
 	/**
 	 * @return the token
 	 */

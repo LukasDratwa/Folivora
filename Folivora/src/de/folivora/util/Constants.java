@@ -7,7 +7,9 @@ public class Constants {
 	/**
 	 * Token will be valid for one hour.
 	 */
-	public static final long TOKEN_SESSION_EXPIRATION_TIME = 63600;
-	public static final int TOKEN_SESSION_LENGTH = 25;
+	public static final long TOKEN_SESSION_EXPIRATION_TIME = 3600000;
+	public static final int TOKEN_SESSION_LENGTH = 35;
 	public static final int TOKEN_SEARCHREQUEST_LENGTH = 5;
+	
+	public static final long UPDATE_THREAD_INTERVAL = 5000;
 }

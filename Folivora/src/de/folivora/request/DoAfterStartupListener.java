@@ -27,6 +27,7 @@ import de.folivora.storage.HibernateSave;
 */
 public class DoAfterStartupListener implements ServletContextListener {
 	private static final Logger logger = Logger.getLogger(DoAfterStartupListener.class);
+	private UpdateDaemon updateThread;
 	
 	@Override
 	public void contextInitialized(ServletContextEvent event) {
@@ -46,6 +47,10 @@ public class DoAfterStartupListener implements ServletContextListener {
 			
 			// 5. Check for corrupted data
 			// TODO
+			
+			// 6. Start update Thread
+			updateThread = new UpdateDaemon();
+			updateThread.start();
 			
 			// aManager.createAndSaveTestData();
 		} catch(Exception e) {
@@ -142,6 +147,9 @@ public class DoAfterStartupListener implements ServletContextListener {
 	@Override
 	public void contextDestroyed(ServletContextEvent event) {
 		try {
+			if(updateThread != null) {
+				updateThread.setRunning(false);
+			}
 		} catch(Exception e) {
 			logger.error("Error within shutdown!", e);
 		}

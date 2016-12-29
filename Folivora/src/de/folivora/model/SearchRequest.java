@@ -32,7 +32,7 @@ public class SearchRequest {
 	public SearchRequest(long id, String title, String description, String pathToDefaultImg,
 			Date possibleDelivery_from, Date possibleDelivery_to, Date preferredDelivery_from, Date preferredDelivery_to,
 			double costsAndReward, double lat, double lng,
-			boolean active, User userCreator) {
+			User userCreator) {
 		this.id = id;
 		this.title = title;
 		this.description = description;
@@ -44,15 +44,15 @@ public class SearchRequest {
 		this.costsAndReward = costsAndReward;
 		this.lat = lat;
 		this.lng = lng;
-		this.active = active;
+		this.active = false;
 		this.userCreator = userCreator;
 	}
 	
 	public SearchRequest(long id, String title, String description, String pathToDefaultImg,
 			Date[] possibleDelivery, Date[] preferredDelivery, double costsAndReward, double lat, double lng,
-			boolean active, User userCreator) {
+			User userCreator) {
 		this(id, title, description, pathToDefaultImg, possibleDelivery[0], possibleDelivery[1],
-				preferredDelivery[0], preferredDelivery[1], costsAndReward, lat, lng, active, userCreator);
+				preferredDelivery[0], preferredDelivery[1], costsAndReward, lat, lng, userCreator);
 	}
 	
 	/**

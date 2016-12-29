@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import de.folivora.model.Gender;
 import de.folivora.model.User;
 import de.folivora.model.UserCredit;
@@ -68,6 +70,18 @@ public class UserManager {
 		}
 		
 		return true;
+	}
+	
+	public List<User> getUsersWithSession(HttpSession session) {
+		List<User> users = new ArrayList<User>();
+		
+		for(User usr : dC.getUserList()) {
+			if(usr.getSession().equals(session)) {
+				users.add(usr);
+			}
+		}
+		
+		return users;
 	}
 	
 	public User getUserWithNameOrEmail(String nameOrEmail) {

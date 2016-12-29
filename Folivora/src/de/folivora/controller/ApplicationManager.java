@@ -116,7 +116,7 @@ public class ApplicationManager {
 	private SearchRequest factory_createSearchRequest(String title, String description, String pathToDefaultImg,
 			Date[] possibleDelivery, Date[] preferredDelivery, double costsAndReward, long lat, long lng, User userCreator) {
 		return new SearchRequest(dC.getIdStorage().getNewSearchRequestId(), title, description, pathToDefaultImg,
-				possibleDelivery, preferredDelivery, costsAndReward, lat, lng, true, userCreator);
+				possibleDelivery, preferredDelivery, costsAndReward, lat, lng, userCreator);
 	}
 	
 	public void createAndSaveTestData() {
