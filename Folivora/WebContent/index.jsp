@@ -28,7 +28,7 @@
           <div class="collapse navbar-collapse" id="navbar-ex-collapse">
             <ul class="nav navbar-nav navbar-right">
               <li>
-                <a href="#">WebApp</a>
+                <a href="webapp.jsp">WebApp</a>
               </li>
               <li>
                 <a id="navbar-benefits" href="#benefits" onclick="scrollTo('#section-benefits', 1500)">Leistungen</a>
