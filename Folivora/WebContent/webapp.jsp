@@ -6,12 +6,49 @@
     <title>Folivora - Webapp</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script type="text/javascript" src="res/js/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="res/js/jquery.validate.min.js"></script>
     <script type="text/javascript" src="res/js/bootstrap.min-3.3.7.js"></script>
     <link href="res/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="res/css/bootstrap-pigendo-default-theme.css" rel="stylesheet" type="text/css">
-    <script type="text/javascript" src="res/js/folivora.js"></script>
+    <script type="text/javascript" src="res/js/folivora-utility.js"></script>
+    <script type="text/javascript" src="res/js/folivora-signin.js"></script>
+    <script type="text/javascript" src="res/js/notify.min.js"></script>
     <link href="res/css/folivora.css" rel="stylesheet" type="text/css">
-  </head><body>
+  </head>
+  
+  <body>
+  	<div id="login" class="modal fade" role="dialog">
+	<div class="modal-dialog">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header form-group custom-background-orange-dark">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Login</h4>
+			</div>
+				
+			<div class="modal-body">
+  				<form role="form" id="loginForm"  method="post">
+  					<div>
+						<label for="loginform-username">Nutzername:</label>
+						<input name="username" class="form-control" id="loginform-username" placeholder="Nutzername oder email eingeben" >
+					</div>
+ 					
+					<div>
+						<label for="loginform-password">Passwort:</label>
+						<input name="password" type="password" class="form-control" id="loginform-password" placeholder="Passwort eingeben">
+					</div>
+  				</form>
+			</div>
+				
+			<div class="modal-footer">
+				<a href="signup.jsp" style="float:left;">Registrieren</a>
+				<button type="submit" id="loginButton" class="btn btn-default">Login</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+	</div>
+  
     <nav class="navbar navbar-default">
       <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
@@ -33,6 +70,7 @@
             <li>
               <a href="#">Link</a>
             </li>
+            <li>
             <!-- <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
               <ul class="dropdown-menu">
@@ -67,7 +105,7 @@
               <a href="index.jsp">About</a>
             </li>
             <li>
-              <a href="#">Login</a>
+          		<a href="" id="btn-show-loginform" class="" data-toggle="modal" data-target="#login">Login</a>
             </li>
           </ul>
         </div>

@@ -19,6 +19,7 @@ import de.folivora.controller.UserManager;
 import de.folivora.model.User;
 import de.folivora.request.AccessLayer;
 import de.folivora.util.Constants;
+import de.folivora.util.GsonUtil;
 
 /** 
  * Servlet to allow users to make an account for folivora
@@ -67,7 +68,7 @@ public class SignUpServlet extends HttpServlet {
 		}
 		
 		// Map inputdata
-		Gson gson = new Gson();
+		Gson gson = GsonUtil.getGsonDateAsLongHandling();
 		User user = null;
 		try {
 			user = gson.fromJson(sB.toString(), User.class);

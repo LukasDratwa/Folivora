@@ -9,9 +9,13 @@
     <script type="text/javascript" src="res/js/bootstrap.min-3.3.7.js"></script>
     <link href="res/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="res/css/bootstrap-pigendo-default-theme.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="res/js/folivora-utility.js"></script>
     <script type="text/javascript" src="res/js/folivora.js"></script>
+    <script type="text/javascript" src="res/js/notify.min.js"></script>
     <link href="res/css/folivora.css" rel="stylesheet" type="text/css">
-  </head><body>
+  </head>
+  
+  <body>
     <div class="cover">
       <div class="navbar">
         <div class="container">
@@ -190,4 +194,6 @@
         </div>
       </div>
     </div>
-</body></html>
+</body>
+
+</html>

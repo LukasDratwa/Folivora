@@ -20,8 +20,6 @@ public class UpdateDaemon extends Thread {
 		DataContainer dC = aManager.getdC();
 		
 		while(this.isRunning) {
-			logger.info("Started new update circle.");
-			
 			// 1. Check for in-/ active SearchRequests
 			Date actDate = new Date();
 			for(SearchRequest sr : dC.getSearchRequestList()) {
