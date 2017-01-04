@@ -39,8 +39,6 @@ public class ApplicationManager {
 		return getApplicationManagerInstance(null);
 	}
 	
-	
-	
 	public Feedback createAndSaveFeedback(Rating rating, String description,
 			User feedbackCreator, Transaction referencedTransaction) {
 		Feedback f = factory_createFeedback(rating, description, feedbackCreator, referencedTransaction);

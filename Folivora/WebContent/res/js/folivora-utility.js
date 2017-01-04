@@ -67,3 +67,10 @@ function b64EncodeUnicode(str) {
         return String.fromCharCode('0x' + p1);
     }));
 }
+
+// From: http://stackoverflow.com/questions/4060004/calculate-age-in-javascript
+function calculateAge(birthday) { // birthday is a date
+    var ageDifMs = Date.now() - birthday.getTime();
+    var ageDate = new Date(ageDifMs); // miliseconds from epoch
+    return Math.abs(ageDate.getUTCFullYear() - 1970);
+}

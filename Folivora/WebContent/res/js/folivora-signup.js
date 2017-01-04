@@ -43,6 +43,12 @@ $(document).ready(function() {
 					birthday: new Date($("#signupform-birthday").val()).valueOf()
 			};
 			
+			// Only allow user +16 years
+			if(calculateAge(new Date($("#signupform-birthday").val())) < 16) {
+				$.notify("Leider darf diese Plattform erst ab 16 Jahren benutzt werden!", "error");
+				return;
+			}
+			
 			if(signUpObj.male && !signUpObj.female) {
 				signUpObj.gender = "MALE";
 			} else if(!signUpObj.male && signUpObj.female) {

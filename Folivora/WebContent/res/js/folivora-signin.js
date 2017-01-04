@@ -46,7 +46,7 @@ function initSignIn() {
 				$.notify("Login erfolgreich.", "success");
 				
 				setTimeout(function() {
-					window.location = "index.jsp";
+					window.location = "webapp.jsp";
 				}, 850);
 			} else {
 				

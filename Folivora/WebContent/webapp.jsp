@@ -10,10 +10,23 @@
     <script type="text/javascript" src="res/js/bootstrap.min-3.3.7.js"></script>
     <link href="res/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="res/css/bootstrap-pigendo-default-theme.css" rel="stylesheet" type="text/css">
+    <link href="res/css/folivora.css" rel="stylesheet" type="text/css">
+    
+    <script type="text/javascript" src="res/js/moment.min.js"></script>
+    <link href="res/css/daterangepicker.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="res/js/daterangepicker.js"></script>
+    
+    <script type="text/javascript" src="res/js/notify.min.js"></script>
+    
     <script type="text/javascript" src="res/js/folivora-utility.js"></script>
     <script type="text/javascript" src="res/js/folivora-signin.js"></script>
-    <script type="text/javascript" src="res/js/notify.min.js"></script>
-    <link href="res/css/folivora.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="res/js/folivora-webapp.js"></script>
+    
+    <script>
+    	$(document).ready(function() {
+    		<%@ include file="customizeNavbar.jsp" %>
+    	});
+    </script>
   </head>
   
   <body>
@@ -65,7 +78,7 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
             <li class="active">
-              <a href="#">Link <span class="sr-only">(current)</span></a>
+              <a href="#">WebApp <span class="sr-only">(current)</span></a>
             </li>
             <li>
               <a href="#">Link</a>
@@ -100,7 +113,7 @@
             </div>
             <button type="submit" class="btn btn-default">Submit</button>
           </form>-->
-          <ul class="nav navbar-nav navbar-right">
+          <ul class="nav navbar-nav navbar-right" id="navbar-right-ul">
             <li>
               <a href="index.jsp">About</a>
             </li>
@@ -113,6 +126,61 @@
       </div>
       <!-- /.container-fluid -->
     </nav>
-  
-
+    
+    
+    
+    <div class="container">
+    	<div class="row">
+    		<div class="col-md-10" id="webapp-map-container">
+    			<div id="webapp-map-container"></div>
+    			<div id="webapp-map"></div>
+    		</div>
+    		
+    		<div class="col-md-2" id="webapp-map-details-container">
+    			<button type="button" id="btn-new-searchrequest" class="btn btn-success">Neue Suchanfrage</button>
+    		
+    			<form role="form" id="srform"  method="post">
+					<div class="form-group">
+						<label for="title">Titel:</label>
+						<input name="title" class="form-control" id="srform-title" placeholder="Ttel eingeben" required>
+					</div>
+					<div class="form-group">
+						<label for="description">Beschreibung:</label>
+						<input name="description" class="form-control" id="srform-description" placeholder="Beschreibung eingeben" required>
+					</div>
+					<div class="form-group">
+						<label for="address">Lieferadresse:</label>
+						<input name="address" class="form-control" id="srform-address" placeholder="Adresse eingeben" required>
+					</div>
+					<div class="form-group">
+						<label for="daterange-possible">Möglicher Lieferzeitraum:</label>
+						<input name="daterange-possible" id="srform-delivery-possible" required>
+					</div>
+					
+					<!-- <div class="form-group">
+						<label for="forename">Präferierter Lieferzeitraum:</label>
+						<input name="daterange">
+					</div>-->
+					
+					<div class="form-group">
+						<label for="maxcosts">Kosten:</label>
+						<input min="1.00" type="number" name="maxcosts" class="form-control" id="srform-maxcosts" placeholder="Max. Kosten" required>
+					</div>
+					
+					<div class="form-group">
+						<label for="charges">Gebühren:</label>
+						<input type="number" name="charges" class="form-control" id="srform-charges" placeholder="Gebühren" disabled>
+					</div>
+					
+					<div class="form-group">
+						<label for="final-costs">Gesamtkosten:</label>
+						<input type="number" name="final-costs" class="form-control" id="srform-final-costs" placeholder="Gesamtkosten" disabled>
+					</div>
+				</form>
+    		</div>
+    	</div>
+    </div>
+    
+    
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB-BsbTc5WFULPD9m4QAXOdolIq0za7QOo&callback=initMap"></script>
 </body></html>

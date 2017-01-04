@@ -72,16 +72,14 @@ public class UserManager {
 		return true;
 	}
 	
-	public List<User> getUsersWithSession(HttpSession session) {
-		List<User> users = new ArrayList<User>();
-		
+	public User getUserWithSession(HttpSession session) {
 		for(User usr : dC.getUserList()) {
-			if(usr.getSession().equals(session)) {
-				users.add(usr);
+			if(usr.getSession() != null && usr.getSession().equals(session)) {
+				return usr;
 			}
 		}
 		
-		return users;
+		return null;
 	}
 	
 	public User getUserWithNameOrEmail(String nameOrEmail) {
