@@ -103,16 +103,16 @@ public class ApplicationManager {
 	}
 	
 	public SearchRequest createAndSaveSearchRequest(String title, String description, String pathToDefaultImg,
-			Date possibleDelivery_from, Date possibleDelivery_to, Date preferredDelivery_from, Date preferredDelivery_to,
+			Long possibleDelivery_from, Long possibleDelivery_to, Long preferredDelivery_from, Long preferredDelivery_to,
 			double costsAndReward, Double lat, Double lng, String address, User userCreator) {
-		Date[] possibleDelivery = {possibleDelivery_from, possibleDelivery_to};
-		Date[] preferredDelivery = {preferredDelivery_from, preferredDelivery_to};
+		Long[] possibleDelivery = {possibleDelivery_from, possibleDelivery_to};
+		Long[] preferredDelivery = {preferredDelivery_from, preferredDelivery_to};
 		return createAndSaveSearchRequest(title, description, pathToDefaultImg, possibleDelivery, preferredDelivery,
 				costsAndReward, lat, lng, address, userCreator);
 	}
 	
 	public SearchRequest createAndSaveSearchRequest(String title, String description, String pathToDefaultImg,
-			Date[] possibleDelivery, Date[] preferredDelivery, double costsAndReward, Double lat, Double lng, String address,
+			Long[] possibleDelivery, Long[] preferredDelivery, double costsAndReward, Double lat, Double lng, String address,
 			User userCreator) {
 		SearchRequest sr = factory_createSearchRequest(title, description, pathToDefaultImg, possibleDelivery,
 				preferredDelivery, costsAndReward, lat, lng, address, userCreator);
@@ -122,7 +122,7 @@ public class ApplicationManager {
 	}
 	
 	private SearchRequest factory_createSearchRequest(String title, String description, String pathToDefaultImg,
-			Date[] possibleDelivery, Date[] preferredDelivery, double costsAndReward, Double lat, Double lng, String address,
+			Long[] possibleDelivery, Long[] preferredDelivery, double costsAndReward, Double lat, Double lng, String address,
 			User userCreator) {
 		return new SearchRequest(dC.getIdStorage().getNewSearchRequestId(), title, description, pathToDefaultImg,
 				possibleDelivery, preferredDelivery, costsAndReward, lat, lng, address, userCreator);
@@ -137,8 +137,8 @@ public class ApplicationManager {
 		createAndSaveFeedback(Rating.BAD, "War schlecht, Lieferant kam viel zu spät!", u1, t1);
 		createAndSaveFeedback(Rating.VERY_BAD, "Kam nur 5 Minuten zu spät und er war super unfreundlich!", u2, t1);
 		
-		Date[] possibleDelivery = {new Date(), new Date()};
-		Date[] preferredDelivery = {new Date(), new Date()};
+		Long[] possibleDelivery = {new Date().getTime(), new Date().getTime()};
+		Long[] preferredDelivery = {new Date().getTime(), new Date().getTime()};
 		SearchRequest sr1 = createAndSaveSearchRequest("Suche Brot", "Bis Mittag Brot.", "",
 				possibleDelivery, preferredDelivery, 3.56, 0.0, 0.0, "Testweg 21", u1);
 		

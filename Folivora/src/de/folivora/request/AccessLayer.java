@@ -1,7 +1,5 @@
 package de.folivora.request;
 
-import java.util.Date;
-
 import javax.servlet.http.HttpSession;
 
 import de.folivora.controller.ApplicationManager;
@@ -24,7 +22,7 @@ public class AccessLayer {
 	}
 	
 	public static boolean createSearchRequest(String title, String description, String pathToDefaultImg,
-			Date possibleDelivery_from, Date possibleDelivery_to, Date preferredDelivery_from, Date preferredDelivery_to,
+			Long possibleDelivery_from, Long possibleDelivery_to, Long preferredDelivery_from, Long preferredDelivery_to,
 			double costsAndReward, Double lat, Double lng, String address, User userCreator, String token) {
 		
 		if(isValidToken(userCreator, token)) {

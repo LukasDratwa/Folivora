@@ -19,10 +19,15 @@ public class SearchRequest {
 	private String address;
 	private boolean active;
 	
-	private Date possibleDelivery_from,
+	private Long possibleDelivery_from,
 				 possibleDelivery_to,
 	   			 preferredDelivery_from,
 	   			 preferredDelivery_to;
+	
+	private String possibleDelivery_from_string,
+	 			   possibleDelivery_to_string,
+	 			   preferredDelivery_from_string,
+	 			   preferredDelivery_to_string;
 	
 	@OneToOne(targetEntity=User.class)
 	private User userCreator;
@@ -31,17 +36,25 @@ public class SearchRequest {
 	private User userStasisfier;
 	
 	public SearchRequest(long id, String title, String description, String pathToDefaultImg,
-			Date possibleDelivery_from, Date possibleDelivery_to, Date preferredDelivery_from, Date preferredDelivery_to,
-			double costsAndReward, double lat, double lng, String address,
+			Long  possibleDelivery_from, Long possibleDelivery_to, Long preferredDelivery_from, Long preferredDelivery_to,
+			double costsAndReward, Double lat, Double lng, String address,
 			User userCreator) {
 		this.id = id;
 		this.title = title;
 		this.description = description;
 		this.pathToDefaultImg = pathToDefaultImg;
 		this.possibleDelivery_from = possibleDelivery_from;
+		this.possibleDelivery_from_string = new Date(possibleDelivery_from).toString();
 		this.possibleDelivery_to = possibleDelivery_to;
+		this.possibleDelivery_to_string = new Date(possibleDelivery_to).toString();
 		this.preferredDelivery_from = preferredDelivery_from;
+		this.preferredDelivery_from_string = preferredDelivery_from != null
+												? new Date(preferredDelivery_from).toString()
+												: null;
 		this.preferredDelivery_to = preferredDelivery_to;
+		this.preferredDelivery_to_string = preferredDelivery_to != null
+												? new Date(preferredDelivery_to).toString()
+												: null;
 		this.costsAndReward = costsAndReward;
 		this.lat = lat;
 		this.lng = lng;
@@ -51,7 +64,7 @@ public class SearchRequest {
 	}
 	
 	public SearchRequest(long id, String title, String description, String pathToDefaultImg,
-			Date[] possibleDelivery, Date[] preferredDelivery, double costsAndReward, double lat, double lng,
+			Long[] possibleDelivery, Long[] preferredDelivery, double costsAndReward, Double lat, Double lng,
 			String address, User userCreator) {
 		this(id, title, description, pathToDefaultImg, possibleDelivery[0], possibleDelivery[1],
 				preferredDelivery[0], preferredDelivery[1], costsAndReward, lat, lng, address, userCreator);
@@ -204,62 +217,6 @@ public class SearchRequest {
 	}
 
 	/**
-	 * @return the possibleDelivery_from
-	 */
-	public Date getPossibleDelivery_from() {
-		return possibleDelivery_from;
-	}
-
-	/**
-	 * @param possibleDelivery_from the possibleDelivery_from to set
-	 */
-	public void setPossibleDelivery_from(Date possibleDelivery_from) {
-		this.possibleDelivery_from = possibleDelivery_from;
-	}
-
-	/**
-	 * @return the possibleDelivery_to
-	 */
-	public Date getPossibleDelivery_to() {
-		return possibleDelivery_to;
-	}
-
-	/**
-	 * @param possibleDelivery_to the possibleDelivery_to to set
-	 */
-	public void setPossibleDelivery_to(Date possibleDelivery_to) {
-		this.possibleDelivery_to = possibleDelivery_to;
-	}
-
-	/**
-	 * @return the preferredDelivery_from
-	 */
-	public Date getPreferredDelivery_from() {
-		return preferredDelivery_from;
-	}
-
-	/**
-	 * @param preferredDelivery_from the preferredDelivery_from to set
-	 */
-	public void setPreferredDelivery_from(Date preferredDelivery_from) {
-		this.preferredDelivery_from = preferredDelivery_from;
-	}
-
-	/**
-	 * @return the preferredDelivery_to
-	 */
-	public Date getPreferredDelivery_to() {
-		return preferredDelivery_to;
-	}
-
-	/**
-	 * @param preferredDelivery_to the preferredDelivery_to to set
-	 */
-	public void setPreferredDelivery_to(Date preferredDelivery_to) {
-		this.preferredDelivery_to = preferredDelivery_to;
-	}
-
-	/**
 	 * @return the userStasisfier
 	 */
 	public User getUserStasisfier() {
@@ -285,5 +242,117 @@ public class SearchRequest {
 	 */
 	public void setAddress(String address) {
 		this.address = address;
+	}
+
+	/**
+	 * @return the possibleDelivery_from
+	 */
+	public Long getPossibleDelivery_from() {
+		return possibleDelivery_from;
+	}
+
+	/**
+	 * @param possibleDelivery_from the possibleDelivery_from to set
+	 */
+	public void setPossibleDelivery_from(Long possibleDelivery_from) {
+		this.possibleDelivery_from = possibleDelivery_from;
+	}
+
+	/**
+	 * @return the possibleDelivery_to
+	 */
+	public Long getPossibleDelivery_to() {
+		return possibleDelivery_to;
+	}
+
+	/**
+	 * @param possibleDelivery_to the possibleDelivery_to to set
+	 */
+	public void setPossibleDelivery_to(Long possibleDelivery_to) {
+		this.possibleDelivery_to = possibleDelivery_to;
+	}
+
+	/**
+	 * @return the preferredDelivery_from
+	 */
+	public Long getPreferredDelivery_from() {
+		return preferredDelivery_from;
+	}
+
+	/**
+	 * @param preferredDelivery_from the preferredDelivery_from to set
+	 */
+	public void setPreferredDelivery_from(Long preferredDelivery_from) {
+		this.preferredDelivery_from = preferredDelivery_from;
+	}
+
+	/**
+	 * @return the preferredDelivery_to
+	 */
+	public Long getPreferredDelivery_to() {
+		return preferredDelivery_to;
+	}
+
+	/**
+	 * @param preferredDelivery_to the preferredDelivery_to to set
+	 */
+	public void setPreferredDelivery_to(Long preferredDelivery_to) {
+		this.preferredDelivery_to = preferredDelivery_to;
+	}
+
+	/**
+	 * @return the possibleDelivery_from_string
+	 */
+	public String getPossibleDelivery_from_string() {
+		return possibleDelivery_from_string;
+	}
+
+	/**
+	 * @param possibleDelivery_from_string the possibleDelivery_from_string to set
+	 */
+	public void setPossibleDelivery_from_string(String possibleDelivery_from_string) {
+		this.possibleDelivery_from_string = possibleDelivery_from_string;
+	}
+
+	/**
+	 * @return the possibleDelivery_to_string
+	 */
+	public String getPossibleDelivery_to_string() {
+		return possibleDelivery_to_string;
+	}
+
+	/**
+	 * @param possibleDelivery_to_string the possibleDelivery_to_string to set
+	 */
+	public void setPossibleDelivery_to_string(String possibleDelivery_to_string) {
+		this.possibleDelivery_to_string = possibleDelivery_to_string;
+	}
+
+	/**
+	 * @return the preferredDelivery_from_string
+	 */
+	public String getPreferredDelivery_from_string() {
+		return preferredDelivery_from_string;
+	}
+
+	/**
+	 * @param preferredDelivery_from_string the preferredDelivery_from_string to set
+	 */
+	public void setPreferredDelivery_from_string(String preferredDelivery_from_string) {
+		this.preferredDelivery_from_string = preferredDelivery_from_string;
+	}
+
+	/**
+	 * @return the preferredDelivery_to_string
+	 */
+	public String getPreferredDelivery_to_string() {
+		return preferredDelivery_to_string;
+	}
+
+	/**
+	 * @param preferredDelivery_to_string the preferredDelivery_to_string to set
+	 */
+	public void setPreferredDelivery_to_string(String preferredDelivery_to_string) {
+		this.preferredDelivery_to_string = preferredDelivery_to_string;
 	}
 }

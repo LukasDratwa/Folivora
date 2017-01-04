@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import de.folivora.controller.ApplicationManager;
 import de.folivora.controller.UserManager;
@@ -20,7 +21,6 @@ import de.folivora.model.SearchRequest;
 import de.folivora.model.User;
 import de.folivora.request.AccessLayer;
 import de.folivora.util.Constants;
-import de.folivora.util.GsonUtil;
 
 /**
  * Servlet implementation class NewSrServlet
@@ -65,7 +65,7 @@ public class NewSrServlet extends HttpServlet {
 		}
 		
 		// Map inputdata
-		Gson gson = GsonUtil.getGsonDateAsLongHandling();
+		Gson gson = new GsonBuilder().create();
 		ApplicationManager aManager = ApplicationManager.getApplicationManagerInstance();
 		try {
 			SearchRequest sr = gson.fromJson(sB.toString(), SearchRequest.class);

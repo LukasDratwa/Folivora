@@ -136,8 +136,8 @@ function initDateTimeRange() {
 	    "endDate": new Date(),
 	    "opens": "left"
 	}, function(start, end, label) {
-		webappDataObj.newSrObj.possibleDelivery_from = new Date(start.format('DD.MM.YYYY hh:mm')).valueOf();
-		webappDataObj.newSrObj.possibleDelivery_to = new Date(end.format('DD.MM.YYYY hh:mm')).valueOf();
+		webappDataObj.newSrObj.possibleDelivery_from = new Date(start).valueOf();
+		webappDataObj.newSrObj.possibleDelivery_to = new Date(end).valueOf();
 		
 		console.log("New date range selected:" + start.format('DD.MM.YYYY hh:mm') + ' to ' + end.format('DD.MM.YYYY hh:mm') + ' (predefined range: ' + label + ")");
 	});

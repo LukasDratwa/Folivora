@@ -1,12 +1,11 @@
 package de.folivora.request;
 
-import java.util.Date;
-
 import org.apache.log4j.Logger;
 
 import de.folivora.controller.ApplicationManager;
 import de.folivora.controller.DataContainer;
 import de.folivora.model.SearchRequest;
+import de.folivora.storage.HibernateUpdate;
 import de.folivora.util.Constants;
 
 public class UpdateDaemon extends Thread {
@@ -21,16 +20,19 @@ public class UpdateDaemon extends Thread {
 		
 		while(this.isRunning) {
 			// 1. Check for in-/ active SearchRequests
-			Date actDate = new Date();
+			long actDate = System.currentTimeMillis();
 			
 			for(SearchRequest sr : dC.getSearchRequestList()) {
 				System.out.println(actDate + " | " + sr.getPossibleDelivery_from() + " - " + sr.getPossibleDelivery_to());
 				
-				if(sr.getPossibleDelivery_from().after(actDate)
-						&& sr.getPossibleDelivery_to().before(actDate)) {
+				if(!sr.isActive()
+						&& sr.getPossibleDelivery_from() < actDate
+						&& sr.getPossibleDelivery_to() > actDate) {
 					sr.setActive(true);
-				} else {
+					HibernateUpdate.updateObject(sr);
+				} else if(sr.isActive()) {
 					sr.setActive(false);
+					HibernateUpdate.updateObject(sr);
 				}
 			}
 			
