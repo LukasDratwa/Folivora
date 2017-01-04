@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script type="text/javascript" src="res/js/jquery-3.1.1.min.js"></script>
     <script type="text/javascript" src="res/js/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="res/js/jquery.cookie.plugin.js"></script>
     <script type="text/javascript" src="res/js/bootstrap.min-3.3.7.js"></script>
     <link href="res/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="res/css/bootstrap-pigendo-default-theme.css" rel="stylesheet" type="text/css">

@@ -6,6 +6,7 @@
  * A cache-variable to store the status-code of the last REST-Call
  */
 var lastRestStatus = null;
+var lastResponse = null;
 
 /**
  * Method to create a REST-call. The returned status will be stored 
@@ -27,6 +28,7 @@ function createRest(method, servlet, payload) {
 	http_request.onreadystatechange = function() {
 		if (http_request.readyState == 4) {
 			lastRestStatus = http_request.status;
+			lastResponse = JSON.parse(http_request.response);
 			return http_request;
 		}
 	}

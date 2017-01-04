@@ -112,15 +112,15 @@ public class DoAfterStartupListener implements ServletContextListener {
 		}
 		
 		if(! foundAdmin) {
-			uManager.createAndSaveUser("admin", "admin", null, null, "", 0, UserType.ADMIN);
+			uManager.createAndSaveUser("admin", "admin", null, null, "", 0, UserType.ADMIN, "");
 		}
 		
 		if(! foundFolivoraUser) {
-			uManager.createAndSaveUser("folivora", "folivora", null, null, "", 0, UserType.FOLIVORA);
+			uManager.createAndSaveUser("folivora", "folivora", null, null, "", 0, UserType.FOLIVORA, "");
 		}
 		
 		if(! foundPaypalUser) {
-			uManager.createAndSaveUser("paypal", "paypal", null, null, "", 0, UserType.PAYPAL);
+			uManager.createAndSaveUser("paypal", "paypal", null, null, "", 0, UserType.PAYPAL, "");
 		}
 	}
 	

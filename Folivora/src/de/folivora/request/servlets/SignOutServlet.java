@@ -12,13 +12,14 @@ import javax.servlet.http.HttpServletResponse;
 import de.folivora.controller.ApplicationManager;
 import de.folivora.controller.UserManager;
 import de.folivora.model.User;
+import de.folivora.util.Constants;
 
 /**
  * Servlet implementation class SignOutServlet
  */
 @WebServlet("/signoutservlet")
 public class SignOutServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = Constants.SERIAL_VERSION_UID;
        
     /**
      * @see HttpServlet#HttpServlet()

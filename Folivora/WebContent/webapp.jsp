@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script type="text/javascript" src="res/js/jquery-3.1.1.min.js"></script>
     <script type="text/javascript" src="res/js/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="res/js/jquery.cookie.plugin.js"></script>
     <script type="text/javascript" src="res/js/bootstrap.min-3.3.7.js"></script>
     <link href="res/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="res/css/bootstrap-pigendo-default-theme.css" rel="stylesheet" type="text/css">
@@ -127,12 +128,9 @@
       <!-- /.container-fluid -->
     </nav>
     
-    
-    
     <div class="container">
     	<div class="row">
     		<div class="col-md-10" id="webapp-map-container">
-    			<div id="webapp-map-container"></div>
     			<div id="webapp-map"></div>
     		</div>
     		
@@ -148,10 +146,14 @@
 						<label for="description">Beschreibung:</label>
 						<input name="description" class="form-control" id="srform-description" placeholder="Beschreibung eingeben" required>
 					</div>
-					<div class="form-group">
-						<label for="address">Lieferadresse:</label>
-						<input name="address" class="form-control" id="srform-address" placeholder="Adresse eingeben" required>
+					<label for="address" style="width: 100%;">Lieferadresse:</label>
+					<div class="input-group">
+					   <input type="text" name="address" id="srform-address" class="form-control" placeholder="Adresse wählen" required>
+					   <span class="input-group-btn">
+					        <button class="btn btn-default" id="btn-select-address" type="button">+</button>
+					   </span>
 					</div>
+					
 					<div class="form-group">
 						<label for="daterange-possible">Möglicher Lieferzeitraum:</label>
 						<input name="daterange-possible" id="srform-delivery-possible" required>
@@ -164,7 +166,7 @@
 					
 					<div class="form-group">
 						<label for="maxcosts">Kosten:</label>
-						<input min="1.00" type="number" name="maxcosts" class="form-control" id="srform-maxcosts" placeholder="Max. Kosten" required>
+						<input min="1.00" step="0.1" type="number" name="maxcosts" class="form-control" id="srform-maxcosts" placeholder="Max. Kosten" required>
 					</div>
 					
 					<div class="form-group">
@@ -176,6 +178,8 @@
 						<label for="final-costs">Gesamtkosten:</label>
 						<input type="number" name="final-costs" class="form-control" id="srform-final-costs" placeholder="Gesamtkosten" disabled>
 					</div>
+					
+					<input type="submit" value="Submit" class="btn btn-default">
 				</form>
     		</div>
     	</div>

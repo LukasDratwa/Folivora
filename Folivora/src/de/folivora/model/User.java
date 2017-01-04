@@ -24,6 +24,7 @@ public class User {
 	private String password;
 	private Date birthday;
 	private String email;
+	private String hometown;
 	
 	@Enumerated(EnumType.STRING)
 	private Gender gender;
@@ -44,7 +45,7 @@ public class User {
 	private List<Feedback> receivedFeedbacks = new ArrayList<Feedback>();
 	
 	public User(long id, String name, String password, Date birthday, Gender gender,
-			String email, UserCredit userCredit, UserType userType) {
+			String email, UserCredit userCredit, UserType userType, String hometown) {
 		this.id = id;
 		this.name = name;
 		this.password = password;
@@ -54,6 +55,7 @@ public class User {
 		this.credit = userCredit;
 		this.userType = userType;
 		this.tokenStorage = new TokenStorage(id);
+		this.hometown = hometown;
 	}
 	
 	/**
@@ -226,5 +228,19 @@ public class User {
 	 */
 	public void setTokenStorage(TokenStorage tokenStorage) {
 		this.tokenStorage = tokenStorage;
+	}
+
+	/**
+	 * @return the hometown
+	 */
+	public String getHometown() {
+		return hometown;
+	}
+
+	/**
+	 * @param hometown the hometown to set
+	 */
+	public void setHometown(String hometown) {
+		this.hometown = hometown;
 	}
 }

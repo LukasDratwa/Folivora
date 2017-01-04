@@ -16,27 +16,24 @@ import com.google.gson.Gson;
 
 import de.folivora.controller.ApplicationManager;
 import de.folivora.controller.UserManager;
+import de.folivora.model.SearchRequest;
 import de.folivora.model.User;
 import de.folivora.request.AccessLayer;
 import de.folivora.util.Constants;
 import de.folivora.util.GsonUtil;
 
-/** 
- * Servlet to allow users to make an account for folivora
- * <br><br>
- * ---------------------------------------------------------------<br>
- *
- * @author Lukas Dratwa
-*/
-@WebServlet("/signupservlet")
-public class SignUpServlet extends HttpServlet {
+/**
+ * Servlet implementation class NewSrServlet
+ */
+@WebServlet("/newsrservlet")
+public class NewSrServlet extends HttpServlet {
 	private static final long serialVersionUID = Constants.SERIAL_VERSION_UID;
-	private static final Logger logger = Logger.getLogger(SignUpServlet.class);
-
-	/**
+	private static final Logger logger = Logger.getLogger(NewSrServlet.class);
+       
+    /**
      * @see HttpServlet#HttpServlet()
      */
-    public SignUpServlet() {
+    public NewSrServlet() {
         super();
     }
 
@@ -69,26 +66,29 @@ public class SignUpServlet extends HttpServlet {
 		
 		// Map inputdata
 		Gson gson = GsonUtil.getGsonDateAsLongHandling();
-		User user = null;
+		ApplicationManager aManager = ApplicationManager.getApplicationManagerInstance();
 		try {
-			user = gson.fromJson(sB.toString(), User.class);
-				
-			if(user.getName() != null && user.getEmail() != null && user.getPassword() != null) {
-				ApplicationManager aManager = ApplicationManager.getApplicationManagerInstance();
+			SearchRequest sr = gson.fromJson(sB.toString(), SearchRequest.class);
+			
+			if(sr.getLat() != null && sr.getLng() !=  null && sr.getTitle() !=  null
+					&& sr.getPossibleDelivery_from() !=  null && sr.getPossibleDelivery_to() !=  null) {
 				UserManager uManager = aManager.getuManager();
-				if(uManager.isUniqueUser(user)) {
-					AccessLayer.signUp(user, request.getSession());
-					ResponseObject ro = new ResponseObject(200, "Successfully signed up!", response);
-					ro.setToken(uManager.getUserWithNameOrEmail(user.getName()).getTokenStorage().getToken());
-					ro.writeResponse();
-					logger.info("Successfully signed up user: " + user);
+				User userCreator = uManager.getUserWithSession(request.getSession());
+				
+				if(userCreator != null) {
+					AccessLayer.createSearchRequest(sr.getTitle(), sr.getDescription(), sr.getPathToDefaultImg(),
+							sr.getPossibleDelivery_from(), sr.getPossibleDelivery_to(), sr.getPreferredDelivery_from(),
+							sr.getPreferredDelivery_to(), sr.getCostsAndReward(), sr.getLat(), sr.getLng(), sr.getAddress(),
+							userCreator, "");
+					new ResponseObject(200, "Successfully created searchrequest.", response).writeResponse();
 				} else {
-					new ResponseObject(400, "User exists already! Change \"name\" and/or \"email\"", response).writeResponse();
-					logger.warn("User exists already, cant save user: " + user);
+					new ResponseObject(403, "Failed to create searchrequest. Please sign in first!", response).writeResponse();
+					logger.info("Failed to save new searchrequest. User wasn't logged in!");
 				}
 			} else {
-				new ResponseObject(400, "Missing credentials \"name\", \"password\" and/or \"email\"", response).writeResponse();
-				logger.info("Missing data to create new user.");
+				new ResponseObject(400, "Missing credentials \"lat\", \"lng\", \"title\","
+						+ "\"possibleDelivery_from\" and/or \"possibleDelivery_to\"", response).writeResponse();
+				logger.info("Missing data to create new searchrequest.");
 			}
 		} catch(Exception e) {
 			new ResponseObject(500, "Failed to map input with gson!", response).writeResponse();

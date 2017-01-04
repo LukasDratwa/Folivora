@@ -1,24 +1,28 @@
 var webappDataObj = {
 	newSearchRequestClicked: false,
-	newSrObj: {
-		title: "",
-		description: "",
-		costsAndReward: 0.0,
-		lat: 0,
-		lng: 0,
-		address: "",
-		possibleDelivery: [],
-		preferredDelivery: []
-	},
+	newSrObj: {},
 	updateNewSrObj: function() {
 		this.newSrObj.title = $("#srform-title").val();
 		this.newSrObj.description = $("#srform-description").val();
 		this.newSrObj.costsAndReward = $("#srform-final-costs").val();
+	},
+	resetNewSrObj: function() {
+		this.newSrObj.title = "";
+		this.newSrObj.description = "";
+		this.newSrObj.costsAndReward = 0.0;
+		this.newSrObj.lat = 0;
+		this.newSrObj.lng = 0;
+		this.newSrObj.address = "";
+		this.newSrObj.possibleDelivery_from = null;
+		this.newSrObj.possibleDelivery_to = null;
+		this.newSrObj.preferredDelivery_from = null;
+		this.newSrObj.preferredDelivery_to = null;
 	}
 };
+webappDataObj.resetNewSrObj();
 
 $(document).ready(function() {
-	$("#btn-new-searchrequest").click(function() {
+	$("#btn-select-address").click(function() {
 		webappDataObj.newSearchRequestClicked = true;
 	});
 	initDateTimeRange();
@@ -26,9 +30,35 @@ $(document).ready(function() {
 	$("#srform-maxcosts").keyup(function() {
 		updateInputCostFields();
 	});
+	
+	$("#srform").submit(function(e) {
+		webappDataObj.updateNewSrObj();
+		webappDataObj.newSrObj.token = $.cookie("token");
+		
+		createRest("POST", "newsrservlet", JSON.stringify(webappDataObj.newSrObj));
+		
+		setTimeout(function() {
+			if(lastRestStatus != null && lastRestStatus == 201 || lastRestStatus == 200) {
+				$.notify("Gesuch \"" + webappDataObj.newSrObj.title + "\" erfolgreich erstellt.", "success");
+				
+				console.log("Created new search request: " , webappDataObj.newSrObj);
+				
+				// webappDataObj.resetNewSrObj();
+				
+				// document.getElementById("srform").reset();
+			} else {
+				$.notify("Fehler beim Erstellen des Gesuchs!", "error");
+			}
+			
+			lastRestStatus = null;
+		}, 1000);
+		
+		
+		e.preventDefault();
+	});
 });
 
-function addSearchRequest(lat, lng, address) {
+function updateGeoData(lat, lng, address) {
 	if(webappDataObj.newSearchRequestClicked) {
 		webappDataObj.newSearchRequestClicked = false;
 		
@@ -36,6 +66,7 @@ function addSearchRequest(lat, lng, address) {
 		webappDataObj.newSrObj.lng = lng;
 		if(address != null) {
 			webappDataObj.newSrObj.address = address;
+			$("#srform-address").val(address);
 		}
 		console.log(webappDataObj.newSrObj);
 	}
@@ -93,28 +124,10 @@ function initDateTimeRange() {
 	        "toLabel": "Bis",
 	        "customRangeLabel": "Individuell",
 	        "weekLabel": "W",
-	        "daysOfWeek": [
-	            "So",
-	            "Mo",
-	            "Di",
-	            "Mi",
-	            "Do",
-	            "Fr",
-	            "Sa"
-	        ],
+	        "daysOfWeek": ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"],
 	        "monthNames": [
-	            "Januar",
-	            "Feburar",
-	            "März",
-	            "April",
-	            "Mai",
-	            "Juni",
-	            "Juli",
-	            "August",
-	            "September",
-	            "Oktober",
-	            "November",
-	            "Dezember"
+	            "Januar", "Feburar", "März", "April", "Mai", "Juni", "Juli",
+	            "August", "September", "Oktober", "November", "Dezember"
 	        ],
 	        "firstDay": 1
 	    },
@@ -123,15 +136,15 @@ function initDateTimeRange() {
 	    "endDate": new Date(),
 	    "opens": "left"
 	}, function(start, end, label) {
-		webappDataObj.newSrObj.possibleDelivery[0] = new Date(start.format('DD.MM.YYYY hh:mm'));
-		webappDataObj.newSrObj.possibleDelivery[1] = new Date(start.format('DD.MM.YYYY hh:mm'));
+		webappDataObj.newSrObj.possibleDelivery_from = new Date(start.format('DD.MM.YYYY hh:mm')).valueOf();
+		webappDataObj.newSrObj.possibleDelivery_to = new Date(end.format('DD.MM.YYYY hh:mm')).valueOf();
 		
 		console.log("New date range selected:" + start.format('DD.MM.YYYY hh:mm') + ' to ' + end.format('DD.MM.YYYY hh:mm') + ' (predefined range: ' + label + ")");
 	});
 }
 
 function initMap() {
-	var myLatlng = new google.maps.LatLng(48.874497,8.655883);
+	var myLatlng = new google.maps.LatLng(49.874505,8.655980);
 	var imagePath = "http://maps.google.com/mapfiles/ms/icons/green-dot.png" // blue-dot, orange oder red-dot
 	var mapOptions = {
 		zoom: 15,
@@ -171,14 +184,22 @@ function initMap() {
 		  }, function(results, status) {
 		    if (status == google.maps.GeocoderStatus.OK) {
 		      if (results[0]) {
-		        addSearchRequest(lat, lng, results[0].formatted_address);
+		        updateGeoData(lat, lng, results[0].formatted_address);
 		      } else {
-		    	  addSearchRequest(lat, lng, null);
+		    	  updateGeoData(lat, lng, null);
 		      }
 		    } else {
-		    	addSearchRequest(lat, lng, null);
+		    	updateGeoData(lat, lng, null);
 		    }
 		  });
+	});
+	
+	google.maps.event.addListener(map, 'mousemove', function(event) {
+		if(webappDataObj.newSearchRequestClicked) {
+			map.setOptions({ draggableCursor: 'crosshair' });
+		} else {
+			map.setOptions({ draggableCursor: 'default' });
+		}
 	});
 	
 	//Resize Function

@@ -125,15 +125,15 @@ public class UserManager {
 	}
 	
 	public User createAndSaveUser(String name, String pwd, Date birthday, Gender gender,
-			String email, double initialBalance, UserType userType) {
-		User u = factory_createUser(name, pwd, birthday, gender, email, initialBalance, userType);
+			String email, double initialBalance, UserType userType, String hometown) {
+		User u = factory_createUser(name, pwd, birthday, gender, email, initialBalance, userType, hometown);
 		HibernateSave.saveOrUpdateObject(u);
 		return u;
 	}
 	
 	protected User factory_createUser(String name, String pwd, Date birthday, Gender gender,
-			String email, double initialBalance, UserType userType) {
-		User u = new User(dC.getIdStorage().getNewUserId(), name, pwd, birthday, gender, email, null, userType);
+			String email, double initialBalance, UserType userType, String hometown) {
+		User u = new User(dC.getIdStorage().getNewUserId(), name, pwd, birthday, gender, email, null, userType, hometown);
 		u.setCredit(new UserCredit(dC.getIdStorage().getNewUserCreditId(), initialBalance, u));
 		dC.getUserList().add(u);
 		return u;

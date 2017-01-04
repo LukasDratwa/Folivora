@@ -103,23 +103,34 @@ public class ApplicationManager {
 	}
 	
 	public SearchRequest createAndSaveSearchRequest(String title, String description, String pathToDefaultImg,
-			Date[] possibleDelivery, Date[] preferredDelivery, double costsAndReward, long lat, long lng, User userCreator) {
+			Date possibleDelivery_from, Date possibleDelivery_to, Date preferredDelivery_from, Date preferredDelivery_to,
+			double costsAndReward, Double lat, Double lng, String address, User userCreator) {
+		Date[] possibleDelivery = {possibleDelivery_from, possibleDelivery_to};
+		Date[] preferredDelivery = {preferredDelivery_from, preferredDelivery_to};
+		return createAndSaveSearchRequest(title, description, pathToDefaultImg, possibleDelivery, preferredDelivery,
+				costsAndReward, lat, lng, address, userCreator);
+	}
+	
+	public SearchRequest createAndSaveSearchRequest(String title, String description, String pathToDefaultImg,
+			Date[] possibleDelivery, Date[] preferredDelivery, double costsAndReward, Double lat, Double lng, String address,
+			User userCreator) {
 		SearchRequest sr = factory_createSearchRequest(title, description, pathToDefaultImg, possibleDelivery,
-				preferredDelivery, costsAndReward, lat, lng, userCreator);
+				preferredDelivery, costsAndReward, lat, lng, address, userCreator);
 		HibernateSave.saveOrUpdateObject(sr);
 		dC.getSearchRequestList().add(sr);
 		return sr;
 	}
 	
 	private SearchRequest factory_createSearchRequest(String title, String description, String pathToDefaultImg,
-			Date[] possibleDelivery, Date[] preferredDelivery, double costsAndReward, long lat, long lng, User userCreator) {
+			Date[] possibleDelivery, Date[] preferredDelivery, double costsAndReward, Double lat, Double lng, String address,
+			User userCreator) {
 		return new SearchRequest(dC.getIdStorage().getNewSearchRequestId(), title, description, pathToDefaultImg,
-				possibleDelivery, preferredDelivery, costsAndReward, lat, lng, userCreator);
+				possibleDelivery, preferredDelivery, costsAndReward, lat, lng, address, userCreator);
 	}
 	
 	public void createAndSaveTestData() {
-		User u1 = uManager.createAndSaveUser("Lukas Test", "123", new Date(), Gender.MALE, "test@das.de", 100, UserType.NORMAL);
-		User u2 = uManager.createAndSaveUser("Hubertus Maximus", "123", new Date(), Gender.Female, "hubert@das.de", 100, UserType.NORMAL);
+		User u1 = uManager.createAndSaveUser("Lukas Test", "123", new Date(), Gender.MALE, "test@das.de", 100, UserType.NORMAL, "Aachen");
+		User u2 = uManager.createAndSaveUser("Hubertus Maximus", "123", new Date(), Gender.Female, "hubert@das.de", 100, UserType.NORMAL, "Aachen");
 		
 		Transaction t1 = createAndSaveTransaction(50, u1, u2, uManager.getTrimmedToken(true, 5, ""));
 		
@@ -129,7 +140,7 @@ public class ApplicationManager {
 		Date[] possibleDelivery = {new Date(), new Date()};
 		Date[] preferredDelivery = {new Date(), new Date()};
 		SearchRequest sr1 = createAndSaveSearchRequest("Suche Brot", "Bis Mittag Brot.", "",
-				possibleDelivery, preferredDelivery, 3.56, 0, 0, u1);
+				possibleDelivery, preferredDelivery, 3.56, 0.0, 0.0, "Testweg 21", u1);
 		
 		sr1.setUserStasisfier(u2);
 		HibernateUpdate.updateObject(sr1);

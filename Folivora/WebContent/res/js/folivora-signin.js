@@ -45,6 +45,9 @@ function initSignIn() {
 			if(lastRestStatus != null && lastRestStatus == 200) {
 				$.notify("Login erfolgreich.", "success");
 				
+				$.removeCookie("token");
+				$.cookie("token", lastResponse.token);
+				
 				setTimeout(function() {
 					window.location = "webapp.jsp";
 				}, 850);

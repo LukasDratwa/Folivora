@@ -22,7 +22,10 @@ public class UpdateDaemon extends Thread {
 		while(this.isRunning) {
 			// 1. Check for in-/ active SearchRequests
 			Date actDate = new Date();
+			
 			for(SearchRequest sr : dC.getSearchRequestList()) {
+				System.out.println(actDate + " | " + sr.getPossibleDelivery_from() + " - " + sr.getPossibleDelivery_to());
+				
 				if(sr.getPossibleDelivery_from().after(actDate)
 						&& sr.getPossibleDelivery_to().before(actDate)) {
 					sr.setActive(true);

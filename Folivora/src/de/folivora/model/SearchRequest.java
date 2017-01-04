@@ -14,8 +14,9 @@ public class SearchRequest {
 	private String description;
 	private String pathToDefaultImg;
 	private double costsAndReward;
-	private double lat,
+	private Double lat,
 				   lng;
+	private String address;
 	private boolean active;
 	
 	private Date possibleDelivery_from,
@@ -31,7 +32,7 @@ public class SearchRequest {
 	
 	public SearchRequest(long id, String title, String description, String pathToDefaultImg,
 			Date possibleDelivery_from, Date possibleDelivery_to, Date preferredDelivery_from, Date preferredDelivery_to,
-			double costsAndReward, double lat, double lng,
+			double costsAndReward, double lat, double lng, String address,
 			User userCreator) {
 		this.id = id;
 		this.title = title;
@@ -46,13 +47,14 @@ public class SearchRequest {
 		this.lng = lng;
 		this.active = false;
 		this.userCreator = userCreator;
+		this.address = address;
 	}
 	
 	public SearchRequest(long id, String title, String description, String pathToDefaultImg,
 			Date[] possibleDelivery, Date[] preferredDelivery, double costsAndReward, double lat, double lng,
-			User userCreator) {
+			String address, User userCreator) {
 		this(id, title, description, pathToDefaultImg, possibleDelivery[0], possibleDelivery[1],
-				preferredDelivery[0], preferredDelivery[1], costsAndReward, lat, lng, userCreator);
+				preferredDelivery[0], preferredDelivery[1], costsAndReward, lat, lng, address, userCreator);
 	}
 	
 	/**
@@ -65,7 +67,10 @@ public class SearchRequest {
 	@Override
 	public String toString() {
 		return "[id=" + this.id + ", title=" + this.title
-				+ ", userCreatorRef=\"" + this.userCreator.getName() + "\" (" + this.userCreator.getId() + ")"
+				+ ", userCreatorRef=\""
+					+ ((this.userCreator != null)
+							? this.userCreator.getName() + "\" (" + this.userCreator.getId() + ")"
+							: "null")
 				+ ", userStatisfier="
 					+ ((this.userStasisfier != null)
 						? "\"" + this.userStasisfier.getName() + "\" (" + this.userStasisfier.getId() + ")"
@@ -145,7 +150,7 @@ public class SearchRequest {
 	/**
 	 * @return the lat
 	 */
-	public double getLat() {
+	public Double getLat() {
 		return lat;
 	}
 	
@@ -159,7 +164,7 @@ public class SearchRequest {
 	/**
 	 * @return the lng
 	 */
-	public double getLng() {
+	public Double getLng() {
 		return lng;
 	}
 	
@@ -266,5 +271,19 @@ public class SearchRequest {
 	 */
 	public void setUserStasisfier(User userStasisfier) {
 		this.userStasisfier = userStasisfier;
+	}
+
+	/**
+	 * @return the address
+	 */
+	public String getAddress() {
+		return address;
+	}
+
+	/**
+	 * @param address the address to set
+	 */
+	public void setAddress(String address) {
+		this.address = address;
 	}
 }

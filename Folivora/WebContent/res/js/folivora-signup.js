@@ -63,6 +63,9 @@ $(document).ready(function() {
 				if(lastRestStatus != null && lastRestStatus == 201 || lastRestStatus == 200) {
 					$.notify("Nutzer \"" + signUpObj.name + "\" erfolgreich erstellt.", "success");
 					
+					$.removeCookie("token");
+					$.cookie("token", lastResponse.token);
+					
 					setTimeout(function() {
 						window.location = "webapp.jsp";
 					}, 850);
