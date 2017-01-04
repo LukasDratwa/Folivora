@@ -1,5 +1,6 @@
 <%@page import="de.folivora.controller.UserManager"%>
 <%@page import="de.folivora.controller.ApplicationManager"%>
+<%@page import="de.folivora.model.User"%>
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="UTF-8" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -26,19 +27,20 @@
     <script type="text/javascript" src="res/js/folivora-webapp.js"></script>
     
     <script>
+    	var ownUserId;
     	$(document).ready(function() {
     		<%@ include file="customizeNavbar.jsp" %>
-    		
-    		
     		
     		<%
     			// Do stuff when someone is signed in
     			UserManager userManager = ApplicationManager.getApplicationManagerInstance().getuManager();
-    			if(userManager.getUserWithSession(session) != null) {
+    			User myUser = userManager.getUserWithSession(session);
+    			if(myUser != null) {
     				%>
-    				infowindowAppendixHtml = "<input type='button' class='btn btn-default' value='Wird erledigt!'>";
+    				ownUserId =  <% out.write("" + myUser.getId()); %>;
+    				
     				$("#srform").removeClass("hidden");
-    				$("#srform").removeClass("sr-function-btns");
+    				$("#sr-function-btns").removeClass("hidden");
     				<%
     			} else {
     				%>
@@ -153,15 +155,10 @@
     		</div>
     		
     		<div class="col-md-2 right-side" id="webapp-map-details-container">
-    			<div class="row hidden" id="sr-function-btns">
-    				<div class="col-md-6">
-    					<input type="button" class="btn btn-default" value="Filter">
-    				</div>
-    				<div class="col-md-6">
-    					<input type="button" class="btn btn-default" value="Neues Gesuch">
-    				</div>
-    			</div>
-    		
+    			<input type="button" class="btn btn-default" id="sr-toggle-btn" value="Filter">
+    			
+    			<br><br>
+    			
     			<form role="form" id="srform"  method="post" class="hidden">
 					<div class="form-group">
 						<label for="title">Titel:</label>
@@ -206,6 +203,15 @@
 					
 					<input type="submit" value="Submit" class="btn btn-default">
 				</form>
+				
+				<div class="container hidden" id="sr-filter-container">
+					<div class="row">
+						<div class="col-md-12">
+							<h4>Filtereinstellungen:</h4>
+							<p>Bald ...</p>
+						</div>
+					</div>
+				</div>
     		</div>
     	</div>
     </div>

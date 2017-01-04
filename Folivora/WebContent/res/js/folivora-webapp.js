@@ -37,6 +37,20 @@ $(document).ready(function() {
 		updateInputCostFields();
 	});
 	
+	$("#sr-toggle-btn").click(function() {
+		if($("#sr-toggle-btn").val() == "Filter") {
+			$("#sr-toggle-btn").val("Neues Gesuch");
+			
+			$("#sr-filter-container").removeClass("hidden");
+			$("#srform").addClass("hidden");
+		} else {
+			$("#sr-toggle-btn").val("Filter");
+			
+			$("#sr-filter-container").addClass("hidden");
+			$("#srform").removeClass("hidden");
+		}
+	});
+	
 	$("#srform").submit(function(e) {
 		webappDataObj.updateNewSrObj();
 		webappDataObj.newSrObj.token = $.cookie("token");
@@ -156,7 +170,6 @@ function loadMapData() {
 	createRest("POST", "getsrdataservlet", null, initMap);
 }
 
-var infowindowAppendixHtml = "";
 var infowindow;
 function initMap(payload) {
 	var myLatlng = new google.maps.LatLng(49.874505,8.655980);
@@ -180,7 +193,9 @@ function initMap(payload) {
 		var marker = new google.maps.Marker({
 			position: new google.maps.LatLng(sr.lat , sr.lng),
 			map: map,
-			icon: sr.marker_icon_path,
+			icon: ownUserId != sr.userCreator.id
+				? sr.marker_icon_path 
+				: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
 			title: sr.title,
 			sr: sr
 		});
@@ -188,10 +203,15 @@ function initMap(payload) {
 		marker.addListener('click', function() {
 			var sr = this.sr;
 			console.log(sr);
-			infowindow.setContent("<div><p><b>" + sr.title + "</b></p></div>"
+			infowindow.setContent("<div><p><b>" + sr.title + "</b> - für " + sr.costsAndReward + "€"
+					+ " - übrige Lieferungszeit: " + getTimeLeftAsString(sr.possibleDelivery_to) + "</p></div>"
 					+ "<div><p>" + sr.description + "</p>"
-					+ "<p>Lieferung möglich bis " + formatLongDate(sr.possibleDelivery_to) + "</p></div>"
-					+ infowindowAppendixHtml);
+					+ "<p>Lieferung möglich bis " + formatLongDate(sr.possibleDelivery_to) + " an "
+					+ sr.address + "</p>"
+					+ "<p>Von \"" + sr.userCreator.name + "\"</p></div>"
+					+ (ownUserId != sr.userCreator.id
+							? "<input type='button' class='btn btn-default' value='Wird erledigt!'>"
+							: "<input type='button' class='btn btn-default' value='Zurückziehen'>"));
 		    infowindow.open(map, this);
 		});
 	}

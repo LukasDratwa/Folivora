@@ -18,8 +18,17 @@
 			$("#navbar-left-ul").append("<li class='navbar-li-element' id='navbar-li-element-searchrequests'><a href='searchrequests.jsp'>Meine Gesuche</a></li>");
 		}
 		
+		// Navbar credit
+		var credit = "<% out.write("" + usr.getCredit().getBalance()); %>";
+		if(window.location.href.indexOf("credit.jsp") != -1) {
+			$(".navbar-li-element").removeClass("active");
+			$("#navbar-left-ul").append("<li class='navbar-li-element active' id='navbar-li-element-credit'><a href='credit.jsp'>Guthaben: " + credit + " €</a></li>");
+		} else {
+			$("#navbar-left-ul").append("<li class='navbar-li-element' id='navbar-li-element-credit'><a href='credit.jsp'>Guthaben: " + credit + " €</a></li>");
+		}
+		
+		
 		var username = "<% out.write(usr.getName()); %>";
-			
 		// Navbar userSettings
 		if(window.location.href.indexOf("userSettings.jsp") != -1) {
 			$(".navbar-li-element").removeClass("active");

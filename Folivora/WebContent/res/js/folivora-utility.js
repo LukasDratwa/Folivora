@@ -15,6 +15,17 @@ function formatLongDate(longDate) {
 	return day + "." + month + "." + year + ", " + hours + ":" + minutes + " Uhr";
 }
 
+function getTimeLeftAsString(longDate) {
+	var d = new Date(longDate);
+	var actual = new Date();
+	var diffMs = (d - actual);
+	var diffDays = Math.round(diffMs / 86400000);
+	var diffHrs = Math.round((diffMs % 86400000) / 3600000);
+	var diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000);
+	
+	return diffHrs + ":" + diffMins;
+}
+
 /**
  * Method to create a REST-call. The returned status will be stored 
  * in "lastRestStatus".
