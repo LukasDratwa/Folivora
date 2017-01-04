@@ -40,7 +40,8 @@ $(document).ready(function() {
 					email: $("#signupform-email").val(),
 					male: $("#signupform-gender-male").is(":checked"),
 					female: $("#signupform-gender-female").is(":checked"),
-					birthday: new Date($("#signupform-birthday").val()).valueOf()
+					birthday: new Date($("#signupform-birthday").val()).valueOf(),
+					hometown: $("#signupform-hometown").val()
 			};
 			
 			// Only allow user +16 years

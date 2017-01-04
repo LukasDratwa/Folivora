@@ -14,6 +14,7 @@ public class SearchRequest {
 	private String description;
 	private String pathToDefaultImg;
 	private double costsAndReward;
+	private double charges;
 	private Double lat,
 				   lng;
 	private String address;
@@ -37,7 +38,7 @@ public class SearchRequest {
 	
 	public SearchRequest(long id, String title, String description, String pathToDefaultImg,
 			Long  possibleDelivery_from, Long possibleDelivery_to, Long preferredDelivery_from, Long preferredDelivery_to,
-			double costsAndReward, Double lat, Double lng, String address,
+			double costsAndReward, double charges, Double lat, Double lng, String address,
 			User userCreator) {
 		this.id = id;
 		this.title = title;
@@ -56,6 +57,7 @@ public class SearchRequest {
 												? new Date(preferredDelivery_to).toString()
 												: null;
 		this.costsAndReward = costsAndReward;
+		this.charges = charges;
 		this.lat = lat;
 		this.lng = lng;
 		this.active = false;
@@ -64,10 +66,10 @@ public class SearchRequest {
 	}
 	
 	public SearchRequest(long id, String title, String description, String pathToDefaultImg,
-			Long[] possibleDelivery, Long[] preferredDelivery, double costsAndReward, Double lat, Double lng,
-			String address, User userCreator) {
+			Long[] possibleDelivery, Long[] preferredDelivery, double costsAndReward, double charges,
+			Double lat, Double lng, String address, User userCreator) {
 		this(id, title, description, pathToDefaultImg, possibleDelivery[0], possibleDelivery[1],
-				preferredDelivery[0], preferredDelivery[1], costsAndReward, lat, lng, address, userCreator);
+				preferredDelivery[0], preferredDelivery[1], costsAndReward, charges, lat, lng, address, userCreator);
 	}
 	
 	/**
@@ -354,5 +356,19 @@ public class SearchRequest {
 	 */
 	public void setPreferredDelivery_to_string(String preferredDelivery_to_string) {
 		this.preferredDelivery_to_string = preferredDelivery_to_string;
+	}
+
+	/**
+	 * @return the charges
+	 */
+	public double getCharges() {
+		return charges;
+	}
+
+	/**
+	 * @param charges the charges to set
+	 */
+	public void setCharges(double charges) {
+		this.charges = charges;
 	}
 }

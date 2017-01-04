@@ -1,3 +1,5 @@
+<%@page import="de.folivora.controller.UserManager"%>
+<%@page import="de.folivora.controller.ApplicationManager"%>
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="UTF-8" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -26,6 +28,25 @@
     <script>
     	$(document).ready(function() {
     		<%@ include file="customizeNavbar.jsp" %>
+    		
+    		
+    		
+    		<%
+    			// Do stuff when someone is signed in
+    			UserManager userManager = ApplicationManager.getApplicationManagerInstance().getuManager();
+    			if(userManager.getUserWithSession(session) != null) {
+    				%>
+    				infowindowAppendixHtml = "<input type='button' class='btn btn-default' value='Wird erledigt!'>";
+    				$("#srform").removeClass("hidden");
+    				$("#srform").removeClass("sr-function-btns");
+    				<%
+    			} else {
+    				%>
+    				$("#webapp-map-container").removeClass("col-md-10");
+    				$("#webapp-map-container").addClass("col-md-12");
+    				<%
+    			}
+    		%>
     	});
     </script>
   </head>
@@ -77,14 +98,11 @@
         </div>
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-          <ul class="nav navbar-nav">
+          <ul class="nav navbar-nav" id="navbar-left-ul">
             <li class="active">
               <a href="#">WebApp <span class="sr-only">(current)</span></a>
             </li>
-            <li>
-              <a href="#">Link</a>
-            </li>
-            <li>
+            <li role="separator" class="divider"></li>
             <!-- <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
               <ul class="dropdown-menu">
@@ -130,14 +148,21 @@
     
     <div class="container">
     	<div class="row">
-    		<div class="col-md-10" id="webapp-map-container">
-    			<div id="webapp-map"></div>
+    		<div class="col-md-10 left-side full-height" id="webapp-map-container">
+    			<div id="webapp-map" class="full-height"></div>
     		</div>
     		
-    		<div class="col-md-2" id="webapp-map-details-container">
-    			<button type="button" id="btn-new-searchrequest" class="btn btn-success">Neue Suchanfrage</button>
+    		<div class="col-md-2 right-side" id="webapp-map-details-container">
+    			<div class="row hidden" id="sr-function-btns">
+    				<div class="col-md-6">
+    					<input type="button" class="btn btn-default" value="Filter">
+    				</div>
+    				<div class="col-md-6">
+    					<input type="button" class="btn btn-default" value="Neues Gesuch">
+    				</div>
+    			</div>
     		
-    			<form role="form" id="srform"  method="post">
+    			<form role="form" id="srform"  method="post" class="hidden">
 					<div class="form-group">
 						<label for="title">Titel:</label>
 						<input name="title" class="form-control" id="srform-title" placeholder="Ttel eingeben" required>
@@ -148,7 +173,7 @@
 					</div>
 					<label for="address" style="width: 100%;">Lieferadresse:</label>
 					<div class="input-group">
-					   <input type="text" name="address" id="srform-address" class="form-control" placeholder="Adresse wählen" required>
+					   <input type="text" name="address" id="srform-address" class="form-control" placeholder="Adresse wählen" disabled required>
 					   <span class="input-group-btn">
 					        <button class="btn btn-default" id="btn-select-address" type="button">+</button>
 					   </span>
@@ -186,5 +211,5 @@
     </div>
     
     
-  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB-BsbTc5WFULPD9m4QAXOdolIq0za7QOo&callback=initMap"></script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB-BsbTc5WFULPD9m4QAXOdolIq0za7QOo&callback=loadMapData"></script>
 </body></html>

@@ -1,12 +1,19 @@
 /**
- * @author: Lukas Dratwa
- */
-
-/**
  * A cache-variable to store the status-code of the last REST-Call
  */
 var lastRestStatus = null;
 var lastResponse = null;
+
+function formatLongDate(longDate) {
+	var d = new Date(longDate);
+	var year = d.getFullYear();
+	var month = d.getMonth() + 1;
+	var day = d.getDate();
+	var hours = d.getHours();
+	var minutes = d.getMinutes();
+	
+	return day + "." + month + "." + year + ", " + hours + ":" + minutes + " Uhr";
+}
 
 /**
  * Method to create a REST-call. The returned status will be stored 
@@ -17,7 +24,7 @@ var lastResponse = null;
  * @param payload - the payload. If there is no payload, provide null
  * @returns {Boolean} false if the HttpRequest could not be created
  */
-function createRest(method, servlet, payload) {
+function createRest(method, servlet, payload, callback) {
 	var http_request = new XMLHttpRequest();
 	if (!http_request) {
 		alert('Cannot create an XMLHTTP instance');
@@ -29,6 +36,11 @@ function createRest(method, servlet, payload) {
 		if (http_request.readyState == 4) {
 			lastRestStatus = http_request.status;
 			lastResponse = JSON.parse(http_request.response);
+			
+			if(typeof callback != "undefined" && callback != null) {
+				callback(http_request.response);
+			}
+			
 			return http_request;
 		}
 	}

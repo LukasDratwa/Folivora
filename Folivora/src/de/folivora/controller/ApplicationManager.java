@@ -104,28 +104,28 @@ public class ApplicationManager {
 	
 	public SearchRequest createAndSaveSearchRequest(String title, String description, String pathToDefaultImg,
 			Long possibleDelivery_from, Long possibleDelivery_to, Long preferredDelivery_from, Long preferredDelivery_to,
-			double costsAndReward, Double lat, Double lng, String address, User userCreator) {
+			double costsAndReward, double charges, Double lat, Double lng, String address, User userCreator) {
 		Long[] possibleDelivery = {possibleDelivery_from, possibleDelivery_to};
 		Long[] preferredDelivery = {preferredDelivery_from, preferredDelivery_to};
 		return createAndSaveSearchRequest(title, description, pathToDefaultImg, possibleDelivery, preferredDelivery,
-				costsAndReward, lat, lng, address, userCreator);
+				costsAndReward, charges, lat, lng, address, userCreator);
 	}
 	
 	public SearchRequest createAndSaveSearchRequest(String title, String description, String pathToDefaultImg,
-			Long[] possibleDelivery, Long[] preferredDelivery, double costsAndReward, Double lat, Double lng, String address,
-			User userCreator) {
+			Long[] possibleDelivery, Long[] preferredDelivery, double costsAndReward, double charges, 
+			Double lat, Double lng, String address, User userCreator) {
 		SearchRequest sr = factory_createSearchRequest(title, description, pathToDefaultImg, possibleDelivery,
-				preferredDelivery, costsAndReward, lat, lng, address, userCreator);
+				preferredDelivery, costsAndReward, charges, lat, lng, address, userCreator);
 		HibernateSave.saveOrUpdateObject(sr);
 		dC.getSearchRequestList().add(sr);
 		return sr;
 	}
 	
 	private SearchRequest factory_createSearchRequest(String title, String description, String pathToDefaultImg,
-			Long[] possibleDelivery, Long[] preferredDelivery, double costsAndReward, Double lat, Double lng, String address,
-			User userCreator) {
+			Long[] possibleDelivery, Long[] preferredDelivery, double costsAndReward, double charges, Double lat,
+			Double lng, String address, User userCreator) {
 		return new SearchRequest(dC.getIdStorage().getNewSearchRequestId(), title, description, pathToDefaultImg,
-				possibleDelivery, preferredDelivery, costsAndReward, lat, lng, address, userCreator);
+				possibleDelivery, preferredDelivery, costsAndReward, charges, lat, lng, address, userCreator);
 	}
 	
 	public void createAndSaveTestData() {
@@ -140,7 +140,7 @@ public class ApplicationManager {
 		Long[] possibleDelivery = {new Date().getTime(), new Date().getTime()};
 		Long[] preferredDelivery = {new Date().getTime(), new Date().getTime()};
 		SearchRequest sr1 = createAndSaveSearchRequest("Suche Brot", "Bis Mittag Brot.", "",
-				possibleDelivery, preferredDelivery, 3.56, 0.0, 0.0, "Testweg 21", u1);
+				possibleDelivery, preferredDelivery, 3.56, 1.0, 0.0, 0.0, "Testweg 21", u1);
 		
 		sr1.setUserStasisfier(u2);
 		HibernateUpdate.updateObject(sr1);

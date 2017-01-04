@@ -119,7 +119,10 @@
 						<label for="confirm_password"> Confirm Password:</label>
 						<input name="confirm_password" type="password" class="form-control" id="signupform-confirm-password" placeholder="Passwort wiederholen" required>
 					</div>
-					
+					<div class="form-group">
+						<label for="hometown">Wohnort:</label>
+						<input name="hometown" class="form-control" id="signupform-hometown" placeholder="Wohnort eingeben">
+					</div>
 					
 					<button type="submit" id="submitButton" class="btn btn-default">Submit</button>
 				</form>

@@ -4,12 +4,14 @@ var webappDataObj = {
 	updateNewSrObj: function() {
 		this.newSrObj.title = $("#srform-title").val();
 		this.newSrObj.description = $("#srform-description").val();
-		this.newSrObj.costsAndReward = $("#srform-final-costs").val();
+		this.newSrObj.costsAndReward = $("#srform-maxcosts").val();
+		this.newSrObj.charges = $("#srform-charges").val();
 	},
 	resetNewSrObj: function() {
 		this.newSrObj.title = "";
 		this.newSrObj.description = "";
 		this.newSrObj.costsAndReward = 0.0;
+		this.newSrObj.charges = 0.0;
 		this.newSrObj.lat = 0;
 		this.newSrObj.lng = 0;
 		this.newSrObj.address = "";
@@ -17,6 +19,10 @@ var webappDataObj = {
 		this.newSrObj.possibleDelivery_to = null;
 		this.newSrObj.preferredDelivery_from = null;
 		this.newSrObj.preferredDelivery_to = null;
+	},
+	mapData: {
+		map: null,
+		infowindow: null
 	}
 };
 webappDataObj.resetNewSrObj();
@@ -43,9 +49,12 @@ $(document).ready(function() {
 				
 				console.log("Created new search request: " , webappDataObj.newSrObj);
 				
-				// webappDataObj.resetNewSrObj();
+				webappDataObj.resetNewSrObj();
+				document.getElementById("srform").reset();
 				
-				// document.getElementById("srform").reset();
+				setTimeout(function() {
+					location.reload();
+				}, 1500);
 			} else {
 				$.notify("Fehler beim Erstellen des Gesuchs!", "error");
 			}
@@ -143,7 +152,13 @@ function initDateTimeRange() {
 	});
 }
 
-function initMap() {
+function loadMapData() {
+	createRest("POST", "getsrdataservlet", null, initMap);
+}
+
+var infowindowAppendixHtml = "";
+var infowindow;
+function initMap(payload) {
 	var myLatlng = new google.maps.LatLng(49.874505,8.655980);
 	var imagePath = "http://maps.google.com/mapfiles/ms/icons/green-dot.png" // blue-dot, orange oder red-dot
 	var mapOptions = {
@@ -151,29 +166,37 @@ function initMap() {
 		center: myLatlng,
 		mapTypeId: google.maps.MapTypeId.ROADMAP
 	}
-	
 	var map = new google.maps.Map(document.getElementById('webapp-map'), mapOptions);
-	//Callout Content
-	var contentString = 'Some address here..';
-	//Set window width + content
-	var infowindow = new google.maps.InfoWindow({
-		content: contentString,
+	
+	//Add Marker from payload
+	infowindow = new google.maps.InfoWindow({
+		content: "",
 		maxWidth: 500
 	});
-	
-	//Add Marker
-	var marker = new google.maps.Marker({
-		position: myLatlng,
-		map: map,
-		icon: imagePath,
-		title: 'image title'
-	});
+	var srArray = JSON.parse(payload);
+	for(var i in srArray) {
+		var sr = srArray[i];
+		
+		var marker = new google.maps.Marker({
+			position: new google.maps.LatLng(sr.lat , sr.lng),
+			map: map,
+			icon: sr.marker_icon_path,
+			title: sr.title,
+			sr: sr
+		});
+		
+		marker.addListener('click', function() {
+			var sr = this.sr;
+			console.log(sr);
+			infowindow.setContent("<div><p><b>" + sr.title + "</b></p></div>"
+					+ "<div><p>" + sr.description + "</p>"
+					+ "<p>Lieferung möglich bis " + formatLongDate(sr.possibleDelivery_to) + "</p></div>"
+					+ infowindowAppendixHtml);
+		    infowindow.open(map, this);
+		});
+	}
 	
 	var geocoder = new google.maps.Geocoder();
-	
-	google.maps.event.addListener(marker, 'click', function() {
-		infowindow.open(map,marker);
-	});
 	
 	google.maps.event.addListener(map, 'click', function(e) {
 		var lat = e.latLng.lat();
@@ -209,5 +232,5 @@ function initMap() {
 		map.setCenter(center);
 	});
 	
-	webappDataObj.map = map;
+	webappDataObj.mapData.map = map;
 }

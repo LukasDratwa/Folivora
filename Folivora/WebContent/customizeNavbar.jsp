@@ -10,6 +10,14 @@
 	
 	if(usr != null) {
 		%>
+		// Navbar searchrequests
+		if(window.location.href.indexOf("searchrequests.jsp") != -1) {
+			$(".navbar-li-element").removeClass("active");
+			$("#navbar-left-ul").append("<li class='navbar-li-element active' id='navbar-li-element-searchrequests'><a href='searchrequests.jsp'>Meine Gesuche</a></li>");
+		} else {
+			$("#navbar-left-ul").append("<li class='navbar-li-element' id='navbar-li-element-searchrequests'><a href='searchrequests.jsp'>Meine Gesuche</a></li>");
+		}
+		
 		var username = "<% out.write(usr.getName()); %>";
 			
 		// Navbar userSettings
