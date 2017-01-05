@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
+import de.folivora.util.Util;
+
 @Entity
 public class UserCredit {
 	@Id
@@ -33,6 +35,17 @@ public class UserCredit {
 	 */
 	protected UserCredit() {
 		
+	}
+	
+	public double getMaxPossiblePriceForSr() {
+		if(getBalance() <= 1) {
+			return getBalance() - 0.1;
+		} else if(getBalance() < 10) {
+			double max = getBalance() / 1.1;
+			return Util.round(max, 2);
+		} else {
+			return getBalance() - 1;
+		}
 	}
 	
 	@Override

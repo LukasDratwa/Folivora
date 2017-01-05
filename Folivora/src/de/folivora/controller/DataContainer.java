@@ -49,8 +49,6 @@ public class DataContainer {
 				jo.addProperty("address", sr.getAddress());
 				jo.addProperty("possibleDelivery_from", sr.getPossibleDelivery_from());
 				jo.addProperty("possibleDelivery_to", sr.getPossibleDelivery_to());
-				jo.addProperty("preferredDelivery_from", sr.getPreferredDelivery_from());
-				jo.addProperty("preferredDelivery_to", sr.getPreferredDelivery_to());
 				
 				jo.addProperty("marker_icon_path", getMarkerIconPath(sr.getPossibleDelivery_to()));
 				

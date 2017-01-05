@@ -17,8 +17,6 @@ var webappDataObj = {
 		this.newSrObj.address = "";
 		this.newSrObj.possibleDelivery_from = null;
 		this.newSrObj.possibleDelivery_to = null;
-		this.newSrObj.preferredDelivery_from = null;
-		this.newSrObj.preferredDelivery_to = null;
 	},
 	mapData: {
 		map: null,
@@ -158,7 +156,7 @@ function initDateTimeRange() {
 	    "timePicker24Hour": true,
 	    "timePickerIncrement": 15,
 	    "dateLimit": {
-	        "days": 7
+	        "days": 1
 	    },
 	    "ranges": {
 	        "3h": [
@@ -194,9 +192,9 @@ function initDateTimeRange() {
 	        ],
 	        "firstDay": 1
 	    },
-	    "minDate": new Date(),
-	    "startDate": new Date(),
-	    "endDate": new Date(),
+	    "minDate": moment(),
+	    "startDate": moment(),
+	    "endDate": moment().add(1, "days"),
 	    "opens": "left"
 	}, function(start, end, label) {
 		webappDataObj.newSrObj.possibleDelivery_from = new Date(start).valueOf();

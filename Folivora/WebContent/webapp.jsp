@@ -181,14 +181,9 @@
 						<input name="daterange-possible" id="srform-delivery-possible" required>
 					</div>
 					
-					<!-- <div class="form-group">
-						<label for="forename">Präferierter Lieferzeitraum:</label>
-						<input name="daterange">
-					</div>-->
-					
 					<div class="form-group">
 						<label for="maxcosts">Kosten:</label>
-						<input min="1.00" step="0.1" type="number" name="maxcosts" class="form-control" id="srform-maxcosts" placeholder="Max. Kosten" required>
+						<input min="1.00" max="<% if(myUser!= null) out.write("" + myUser.getCredit().getMaxPossiblePriceForSr()); %>" step="0.1" type="number" name="maxcosts" class="form-control" id="srform-maxcosts" placeholder="Max. Kosten" required>
 					</div>
 					
 					<div class="form-group">

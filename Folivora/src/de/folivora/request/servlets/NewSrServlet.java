@@ -77,9 +77,8 @@ public class NewSrServlet extends HttpServlet {
 				
 				if(userCreator != null) {
 					AccessLayer.createSearchRequest(sr.getTitle(), sr.getDescription(), sr.getPathToDefaultImg(),
-							sr.getPossibleDelivery_from(), sr.getPossibleDelivery_to(), sr.getPreferredDelivery_from(),
-							sr.getPreferredDelivery_to(), sr.getCostsAndReward(), sr.getCharges(), sr.getLat(),
-							sr.getLng(), sr.getAddress(), userCreator, "");
+							sr.getPossibleDelivery_from(), sr.getPossibleDelivery_to(), sr.getCostsAndReward(),
+							sr.getCharges(), sr.getLat(), sr.getLng(), sr.getAddress(), userCreator, "");
 					new ResponseObject(200, "Successfully created searchrequest.", response).writeResponse();
 				} else {
 					new ResponseObject(403, "Failed to create searchrequest. Please sign in first!", response).writeResponse();

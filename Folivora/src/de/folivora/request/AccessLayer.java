@@ -25,13 +25,12 @@ public class AccessLayer {
 	}
 	
 	public static boolean createSearchRequest(String title, String description, String pathToDefaultImg,
-			Long possibleDelivery_from, Long possibleDelivery_to, Long preferredDelivery_from, Long preferredDelivery_to,
-			double costsAndReward, double charges, Double lat, Double lng, String address, User userCreator, String token) {
+			Long possibleDelivery_from, Long possibleDelivery_to, double costsAndReward, double charges,
+			Double lat, Double lng, String address, User userCreator, String token) {
 		
 		if(isValidToken(userCreator, token)) {
 			ApplicationManager.getApplicationManagerInstance().createAndSaveSearchRequest(title, description, pathToDefaultImg,
-					possibleDelivery_from, possibleDelivery_to, preferredDelivery_from, preferredDelivery_to,
-					costsAndReward, charges, lat, lng, address, userCreator);
+					possibleDelivery_from, possibleDelivery_to, costsAndReward, charges, lat, lng, address, userCreator);
 			return true;
 		} else {
 			return false;
