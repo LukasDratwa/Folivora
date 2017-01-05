@@ -92,6 +92,16 @@ public class UserManager {
 		return null;
 	}
 	
+	public User getUserWithId(long id) {
+		for(User user : dC.getUserList()) {
+			if(user.getId() == id) {
+				return user;
+			}
+		}
+		
+		return null;
+	}
+	
 	public User getFolivoraUser() {
 		for(User user : dC.getUserList()) {
 			if(user.getUserType() == UserType.FOLIVORA) {

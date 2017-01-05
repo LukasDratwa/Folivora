@@ -4,19 +4,22 @@ import javax.servlet.http.HttpSession;
 
 import de.folivora.controller.ApplicationManager;
 import de.folivora.controller.UserManager;
+import de.folivora.model.SearchRequest;
 import de.folivora.model.User;
 import de.folivora.model.UserType;
+import de.folivora.util.Constants;
 
 public class AccessLayer {
 	private static boolean isValidToken(User user, String token) {
 		return true;
-		// return user.getTokenStorage().getToken().equals(token);
+		// TODO be sure that in every call is a token ... return user.getTokenStorage().getToken().equals(token);
 	}
 	
 	public static void signUp(User newUser, HttpSession session) {
 		UserManager uManager = ApplicationManager.getApplicationManagerInstance().getuManager();
 		User user = uManager.createAndSaveUser(newUser.getName(), newUser.getPassword(), newUser.getBirthday(), newUser.getGender(),
-				newUser.getEmail(), 0, UserType.NORMAL, newUser.getHometown());
+				newUser.getEmail(), Constants.USERCREDIT_ENABLE_INITIAL_BALANCE ? Constants.USERCREDIT_INITIAL_BALANCE : 0.0,
+						UserType.NORMAL, newUser.getHometown());
 		uManager.authenticate(user.getName(), user.getPassword()); // To generate a token for the user
 		user.setSession(session);
 	}
@@ -33,5 +36,10 @@ public class AccessLayer {
 		} else {
 			return false;
 		}
+	}
+	
+	public static boolean cancelSearchRequest(User callingUser, SearchRequest sr) {
+		sr.setCancelled(true);
+		return true;
 	}
 }

@@ -18,7 +18,9 @@ public class SearchRequest {
 	private Double lat,
 				   lng;
 	private String address;
-	private boolean active;
+	private boolean active,
+					cancelled,
+					statisfied;
 	
 	private Long possibleDelivery_from,
 				 possibleDelivery_to,
@@ -60,7 +62,9 @@ public class SearchRequest {
 		this.charges = charges;
 		this.lat = lat;
 		this.lng = lng;
-		this.active = false;
+		this.active = shouldBeActive();
+		this.cancelled = false;
+		this.statisfied = false;
 		this.userCreator = userCreator;
 		this.address = address;
 	}
@@ -77,6 +81,14 @@ public class SearchRequest {
 	 */
 	protected SearchRequest() {
 		
+	}
+	
+	public boolean shouldBeActive() {
+		Date actDate = new Date();
+		Date a = new Date(this.getPossibleDelivery_from());
+		Date b = new Date(this.getPossibleDelivery_to());
+		
+		return (a.compareTo(actDate) * actDate.compareTo(b) > 0);
 	}
 	
 	@Override
@@ -370,5 +382,33 @@ public class SearchRequest {
 	 */
 	public void setCharges(double charges) {
 		this.charges = charges;
+	}
+
+	/**
+	 * @return the cancelled
+	 */
+	public boolean isCancelled() {
+		return cancelled;
+	}
+
+	/**
+	 * @param cancelled the cancelled to set
+	 */
+	public void setCancelled(boolean cancelled) {
+		this.cancelled = cancelled;
+	}
+
+	/**
+	 * @return the statisfied
+	 */
+	public boolean isStatisfied() {
+		return statisfied;
+	}
+
+	/**
+	 * @param statisfied the statisfied to set
+	 */
+	public void setStatisfied(boolean statisfied) {
+		this.statisfied = statisfied;
 	}
 }

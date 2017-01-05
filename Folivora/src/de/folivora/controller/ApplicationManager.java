@@ -98,6 +98,16 @@ public class ApplicationManager {
 		return t;
 	}
 	
+	public SearchRequest getSearchRequestWithId(long id) {
+		for(SearchRequest sr : dC.getSearchRequestList()) {
+			if(sr.getId() == id) {
+				return sr;
+			}
+		}
+		
+		return null;
+	}
+	
 	private Transaction factory_createTransaction(double value, User userSearching, User userDelivering, String unlockToken) {
 		return new Transaction(dC.getIdStorage().getNewTransactionId(), value, userSearching, userDelivering, unlockToken);
 	}

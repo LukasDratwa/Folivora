@@ -4,6 +4,9 @@ public class Constants {
 	public static final double VERSION = 1.0;
 	public static final long SERIAL_VERSION_UID = 1841986427873375189L;
 	
+	public static final boolean USERCREDIT_ENABLE_INITIAL_BALANCE = true;
+	public static final double USERCREDIT_INITIAL_BALANCE = 100.00;
+	
 	/**
 	 * Token will be valid for one hour.
 	 */

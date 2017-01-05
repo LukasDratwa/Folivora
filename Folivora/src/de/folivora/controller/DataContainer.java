@@ -58,6 +58,7 @@ public class DataContainer {
 				User user = sr.getUserCreator();
 				creator.addProperty("id", user.getId());
 				creator.addProperty("name", user.getName());
+				creator.addProperty("hometown", user.getHometown());
 				jo.add("userCreator", creator);
 				
 				

@@ -22,7 +22,16 @@ var webappDataObj = {
 	},
 	mapData: {
 		map: null,
-		infowindow: null
+		markers: [],
+		removeMarker: function(srId) {
+			for(var i in this.markers) {
+				var marker = this.markers[i];
+				
+				if(marker.sr.id == srId) {
+					marker.setMap(null);
+				}
+			}
+		}
 	}
 };
 webappDataObj.resetNewSrObj();
@@ -38,13 +47,13 @@ $(document).ready(function() {
 	});
 	
 	$("#sr-toggle-btn").click(function() {
-		if($("#sr-toggle-btn").val() == "Filter") {
-			$("#sr-toggle-btn").val("Neues Gesuch");
+		if($("#sr-toggle-btn").val() == "Zum Filter") {
+			$("#sr-toggle-btn").val("Neues Gesuch erstellen");
 			
 			$("#sr-filter-container").removeClass("hidden");
 			$("#srform").addClass("hidden");
 		} else {
-			$("#sr-toggle-btn").val("Filter");
+			$("#sr-toggle-btn").val("Zum Filter");
 			
 			$("#sr-filter-container").addClass("hidden");
 			$("#srform").removeClass("hidden");
@@ -80,6 +89,37 @@ $(document).ready(function() {
 		e.preventDefault();
 	});
 });
+
+function stasifySr(signedInUserId, srId) {
+	console.log(signedInUserId + " want to statisfy: " + srId);
+}
+
+function cancelSr(signedInUserId, srId) {
+	var choice = confirm("Möchten Sie wirklich dieses Gesuch zurückziehen?");
+	
+	if(choice) {
+		console.log(signedInUserId + " want to cancel: " + srId);
+		
+		var payloadObj = {
+			userCallingId: signedInUserId,
+			srId: srId
+		};
+		
+		createRest("POST", "cancelsrservlet", JSON.stringify(payloadObj));
+		
+		setTimeout(function() {
+			if(lastRestStatus != null && lastRestStatus == 201 || lastRestStatus == 200) {
+				$.notify("Gesuch erfolgreich zurückgezogen.", "success");
+				
+				webappDataObj.mapData.removeMarker(srId);
+			} else {
+				$.notify("Fehler beim Zurückziehen!", "error");
+			}
+			
+			lastRestStatus = null;
+		}, 1000);
+	}
+}
 
 function updateGeoData(lat, lng, address) {
 	if(webappDataObj.newSearchRequestClicked) {
@@ -202,18 +242,29 @@ function initMap(payload) {
 		
 		marker.addListener('click', function() {
 			var sr = this.sr;
-			console.log(sr);
+			console.log("Marker clicked, referenced sr: ", sr);
+			
+			var btn = "";
+			if(typeof ownUserId != "undefined") {
+				if(ownUserId != sr.userCreator.id) {
+					btn = "<input type='button' class='btn btn-default' value='Wird erledigt!' onclick='stasifySr(" + ownUserId + "," + sr.id + ")'>";
+				} else {
+					btn = "<input type='button' class='btn btn-default' value='Zurückziehen' onclick='cancelSr(" + ownUserId + "," + sr.id + ")'>"
+				}
+			}
+			
 			infowindow.setContent("<div><p><b>" + sr.title + "</b> - für " + sr.costsAndReward + "€"
 					+ " - übrige Lieferungszeit: " + getTimeLeftAsString(sr.possibleDelivery_to) + "</p></div>"
 					+ "<div><p>" + sr.description + "</p>"
 					+ "<p>Lieferung möglich bis " + formatLongDate(sr.possibleDelivery_to) + " an "
 					+ sr.address + "</p>"
 					+ "<p>Von \"" + sr.userCreator.name + "\"</p></div>"
-					+ (ownUserId != sr.userCreator.id
-							? "<input type='button' class='btn btn-default' value='Wird erledigt!'>"
-							: "<input type='button' class='btn btn-default' value='Zurückziehen'>"));
+					+ btn
+			);
 		    infowindow.open(map, this);
 		});
+		
+		webappDataObj.mapData.markers.push(marker);
 	}
 	
 	var geocoder = new google.maps.Geocoder();

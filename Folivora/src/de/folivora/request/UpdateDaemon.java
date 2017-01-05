@@ -1,7 +1,5 @@
 package de.folivora.request;
 
-import java.util.Date;
-
 import org.apache.log4j.Logger;
 
 import de.folivora.controller.ApplicationManager;
@@ -22,13 +20,8 @@ public class UpdateDaemon extends Thread {
 		
 		while(this.isRunning) {
 			// 1. Check for in-/ active SearchRequests
-			Date actDate = new Date();
-			
 			for(SearchRequest sr : dC.getSearchRequestList()) {
-				Date a = new Date(sr.getPossibleDelivery_from());
-				Date b = new Date(sr.getPossibleDelivery_to());
-				
-				if(a.compareTo(actDate) * actDate.compareTo(b) > 0) {
+				if(sr.shouldBeActive() && !sr.isCancelled() && !sr.isStatisfied()) {
 					if(!sr.isActive()) {
 						sr.setActive(true);
 						HibernateUpdate.updateObject(sr);
