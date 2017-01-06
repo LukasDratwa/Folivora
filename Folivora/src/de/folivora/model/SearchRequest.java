@@ -3,6 +3,8 @@ package de.folivora.model;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
@@ -18,9 +20,9 @@ public class SearchRequest {
 	private Double lat,
 				   lng;
 	private String address;
-	private boolean active,
-					cancelled,
-					statisfied;
+	
+	@Enumerated(EnumType.STRING)
+	private SearchRequestStatus status;
 	
 	private Long possibleDelivery_from,
 				 possibleDelivery_to;
@@ -50,9 +52,7 @@ public class SearchRequest {
 		this.charges = charges;
 		this.lat = lat;
 		this.lng = lng;
-		this.active = shouldBeActive();
-		this.cancelled = false;
-		this.statisfied = false;
+		this.status = shouldBeActive() ? SearchRequestStatus.ACTIVE : SearchRequestStatus.INACTIVE;
 		this.userCreator = userCreator;
 		this.address = address;
 	}
@@ -191,20 +191,6 @@ public class SearchRequest {
 	}
 	
 	/**
-	 * @return the active
-	 */
-	public boolean isActive() {
-		return active;
-	}
-	
-	/**
-	 * @param active the active to set
-	 */
-	public void setActive(boolean active) {
-		this.active = active;
-	}
-	
-	/**
 	 * @return the userCreator
 	 */
 	public User getUserCreator() {
@@ -319,30 +305,16 @@ public class SearchRequest {
 	}
 
 	/**
-	 * @return the cancelled
+	 * @return the status
 	 */
-	public boolean isCancelled() {
-		return cancelled;
+	public SearchRequestStatus getStatus() {
+		return status;
 	}
 
 	/**
-	 * @param cancelled the cancelled to set
+	 * @param status the status to set
 	 */
-	public void setCancelled(boolean cancelled) {
-		this.cancelled = cancelled;
-	}
-
-	/**
-	 * @return the statisfied
-	 */
-	public boolean isStatisfied() {
-		return statisfied;
-	}
-
-	/**
-	 * @param statisfied the statisfied to set
-	 */
-	public void setStatisfied(boolean statisfied) {
-		this.statisfied = statisfied;
+	public void setStatus(SearchRequestStatus status) {
+		this.status = status;
 	}
 }

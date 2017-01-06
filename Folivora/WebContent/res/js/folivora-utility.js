@@ -26,6 +26,11 @@ function getTimeLeftAsString(longDate) {
 	return diffHrs + ":" + diffMins;
 }
 
+function getTimeAsString(longDate) {
+	var d = new Date(longDate);
+	return d.getHours() + ":" + d.getMinutes();
+}
+
 /**
  * Method to create a REST-call. The returned status will be stored 
  * in "lastRestStatus".

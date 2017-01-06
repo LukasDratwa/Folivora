@@ -5,8 +5,10 @@ import javax.servlet.http.HttpSession;
 import de.folivora.controller.ApplicationManager;
 import de.folivora.controller.UserManager;
 import de.folivora.model.SearchRequest;
+import de.folivora.model.SearchRequestStatus;
 import de.folivora.model.User;
 import de.folivora.model.UserType;
+import de.folivora.storage.HibernateUpdate;
 import de.folivora.util.Constants;
 
 public class AccessLayer {
@@ -38,7 +40,8 @@ public class AccessLayer {
 	}
 	
 	public static boolean cancelSearchRequest(User callingUser, SearchRequest sr) {
-		sr.setCancelled(true);
+		sr.setStatus(SearchRequestStatus.CANCELLED);
+		HibernateUpdate.updateObject(sr);
 		return true;
 	}
 }

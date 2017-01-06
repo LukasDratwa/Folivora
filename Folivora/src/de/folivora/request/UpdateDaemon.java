@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import de.folivora.controller.ApplicationManager;
 import de.folivora.controller.DataContainer;
 import de.folivora.model.SearchRequest;
+import de.folivora.model.SearchRequestStatus;
 import de.folivora.storage.HibernateUpdate;
 import de.folivora.util.Constants;
 
@@ -21,13 +22,13 @@ public class UpdateDaemon extends Thread {
 		while(this.isRunning) {
 			// 1. Check for in-/ active SearchRequests
 			for(SearchRequest sr : dC.getSearchRequestList()) {
-				if(sr.shouldBeActive() && !sr.isCancelled() && !sr.isStatisfied()) {
-					if(!sr.isActive()) {
-						sr.setActive(true);
+				if(sr.shouldBeActive()) {
+					if(sr.getStatus() == SearchRequestStatus.INACTIVE) {
+						sr.setStatus(SearchRequestStatus.ACTIVE);
 						HibernateUpdate.updateObject(sr);
 					}
-				} else if(sr.isActive()) {
-					sr.setActive(false);
+				} else if(sr.getStatus() == SearchRequestStatus.ACTIVE) {
+					sr.setStatus(SearchRequestStatus.INACTIVE);
 					HibernateUpdate.updateObject(sr);
 				}
 			}

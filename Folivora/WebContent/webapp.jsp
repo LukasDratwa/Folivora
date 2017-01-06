@@ -39,13 +39,8 @@
     				%>
     				ownUserId =  <% out.write("" + myUser.getId()); %>;
     				
-    				$("#srform").removeClass("hidden");
+    				$("#sr-toggle-btn").removeClass("hidden");
     				$("#sr-function-btns").removeClass("hidden");
-    				<%
-    			} else {
-    				%>
-    				$("#webapp-map-container").removeClass("col-md-10");
-    				$("#webapp-map-container").addClass("col-md-12");
     				<%
     			}
     		%>
@@ -155,7 +150,7 @@
     		</div>
     		
     		<div class="col-md-2 right-side" id="webapp-map-details-container">
-    			<input type="button" class="btn btn-default" id="sr-toggle-btn" value="Filter">
+    			<input type="button" class="btn btn-default hidden" id="sr-toggle-btn" value="Neues Gesuch erstellen">
     			
     			<br><br>
     			
@@ -176,10 +171,26 @@
 					   </span>
 					</div>
 					
-					<div class="form-group">
+					<!--<div class="form-group">
 						<label for="daterange-possible">Möglicher Lieferzeitraum:</label>
 						<input name="daterange-possible" id="srform-delivery-possible" required>
+					</div>-->
+					
+					<br>
+					<div class="dropdown">
+						<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"
+							id="btn-possible-delivery-dropdown" style="width: 100%;">Mögliche Lieferzeit<span class="caret"></span></button>
+					  	<ul class="dropdown-menu">
+					  	<li><a href="#" onclick="updatePossibleDelivery(1)">1h</a></li>
+					    	<li><a href="#" onclick="updatePossibleDelivery(2)">2h</a></li>
+					    	<li><a href="#" onclick="updatePossibleDelivery(3)">3h</a></li>
+					    	<li><a href="#" onclick="updatePossibleDelivery(4)">4h</a></li>
+					    	<li><a href="#" onclick="updatePossibleDelivery(8)">8h</a></li>
+					    	<li><a href="#" onclick="updatePossibleDelivery(12)">12h</a></li>
+					    	<li><a href="#" onclick="updatePossibleDelivery(24)">24h</a></li>
+					  	</ul>
 					</div>
+					<br>
 					
 					<div class="form-group">
 						<label for="maxcosts">Kosten:</label>
@@ -196,10 +207,10 @@
 						<input type="number" name="final-costs" class="form-control" id="srform-final-costs" placeholder="Gesamtkosten" disabled>
 					</div>
 					
-					<input type="submit" value="Submit" class="btn btn-default">
+					<input type="submit" value="Submit" class="btn btn-default" id="btn-srform-submit">
 				</form>
 				
-				<div class="container hidden" id="sr-filter-container">
+				<div class="container" id="sr-filter-container">
 					<div class="row">
 						<div class="col-md-12">
 							<h4>Filtereinstellungen:</h4>

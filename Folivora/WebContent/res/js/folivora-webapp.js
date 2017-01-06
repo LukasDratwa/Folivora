@@ -15,8 +15,8 @@ var webappDataObj = {
 		this.newSrObj.lat = 0;
 		this.newSrObj.lng = 0;
 		this.newSrObj.address = "";
-		this.newSrObj.possibleDelivery_from = null;
-		this.newSrObj.possibleDelivery_to = null;
+		this.newSrObj.possibleDelivery_from = 0;
+		this.newSrObj.possibleDelivery_to = 0;
 	},
 	mapData: {
 		map: null,
@@ -38,7 +38,7 @@ $(document).ready(function() {
 	$("#btn-select-address").click(function() {
 		webappDataObj.newSearchRequestClicked = true;
 	});
-	initDateTimeRange();
+	// initDateTimeRange();
 	
 	$("#srform-maxcosts").keyup(function() {
 		updateInputCostFields();
@@ -86,6 +86,12 @@ $(document).ready(function() {
 		
 		e.preventDefault();
 	});
+	
+	$("#btn-srform-submit").mouseover(function() {
+		if($("#btn-possible-delivery-dropdown").text() === "Mögliche Lieferzeit") {
+			updatePossibleDelivery(3);
+		}
+	});
 });
 
 function stasifySr(signedInUserId, srId) {
@@ -117,6 +123,15 @@ function cancelSr(signedInUserId, srId) {
 			lastRestStatus = null;
 		}, 1000);
 	}
+}
+
+function updatePossibleDelivery(h) {
+	var oneH = 3600000;
+	webappDataObj.newSrObj.possibleDelivery_from = new Date().valueOf();
+	var to = new Date().valueOf() + oneH * h;
+	webappDataObj.newSrObj.possibleDelivery_to = to;
+	
+	$("#btn-possible-delivery-dropdown").text(h + "h - bis " + getTimeAsString(to) + " Uhr");
 }
 
 function updateGeoData(lat, lng, address) {

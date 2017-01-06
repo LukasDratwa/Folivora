@@ -8,6 +8,7 @@ import com.google.gson.JsonObject;
 
 import de.folivora.model.IdStorage;
 import de.folivora.model.SearchRequest;
+import de.folivora.model.SearchRequestStatus;
 import de.folivora.model.Transaction;
 import de.folivora.model.User;
 import de.folivora.util.Constants;
@@ -31,11 +32,11 @@ public class DataContainer {
 		this.idStorage = new IdStorage(0, 0, 0, 0, 0);
 	}
 	
-	public JsonArray getActiveSearchRequestListAsJsonArray() {
+	public JsonArray getActiveAndInProgressSearchRequestListAsJsonArray() {
 		JsonArray result = new JsonArray();
 		
 		for(SearchRequest sr : getSearchRequestList()) {
-			if(sr.isActive()) {
+			if(sr.getStatus() == SearchRequestStatus.ACTIVE || sr.getStatus() == SearchRequestStatus.IN_PROGRESS) {
 				JsonObject jo = new JsonObject();
 				
 				jo.addProperty("id", sr.getId());

@@ -76,7 +76,7 @@ public class GetSrDataServlet extends HttpServlet {
 		try {
 			Gson gson = new Gson();
 			DataContainer dC = ApplicationManager.getApplicationManagerInstance().getdC();
-			String s = gson.toJson(dC.getActiveSearchRequestListAsJsonArray());
+			String s = gson.toJson(dC.getActiveAndInProgressSearchRequestListAsJsonArray());
 			ServletOutputStream sos = response.getOutputStream();
 			sos.write(s.getBytes());
 			sos.flush();
