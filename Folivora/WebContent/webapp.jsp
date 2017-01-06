@@ -183,7 +183,7 @@
 					
 					<div class="form-group">
 						<label for="maxcosts">Kosten:</label>
-						<input min="1.00" max="<% if(myUser!= null) out.write("" + myUser.getCredit().getMaxPossiblePriceForSr()); %>" step="0.1" type="number" name="maxcosts" class="form-control" id="srform-maxcosts" placeholder="Max. Kosten" required>
+						<input min="0.10" max="<% if(myUser!= null) out.write("" + myUser.getCredit().getMaxPossiblePriceForSr()); %>" step="0.1" type="number" name="maxcosts" class="form-control" id="srform-maxcosts" placeholder="Max. Kosten" required>
 					</div>
 					
 					<div class="form-group">

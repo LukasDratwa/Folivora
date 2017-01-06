@@ -210,14 +210,26 @@ function loadMapData() {
 
 var infowindow;
 function initMap(payload) {
+	var geocoder = new google.maps.Geocoder();
+	
+	// Default on Darmstadt
 	var myLatlng = new google.maps.LatLng(49.874505,8.655980);
-	var imagePath = "http://maps.google.com/mapfiles/ms/icons/green-dot.png" // blue-dot, orange oder red-dot
 	var mapOptions = {
 		zoom: 15,
 		center: myLatlng,
 		mapTypeId: google.maps.MapTypeId.ROADMAP
 	}
 	var map = new google.maps.Map(document.getElementById('webapp-map'), mapOptions);
+	
+	// Try HTML5 geolocation to get the location of the user.
+	if(navigator.geolocation) {
+		navigator.geolocation.getCurrentPosition(function(position) {
+		    myLatlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+		    map.setCenter(myLatlng);
+		}, function() {
+			console.error("Could not get geoinformation of user");
+		});
+	}
 	
 	//Add Marker from payload
 	infowindow = new google.maps.InfoWindow({
@@ -264,8 +276,6 @@ function initMap(payload) {
 		
 		webappDataObj.mapData.markers.push(marker);
 	}
-	
-	var geocoder = new google.maps.Geocoder();
 	
 	google.maps.event.addListener(map, 'click', function(e) {
 		var lat = e.latLng.lat();

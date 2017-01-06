@@ -39,7 +39,7 @@ public class UserCredit {
 	
 	public double getMaxPossiblePriceForSr() {
 		if(getBalance() <= 1) {
-			return getBalance() - 0.1;
+			return (getBalance() - 0.1 > 0) ? getBalance() - 0.1 : 0;
 		} else if(getBalance() < 10) {
 			double max = getBalance() / 1.1;
 			return Util.round(max, 2);
