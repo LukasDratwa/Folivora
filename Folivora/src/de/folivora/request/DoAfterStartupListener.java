@@ -17,6 +17,7 @@ import de.folivora.model.SearchRequest;
 import de.folivora.model.Transaction;
 import de.folivora.model.User;
 import de.folivora.model.UserType;
+import de.folivora.model.messanger.Message;
 import de.folivora.storage.HibernateLoad;
 import de.folivora.storage.HibernateSave;
 
@@ -61,7 +62,7 @@ public class DoAfterStartupListener implements ServletContextListener {
 		IdStorage idStorage = HibernateLoad.loadIdStorage(0);
 		if(idStorage == null) {
 			logger.warn("Could not load id storage, create default one.");
-			aManager.getdC().setIdStorage(new IdStorage(0, 0, 0, 0, 0));
+			aManager.getdC().setIdStorage(new IdStorage(0, 0, 0, 0, 0, 0));
 			HibernateSave.saveOrUpdateObject(aManager.getdC().getIdStorage());
 			logger.warn("Created and saved new default id storage.");
 			// TODO Check if there are andy objects in the database, should be dropped then
@@ -88,6 +89,12 @@ public class DoAfterStartupListener implements ServletContextListener {
 		if(searchRequests != null && searchRequests.size() > 0) {
 			aManager.getdC().setSearchRequestList(searchRequests);
 		}
+		
+		// Load messages
+		List<Message> messages = HibernateLoad.loadMessageList();
+		if(messages != null && messages.size() > 0) {
+			aManager.getdC().setMessageList(messages);
+		}	
 	}
 	
 	private void checkForStandardUsers(ApplicationManager aManager) {
@@ -125,29 +132,35 @@ public class DoAfterStartupListener implements ServletContextListener {
 	
 	private void enrichLoadedDatabaseData(ApplicationManager aManager) {
 		DataContainer dC = aManager.getdC();
+		UserManager uManager = aManager.getuManager();
 		
 		for(Transaction t : dC.getTransactionList()) {
 			// Save transaction which influence the user credits
-			t.getuFrom().getCredit().getReferencedTransactions().add(t);
-			t.getuTo().getCredit().getReferencedTransactions().add(t);
+			uManager.getUserWithId(t.getuFrom().getId()).getCredit().getReferencedTransactions().add(t);
+			uManager.getUserWithId(t.getuTo().getId()).getCredit().getReferencedTransactions().add(t);
 		}
 		
-		
+		// Save feedbacks
 		for(SearchRequest sr : dC.getSearchRequestList()) {
 			// Feedback of delivering user -> searching user
 			Feedback fOfDeliveringUser = sr.getFeedbackOfDeliveringUser();
 			if(fOfDeliveringUser != null) {
-				sr.getUserCreator().getReceivedFeedbacks().add(fOfDeliveringUser);
+				uManager.getUserWithId(sr.getUserCreator().getId()).getReceivedFeedbacks().add(fOfDeliveringUser);
 			}
 			
 			// Feedback of searching user -> delivering user
 			Feedback fOfSearchingUser = sr.getFeedbackOfSearchingUser();
 			if(fOfSearchingUser != null) {
 				if(sr.getUserStasisfier() != null) {
-					sr.getUserStasisfier().getReceivedFeedbacks().add(fOfSearchingUser);
+					uManager.getUserWithId(sr.getUserStasisfier().getId()).getReceivedFeedbacks().add(fOfSearchingUser);
 				}
 			}
-			
+		}
+		
+		// Save relevant messages for users
+		for(Message msg : dC.getMessageList()) {
+			uManager.getUserWithId(msg.getSender().getId()).getRelevantMessages().add(msg);
+			uManager.getUserWithId(msg.getReceiver().getId()).getRelevantMessages().add(msg);
 		}
 	}
 	

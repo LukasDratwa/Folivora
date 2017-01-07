@@ -14,6 +14,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import javax.servlet.http.HttpSession;
 
+import de.folivora.model.messanger.Message;
 import de.folivora.util.Constants;
 
 @Entity
@@ -44,6 +45,9 @@ public class User {
 	@Transient
 	private List<Feedback> receivedFeedbacks = new ArrayList<Feedback>();
 	
+	@Transient
+	private List<Message> relevantMessages = new ArrayList<Message>();
+	
 	public User(long id, String name, String password, Date birthday, Gender gender,
 			String email, UserCredit userCredit, UserType userType, String hometown) {
 		this.id = id;
@@ -62,6 +66,30 @@ public class User {
 	 * Protected default constructor for hibernate mapping.
 	 */
 	protected User() {
+	}
+	
+	public void printAllRelevantMsgs() {
+		System.out.println("\nPrinting all messages of: " + this);
+		for(Message msg : getRelevantMessages()) {
+			System.out.println("\t" + msg);
+		}
+		System.out.println();
+	}
+	
+	public void printAllReceivedFeedbacks() {
+		System.out.println("\nPrinting all received feedbacks of: " + this);
+		for(Feedback f : getReceivedFeedbacks()) {
+			System.out.println("\t" + f);
+		}
+		System.out.println();
+	}
+	
+	public boolean isInvolvedIn(SearchRequest sr) {
+		if(sr.getUserCreator().getId() == getId() || sr.getUserStasisfier().getId() == getId()) {
+			return true;
+		}
+		
+		return false;
 	}
 	
 	public void refreshTokenStorage(String token) {
@@ -242,5 +270,19 @@ public class User {
 	 */
 	public void setHometown(String hometown) {
 		this.hometown = hometown;
+	}
+
+	/**
+	 * @return the relevantMessages
+	 */
+	public List<Message> getRelevantMessages() {
+		return relevantMessages;
+	}
+
+	/**
+	 * @param relevantMessages the relevantMessages to set
+	 */
+	public void setRelevantMessages(List<Message> relevantMessages) {
+		this.relevantMessages = relevantMessages;
 	}
 }

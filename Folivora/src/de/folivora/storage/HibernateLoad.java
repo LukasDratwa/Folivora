@@ -12,6 +12,7 @@ import de.folivora.model.SearchRequest;
 import de.folivora.model.TokenStorage;
 import de.folivora.model.Transaction;
 import de.folivora.model.User;
+import de.folivora.model.messanger.Message;
 
 /** 
  * Class with method to load something of the database
@@ -219,6 +220,58 @@ public class HibernateLoad {
 		}
 		
 		return srList;
+	}
+	
+	/**
+	 * Method to load a specific Message of the database
+	 * 
+	 * @param id - the transaction id
+	 * @return - the loaded Message or null, if there is no Message with the given id in the database
+	 */
+	public static Message loadMessage(long id) {
+		Message message = null;
+		
+		try {
+			Session session = HibernateUtil.getSessionFactory().openSession();	
+	        message = (Message) session.createQuery("from Message where id = '" + id + "'").uniqueResult();
+	        session.close();
+		} catch(HibernateException e) {
+			logger.error("Failed to load Message with the id " + id + "!", e);
+		}
+		
+		if(message == null) {
+			logger.warn("Message with ID " + id + " could not be loaded.");
+		} else {
+			logger.info("Loaded Message: " + message);
+		}
+		
+		return message;
+	}
+	
+	/**
+	 * Method to load all Messages of the database
+	 * 
+	 * @return the loaded Messages 
+	 */
+	@SuppressWarnings("unchecked")
+	public static List<Message> loadMessageList() {
+		ArrayList<Message> messageList = null;
+		
+		try {
+			Session session = HibernateUtil.getSessionFactory().openSession();		      
+			messageList = (ArrayList<Message>) session.createQuery("from Message order by id asc").list();
+			session.close();
+			
+			if(messageList != null) {
+				for(Message msg : messageList) {
+					logger.info("Loaded message: " + msg);
+				}
+			}
+		} catch(HibernateException e) {
+			logger.error("Failed to load message list!", e);
+		}
+		
+		return messageList;
 	}
 	
 	/**

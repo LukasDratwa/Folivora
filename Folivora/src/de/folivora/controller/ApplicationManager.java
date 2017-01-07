@@ -16,6 +16,7 @@ import de.folivora.model.SearchRequestStatus;
 import de.folivora.model.Transaction;
 import de.folivora.model.User;
 import de.folivora.model.UserCredit;
+import de.folivora.model.messanger.Message;
 import de.folivora.storage.HibernateSave;
 import de.folivora.storage.HibernateUpdate;
 
@@ -119,6 +120,21 @@ public class ApplicationManager {
 				userFrom, userTo, unlockToken, sr);
 	}
 	
+	public JsonArray getInvolvedSearchRequestsOfUserAsJsonArray(long userId) {
+		JsonArray result = new JsonArray();
+		User user = getuManager().getUserWithId(userId);
+		
+		if(user != null) {
+			for(SearchRequest sr : dC.getSearchRequestList()) {
+				if(user.isInvolvedIn(sr)) {
+					result.add(sr.getAsJsonObject());
+				}
+			}
+		}
+		
+		return result;
+	}
+	
 	public JsonArray getActiveAndInProgressSearchRequestListAsJsonArray() {
 		JsonArray result = new JsonArray();
 		
@@ -164,6 +180,19 @@ public class ApplicationManager {
 			Double lng, String address, User userCreator) {
 		return new SearchRequest(dC.getIdStorage().getNewSearchRequestId(), title, description, pathToDefaultImg,
 				possibleDelivery, costsAndReward, fee, lat, lng, address, userCreator);
+	}
+	
+	public Message createAndSaveMessage(String title, String text, User sender, User receiver) {
+		Message msg = factory_createMessage(title, text, sender, receiver);
+		HibernateSave.saveOrUpdateObject(msg);
+		dC.getMessageList().add(msg);
+		msg.getSender().getRelevantMessages().add(msg);
+		msg.getReceiver().getRelevantMessages().add(msg);
+		return msg;
+	}
+	
+	private Message factory_createMessage(String title, String text, User sender, User receiver) {
+		return new Message(dC.getIdStorage().getNewMessageId(), title, text, sender, receiver);
 	}
 	
 	/**

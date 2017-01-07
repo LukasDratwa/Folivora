@@ -7,24 +7,21 @@ import de.folivora.model.IdStorage;
 import de.folivora.model.SearchRequest;
 import de.folivora.model.Transaction;
 import de.folivora.model.User;
+import de.folivora.model.messanger.Message;
 
 public class DataContainer {
 	private List<User> userList;
 	private List<SearchRequest> searchRequestList;
 	private List<Transaction> transactionList;
+	private List<Message> messageList;
 	private IdStorage idStorage;
-	
-	public DataContainer(List<User> userList, List<SearchRequest> searchRequestList, IdStorage idStorage) {
-		this.userList = userList;
-		this.searchRequestList = searchRequestList;
-		this.idStorage = idStorage;
-	}
 	
 	public DataContainer() {
 		this.userList = new ArrayList<User>();
 		this.searchRequestList = new ArrayList<SearchRequest>();
 		this.transactionList = new ArrayList<Transaction>();
-		this.idStorage = new IdStorage(0, 0, 0, 0, 0);
+		this.messageList = new ArrayList<Message>();
+		this.idStorage = new IdStorage(0, 0, 0, 0, 0, 0);
 	}
 	
 	/**
@@ -81,5 +78,19 @@ public class DataContainer {
 	 */
 	public void setTransactionList(List<Transaction> transactionList) {
 		this.transactionList = transactionList;
+	}
+
+	/**
+	 * @return the messageList
+	 */
+	public List<Message> getMessageList() {
+		return messageList;
+	}
+
+	/**
+	 * @param messageList the messageList to set
+	 */
+	public void setMessageList(List<Message> messageList) {
+		this.messageList = messageList;
 	}
 }

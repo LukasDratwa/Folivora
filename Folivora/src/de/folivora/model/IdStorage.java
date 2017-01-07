@@ -13,15 +13,17 @@ public class IdStorage {
 	 			 lastUsedSearchRequestId,
 	 			 lastUsedFeedbackId,
 	 			 lastUsedUserCreditId,
-	 			 lastUsedTransactionId;
+	 			 lastUsedTransactionId,
+	 			 lastUsedMessageId;
 	
 	public IdStorage(long lastUsedUserId, long lastUsedSearchRequestId, long lastUsedFeedbackId,
-			long lastUsedUserCreditId, long lastUsedTransactionId) {
+			long lastUsedUserCreditId, long lastUsedTransactionId, long lastUsedMessageId) {
 		this.lastUsedUserId = lastUsedUserId;
 		this.lastUsedSearchRequestId = lastUsedSearchRequestId;
 		this.lastUsedFeedbackId = lastUsedFeedbackId;
 		this.lastUsedUserCreditId = lastUsedUserCreditId;
 		this.lastUsedTransactionId = lastUsedTransactionId;
+		this.lastUsedMessageId = lastUsedMessageId;
 	}
 	
 	/**
@@ -35,7 +37,7 @@ public class IdStorage {
 	public String toString() {
 		return "[lUserId=" + this.lastUsedUserId + ", lUserCreditId=" + this.lastUsedUserCreditId 
 					+ ", lSearchReqId=" + this.lastUsedSearchRequestId + ", lTransactionId=" + this.lastUsedTransactionId
-					+ ", lFeedbackId=" + this.lastUsedFeedbackId + "]";
+					+ ", lFeedbackId=" + this.lastUsedFeedbackId + ", lMessageId=" + this.lastUsedMessageId + "]";
 	}
 	
 	/**
@@ -91,6 +93,17 @@ public class IdStorage {
 		setLastUsedTransactionId(getLastUsedTransactionId() + 1);
 		HibernateUpdate.updateObject(this);
 		return getLastUsedTransactionId();
+	}
+	
+	/**
+	 * Method to get a new unique id for a new {@link Message}.
+	 * 
+	 * @return a new id
+	 */
+	public long getNewMessageId() {
+		setLastUsedMessageId(getLastUsedMessageId() + 1);
+		HibernateUpdate.updateObject(this);
+		return getLastUsedMessageId();
 	}
 
 	/**
@@ -161,6 +174,20 @@ public class IdStorage {
 	 */
 	private void setLastUsedTransactionId(long lastUsedTransactionId) {
 		this.lastUsedTransactionId = lastUsedTransactionId;
+	}
+	
+	/**
+	 * @return the lastUsedMessageId
+	 */
+	private long getLastUsedMessageId() {
+		return lastUsedMessageId;
+	}
+
+	/**
+	 * @param lastUsedMessageId the lastUsedMessageId to set
+	 */
+	private void setLastUsedMessageId(long lastUsedMessageId) {
+		this.lastUsedMessageId = lastUsedMessageId;
 	}
 
 	/**
