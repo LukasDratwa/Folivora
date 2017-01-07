@@ -149,6 +149,8 @@ function cancelSr(signedInUserId, srId) {
 				$.notify("Gesuch erfolgreich zurückgezogen.", "success");
 				
 				webappDataObj.mapData.removeMarker(srId);
+				var sr = webappDataObj.srData.getSrWithId(srId);
+				updateNavbarBalance(sr.costsAndReward + sr.fee);
 			} else {
 				$.notify("Fehler beim Zurückziehen!", "error");
 			}
@@ -198,7 +200,28 @@ function updateInputCostFields() {
 }
 
 function updateNavbarBalance(delta) {
-	// TODO 
+	$("#credit-animation-span").css("display", "none");
+	
+	if(delta < 0) {
+		$("#credit-animation-span").css("color", "red");
+		$("#credit-animation-span").text("   " + delta);
+	} else {
+		$("#credit-animation-span").css("color", "green");
+		$("#credit-animation-span").text("   +" + delta);
+	}
+	
+	
+	$("#credit-animation-span").fadeIn(1000, function() {
+		setTimeout(function() {
+			$("#credit-animation-span").fadeOut(500, function() {
+				var spanHtml = $("#credit-animation-span").wrap('<p/>').parent().html();
+				$("#credit-animation-span").unwrap();
+				
+				webappDataObj.userData.balance = webappDataObj.userData.balance + delta;
+				$("#navbar-li-element-credit-link").html("Guthaben: " + webappDataObj.userData.balance + " €" + spanHtml);
+			});
+		}, 1000);
+	});
 }
 
 function initDateTimeRange() {

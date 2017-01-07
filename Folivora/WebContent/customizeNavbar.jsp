@@ -22,9 +22,9 @@
 		var credit = "<% out.write("" + usr.getCredit().getBalance()); %>";
 		if(window.location.href.indexOf("credit.jsp") != -1) {
 			$(".navbar-li-element").removeClass("active");
-			$("#navbar-left-ul").append("<li class='navbar-li-element active' id='navbar-li-element-credit'><a href='credit.jsp'>Guthaben: " + credit + " €</a></li>");
+			$("#navbar-left-ul").append("<li class='navbar-li-element active' id='navbar-li-element-credit'><a id='navbar-li-element-credit-link' href='credit.jsp'>Guthaben: " + credit + " €<span id='credit-animation-span'></span></a></li>");
 		} else {
-			$("#navbar-left-ul").append("<li class='navbar-li-element' id='navbar-li-element-credit'><a href='credit.jsp'>Guthaben: " + credit + " €</a></li>");
+			$("#navbar-left-ul").append("<li class='navbar-li-element' id='navbar-li-element-credit'><a id='navbar-li-element-credit-link' href='credit.jsp'>Guthaben: " + credit + " €<span id='credit-animation-span'></span></a></li>");
 		}
 		
 		
