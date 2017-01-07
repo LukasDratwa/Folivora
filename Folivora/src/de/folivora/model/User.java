@@ -32,7 +32,7 @@ public class User {
 	@Enumerated(EnumType.STRING)
 	private UserType userType;
 	
-	@OneToOne(cascade=CascadeType.ALL, fetch=FetchType.EAGER, targetEntity=UserCredit.class, mappedBy="owner")
+	@OneToOne(cascade=CascadeType.ALL, fetch=FetchType.EAGER, targetEntity=UserCredit.class)
 	private UserCredit credit;
 	
 	@OneToOne(cascade=CascadeType.ALL, fetch=FetchType.EAGER, targetEntity=TokenStorage.class)

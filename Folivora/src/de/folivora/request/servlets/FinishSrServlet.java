@@ -23,17 +23,17 @@ import de.folivora.request.AccessLayer;
 import de.folivora.util.Constants;
 
 /**
- * Servlet implementation class NewSrServlet
+ * Servlet implementation class FinishSrServlet
  */
-@WebServlet("/newsrservlet")
-public class NewSrServlet extends HttpServlet {
+@WebServlet("/finishsrservlet")
+public class FinishSrServlet extends HttpServlet {
 	private static final long serialVersionUID = Constants.SERIAL_VERSION_UID;
-	private static final Logger logger = Logger.getLogger(NewSrServlet.class);
+	private static final Logger logger = Logger.getLogger(FinishSrServlet.class);
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public NewSrServlet() {
+    public FinishSrServlet() {
         super();
     }
 
@@ -67,31 +67,75 @@ public class NewSrServlet extends HttpServlet {
 		// Map inputdata
 		Gson gson = new GsonBuilder().create();
 		ApplicationManager aManager = ApplicationManager.getApplicationManagerInstance();
+		UserManager uManager = aManager.getuManager();
 		try {
-			SearchRequest sr = gson.fromJson(sB.toString(), SearchRequest.class);
+			Input input = gson.fromJson(sB.toString(), Input.class);
+			SearchRequest sr = aManager.getSearchRequestWithId(input.getSrId());
 			
-			if(sr.getLat() != null && sr.getLng() !=  null && sr.getTitle() !=  null
-					&& sr.getPossibleDelivery_from() !=  null && sr.getPossibleDelivery_to() !=  null) {
-				UserManager uManager = aManager.getuManager();
-				User userCreator = uManager.getUserWithSession(request.getSession());
-				
-				if(userCreator != null) {
-					AccessLayer.createSearchRequest(sr.getTitle(), sr.getDescription(), sr.getPathToDefaultImg(),
-							sr.getPossibleDelivery_from(), sr.getPossibleDelivery_to(), sr.getCostsAndReward(),
-							sr.getFee(), sr.getLat(), sr.getLng(), sr.getAddress(), userCreator, "");
-					new ResponseObject(200, "Successfully created searchrequest.", response).writeResponse();
-				} else {
-					new ResponseObject(403, "Failed to create searchrequest. Please sign in first!", response).writeResponse();
-					logger.info("Failed to save new searchrequest. User wasn't logged in!");
-				}
+			if(input.getUnlockToken() == null) {
+				new ResponseObject(400, "Please provide the filed \"unlockToken\"!", response).writeResponse();
+				logger.warn("Failed to finish SR!");
+				return;
+			}
+			
+			User callingUser = uManager.getUserWithId(input.getUserCallingId());
+			if(sr != null) {
+				AccessLayer.finsihSr(sr, input.getUnlockToken(), callingUser);
 			} else {
-				new ResponseObject(400, "Missing credentials \"lat\", \"lng\", \"title\","
-						+ "\"possibleDelivery_from\" and/or \"possibleDelivery_to\"", response).writeResponse();
-				logger.info("Missing data to create new searchrequest.");
+				new ResponseObject(400, "There is no SR with the id=" + input.getSrId() + "!", response).writeResponse();
+				logger.warn("Failed to finish SR!");
 			}
 		} catch(Exception e) {
 			new ResponseObject(500, "Failed to map input with gson!", response).writeResponse();
 			logger.error("Failed to map inputdata!", e);
+		}
+	}
+	
+	class Input {
+		private long userCallingId;
+		private long srId;
+		private String unlockToken;
+		
+		/**
+		 * @return the userCallingId
+		 */
+		public long getUserCallingId() {
+			return userCallingId;
+		}
+		
+		/**
+		 * @param userCallingId the userCallingId to set
+		 */
+		public void setUserCallingId(long userCallingId) {
+			this.userCallingId = userCallingId;
+		}
+		
+		/**
+		 * @return the srId
+		 */
+		public long getSrId() {
+			return srId;
+		}
+		
+		/**
+		 * @param srId the srId to set
+		 */
+		public void setSrId(long srId) {
+			this.srId = srId;
+		}
+
+		/**
+		 * @return the unlockToken
+		 */
+		public String getUnlockToken() {
+			return unlockToken;
+		}
+
+		/**
+		 * @param unlockToken the unlockToken to set
+		 */
+		public void setUnlockToken(String unlockToken) {
+			this.unlockToken = unlockToken;
 		}
 	}
 }

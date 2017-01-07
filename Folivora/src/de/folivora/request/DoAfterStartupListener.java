@@ -1,5 +1,6 @@
 package de.folivora.request;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletContextEvent;
@@ -51,8 +52,6 @@ public class DoAfterStartupListener implements ServletContextListener {
 			// 6. Start update Thread
 			updateThread = new UpdateDaemon();
 			updateThread.start();
-			
-			// aManager.createAndSaveTestData();
 		} catch(Exception e) {
 			logger.error("Error while startup!", e);
 		}
@@ -112,15 +111,15 @@ public class DoAfterStartupListener implements ServletContextListener {
 		}
 		
 		if(! foundAdmin) {
-			uManager.createAndSaveUser("admin", "admin", null, null, "", 0, UserType.ADMIN, "");
+			uManager.createAndSaveUser("admin", "admin", new Date(), null, "", 0, UserType.ADMIN, "");
 		}
 		
 		if(! foundFolivoraUser) {
-			uManager.createAndSaveUser("folivora", "folivora", null, null, "", 0, UserType.FOLIVORA, "");
+			uManager.createAndSaveUser("folivora", "folivora", new Date(), null, "", 0, UserType.FOLIVORA, "");
 		}
 		
 		if(! foundPaypalUser) {
-			uManager.createAndSaveUser("paypal", "paypal", null, null, "", 0, UserType.PAYPAL, "");
+			uManager.createAndSaveUser("paypal", "paypal", new Date(), null, "", 0, UserType.PAYPAL, "");
 		}
 	}
 	
@@ -129,18 +128,26 @@ public class DoAfterStartupListener implements ServletContextListener {
 		
 		for(Transaction t : dC.getTransactionList()) {
 			// Save transaction which influence the user credits
-			t.getUserSearching().getCredit().getReferencedTransactions().add(t);
-			t.getUserDelivering().getCredit().getReferencedTransactions().add(t);
-			
-			// Save received feedbacks
-			Feedback fOfSearchingUser = t.getFeedbackOfSearchingUser();
-			if(fOfSearchingUser != null) {
-				t.getUserDelivering().getReceivedFeedbacks().add(fOfSearchingUser);
-			}
-			Feedback fOfDeliveringUser = t.getFeedbackOfDeliveringUser();
+			t.getuFrom().getCredit().getReferencedTransactions().add(t);
+			t.getuTo().getCredit().getReferencedTransactions().add(t);
+		}
+		
+		
+		for(SearchRequest sr : dC.getSearchRequestList()) {
+			// Feedback of delivering user -> searching user
+			Feedback fOfDeliveringUser = sr.getFeedbackOfDeliveringUser();
 			if(fOfDeliveringUser != null) {
-				t.getUserSearching().getReceivedFeedbacks().add(fOfDeliveringUser);
+				sr.getUserCreator().getReceivedFeedbacks().add(fOfDeliveringUser);
 			}
+			
+			// Feedback of searching user -> delivering user
+			Feedback fOfSearchingUser = sr.getFeedbackOfSearchingUser();
+			if(fOfSearchingUser != null) {
+				if(sr.getUserStasisfier() != null) {
+					sr.getUserStasisfier().getReceivedFeedbacks().add(fOfSearchingUser);
+				}
+			}
+			
 		}
 	}
 	

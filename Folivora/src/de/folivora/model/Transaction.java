@@ -2,9 +2,7 @@ package de.folivora.model;
 
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
@@ -14,34 +12,37 @@ public class Transaction {
 	private long id;
 	private Date executionDate;
 	private double value;
+	private double fee;
 	private boolean executed;
 	private boolean cancelled;
 	private Long cacelTransactionId;
 	private String unlockToken;
 	
-	@OneToOne(targetEntity=User.class)
-	private User userSearching,
-				 userDelivering;
-
-	@OneToOne(cascade=CascadeType.ALL, fetch=FetchType.EAGER, targetEntity=Feedback.class)
-	private Feedback feedbackOfSearchingUser = null,
-					 feedbackOfDeliveringUser = null;
+	@OneToOne(targetEntity=SearchRequest.class)
+	private SearchRequest referencedSr;
 	
-	public Transaction(long id, double value, User userSearching, User userDelivering, String unlockToken) {
+	@OneToOne(targetEntity=User.class)
+	private User uFrom,
+				 uTo;
+
+	public Transaction(long id, double value, double fee, User uFrom, User uTo,
+			String unlockToken, SearchRequest referencedSr) {
 		this.id = id;
 		this.value = value;
-		this.userSearching = userSearching;
-		this.userDelivering = userDelivering;
+		this.fee = fee;
+		this.uFrom = uFrom;
+		this.uTo = uTo;
 		this.executed = false;
 		this.cancelled = false;
 		this.unlockToken = unlockToken;
+		this.referencedSr = referencedSr;
 	}
 	
 	@Override
 	public String toString() {
-		return "[userSearchingRef=\"" + this.userSearching.getName() + "\" (" + this.userSearching.getId() + ")"
-			+ ", userDeliveringRef=\"" + this.userDelivering.getName() + "\" (" + this.userDelivering.getId() + ")"
-			+ ", value=" + this.value + ", executed=" + this.executed + "]";
+		return "[userFromRef=\"" + this.uFrom.getName() + "\" (" + this.uFrom.getId() + ")"
+			+ ", userToRef=\"" + this.uTo.getName() + "\" (" + this.uTo.getId() + ")"
+			+ ", value=" + this.value + ", fee=" + this.fee + ", executed=" + this.executed + "]";
 	}
 	
 	/**
@@ -91,62 +92,6 @@ public class Transaction {
 	 */
 	public void setValue(double value) {
 		this.value = value;
-	}
-
-	/**
-	 * @return the userSearching
-	 */
-	public User getUserSearching() {
-		return userSearching;
-	}
-
-	/**
-	 * @param userSearching the userSearching to set
-	 */
-	public void setUserSearching(User userSearching) {
-		this.userSearching = userSearching;
-	}
-
-	/**
-	 * @return the userDelivering
-	 */
-	public User getUserDelivering() {
-		return userDelivering;
-	}
-
-	/**
-	 * @param userDelivering the userDelivering to set
-	 */
-	public void setUserDelivering(User userDelivering) {
-		this.userDelivering = userDelivering;
-	}
-
-	/**
-	 * @return the feedbackOfSearchingUser
-	 */
-	public Feedback getFeedbackOfSearchingUser() {
-		return feedbackOfSearchingUser;
-	}
-
-	/**
-	 * @param feedbackOfSearchingUser the feedbackOfSearchingUser to set
-	 */
-	public void setFeedbackOfSearchingUser(Feedback feedbackOfSearchingUser) {
-		this.feedbackOfSearchingUser = feedbackOfSearchingUser;
-	}
-
-	/**
-	 * @return the feedbackOfDeliveringUser
-	 */
-	public Feedback getFeedbackOfDeliveringUser() {
-		return feedbackOfDeliveringUser;
-	}
-
-	/**
-	 * @param feedbackOfDeliveringUser the feedbackOfDeliveringUser to set
-	 */
-	public void setFeedbackOfDeliveringUser(Feedback feedbackOfDeliveringUser) {
-		this.feedbackOfDeliveringUser = feedbackOfDeliveringUser;
 	}
 
 	/**
@@ -200,5 +145,61 @@ public class Transaction {
 	 */
 	public String getUnlockToken() {
 		return unlockToken;
+	}
+
+	/**
+	 * @return the referencedSr
+	 */
+	public SearchRequest getReferencedSr() {
+		return referencedSr;
+	}
+
+	/**
+	 * @param referencedSr the referencedSr to set
+	 */
+	public void setReferencedSr(SearchRequest referencedSr) {
+		this.referencedSr = referencedSr;
+	}
+
+	/**
+	 * @return the fee
+	 */
+	public double getFee() {
+		return fee;
+	}
+
+	/**
+	 * @param fee the fee to set
+	 */
+	public void setFee(double fee) {
+		this.fee = fee;
+	}
+
+	/**
+	 * @return the uFrom
+	 */
+	public User getuFrom() {
+		return uFrom;
+	}
+
+	/**
+	 * @param uFrom the uFrom to set
+	 */
+	public void setuFrom(User uFrom) {
+		this.uFrom = uFrom;
+	}
+
+	/**
+	 * @return the uTo
+	 */
+	public User getuTo() {
+		return uTo;
+	}
+
+	/**
+	 * @param uTo the uTo to set
+	 */
+	public void setuTo(User uTo) {
+		this.uTo = uTo;
 	}
 }

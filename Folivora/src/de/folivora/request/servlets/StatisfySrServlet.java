@@ -23,17 +23,17 @@ import de.folivora.request.AccessLayer;
 import de.folivora.util.Constants;
 
 /**
- * Servlet implementation class NewSrServlet
+ * Servlet implementation class StatisfySrServlet
  */
-@WebServlet("/newsrservlet")
-public class NewSrServlet extends HttpServlet {
+@WebServlet("/statisfysrservlet")
+public class StatisfySrServlet extends HttpServlet {
 	private static final long serialVersionUID = Constants.SERIAL_VERSION_UID;
-	private static final Logger logger = Logger.getLogger(NewSrServlet.class);
+	private static final Logger logger = Logger.getLogger(StatisfySrServlet.class);
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public NewSrServlet() {
+    public StatisfySrServlet() {
         super();
     }
 
@@ -67,31 +67,63 @@ public class NewSrServlet extends HttpServlet {
 		// Map inputdata
 		Gson gson = new GsonBuilder().create();
 		ApplicationManager aManager = ApplicationManager.getApplicationManagerInstance();
+		UserManager uManager = aManager.getuManager();
 		try {
-			SearchRequest sr = gson.fromJson(sB.toString(), SearchRequest.class);
+			Input input = gson.fromJson(sB.toString(), Input.class);
+			SearchRequest sr = aManager.getSearchRequestWithId(input.getSrId());
 			
-			if(sr.getLat() != null && sr.getLng() !=  null && sr.getTitle() !=  null
-					&& sr.getPossibleDelivery_from() !=  null && sr.getPossibleDelivery_to() !=  null) {
-				UserManager uManager = aManager.getuManager();
-				User userCreator = uManager.getUserWithSession(request.getSession());
+			if(sr != null) {
+				User userSrCreator = sr.getUserCreator();
+				User userCalling = uManager.getUserWithId(input.getUserCallingId());
 				
-				if(userCreator != null) {
-					AccessLayer.createSearchRequest(sr.getTitle(), sr.getDescription(), sr.getPathToDefaultImg(),
-							sr.getPossibleDelivery_from(), sr.getPossibleDelivery_to(), sr.getCostsAndReward(),
-							sr.getFee(), sr.getLat(), sr.getLng(), sr.getAddress(), userCreator, "");
-					new ResponseObject(200, "Successfully created searchrequest.", response).writeResponse();
+				if(userSrCreator.getId() != userCalling.getId()) {
+					AccessLayer.statisfySearchRequest(userCalling, sr);
+					new ResponseObject(200, "Successfully statisfied sr.", response).writeResponse();
+					logger.info(userCalling.getName() + " statisfied: " + sr);
 				} else {
-					new ResponseObject(403, "Failed to create searchrequest. Please sign in first!", response).writeResponse();
-					logger.info("Failed to save new searchrequest. User wasn't logged in!");
+					new ResponseObject(403, "Failed to statisfy SR! User unauthorized!", response).writeResponse();
+					logger.warn("Failed to cancel SR! Users can't statisfy their own SRs!");
 				}
 			} else {
-				new ResponseObject(400, "Missing credentials \"lat\", \"lng\", \"title\","
-						+ "\"possibleDelivery_from\" and/or \"possibleDelivery_to\"", response).writeResponse();
-				logger.info("Missing data to create new searchrequest.");
+				new ResponseObject(400, "There is no SR with the id=" + input.getSrId() + "!", response).writeResponse();
+				logger.warn("Failed to statisfy SR!");
 			}
 		} catch(Exception e) {
 			new ResponseObject(500, "Failed to map input with gson!", response).writeResponse();
 			logger.error("Failed to map inputdata!", e);
+		}
+	}
+	
+	class Input {
+		private long userCallingId;
+		private long srId;
+		
+		/**
+		 * @return the userCallingId
+		 */
+		public long getUserCallingId() {
+			return userCallingId;
+		}
+		
+		/**
+		 * @param userCallingId the userCallingId to set
+		 */
+		public void setUserCallingId(long userCallingId) {
+			this.userCallingId = userCallingId;
+		}
+		
+		/**
+		 * @return the srId
+		 */
+		public long getSrId() {
+			return srId;
+		}
+		
+		/**
+		 * @param srId the srId to set
+		 */
+		public void setSrId(long srId) {
+			this.srId = srId;
 		}
 	}
 }

@@ -93,6 +93,7 @@ public class UserCredit {
 	 */
 	public void setBalance(double balance) {
 		this.balance = balance;
+		setLastModification(new Date());
 	}
 
 	/**

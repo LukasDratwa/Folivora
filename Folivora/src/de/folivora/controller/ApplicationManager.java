@@ -1,18 +1,21 @@
 package de.folivora.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import com.google.gson.JsonArray;
+
 import de.folivora.model.Feedback;
-import de.folivora.model.Gender;
 import de.folivora.model.IdStorage;
 import de.folivora.model.Rating;
 import de.folivora.model.SearchRequest;
+import de.folivora.model.SearchRequestStatus;
 import de.folivora.model.Transaction;
 import de.folivora.model.User;
 import de.folivora.model.UserCredit;
-import de.folivora.model.UserType;
 import de.folivora.storage.HibernateSave;
 import de.folivora.storage.HibernateUpdate;
 
@@ -21,7 +24,7 @@ public class ApplicationManager {
 	private static ApplicationManager instance = null;
 	private DataContainer dC;
 	private IdStorage idStorage;
-	private Logger logger = Logger.getLogger(ApplicationManager.class);
+	private static final Logger logger = Logger.getLogger(ApplicationManager.class);
 	
 	private ApplicationManager(DataContainer dC) {
 		this.dC = dC;
@@ -40,62 +43,92 @@ public class ApplicationManager {
 	}
 	
 	public Feedback createAndSaveFeedback(Rating rating, String description,
-			User feedbackCreator, Transaction referencedTransaction) {
-		Feedback f = factory_createFeedback(rating, description, feedbackCreator, referencedTransaction);
+			User feedbackCreator, SearchRequest referencedSearchRequest) {
+		Feedback f = factory_createFeedback(rating, description, feedbackCreator, referencedSearchRequest);
 		
 		// Save the given feedback in the transaction and in the list of received feedbacks
 		User feedbackReceiver = null;
-		if(referencedTransaction.getUserSearching().equals(feedbackCreator)) {
-			referencedTransaction.setFeedbackOfSearchingUser(f);
-			feedbackReceiver = referencedTransaction.getUserDelivering();
+		if(referencedSearchRequest.getUserCreator().equals(feedbackCreator)) {
+			referencedSearchRequest.setFeedbackOfSearchingUser(f);
+			feedbackReceiver = referencedSearchRequest.getUserStasisfier();
 		} else {
-			referencedTransaction.setFeedbackOfDeliveringUser(f);
-			feedbackReceiver = referencedTransaction.getUserSearching();
+			referencedSearchRequest.setFeedbackOfDeliveringUser(f);
+			feedbackReceiver = referencedSearchRequest.getUserCreator();
 		}
 		feedbackReceiver.getReceivedFeedbacks().add(f);
 		
-		HibernateSave.saveOrUpdateObject(referencedTransaction);
+		HibernateSave.saveOrUpdateObject(referencedSearchRequest);
 		return f;
 	}
 	
 	private Feedback factory_createFeedback(Rating rating, String description,
-			User feedbackCreator, Transaction referencedTransaction) {
-		return new Feedback(dC.getIdStorage().getNewFeedbackId(), rating, description, feedbackCreator, referencedTransaction);
+			User feedbackCreator, SearchRequest referencedSearchRequest) {
+		return new Feedback(dC.getIdStorage().getNewFeedbackId(), rating, description, feedbackCreator, referencedSearchRequest);
 	}
 	
-	public void executeTransaction(String executionUnlockToken, Transaction t) {
-		if(! executionUnlockToken.equals(t.getUnlockToken())) {
-			logger.warn("Invalid unlock token! Couldn't execute transaction: " + t);
-			return;
+	public boolean executeTransaction(String token, Transaction t) {
+		if(t.getUnlockToken() != null && !token.equals(t.getUnlockToken())) {
+			logger.warn("Failed to unlock " + t + " with token " + token + "!! Execution cancelled.");
+			return true;
 		}
 		
-		UserCredit userCreditSearching = t.getUserSearching().getCredit();
-		UserCredit userCreditDelivering = t.getUserDelivering().getCredit();
+		UserCredit creditUserFrom = t.getuFrom().getCredit();
+		UserCredit creditUserTo = t.getuTo().getCredit();
 		
-		userCreditSearching.setBalance(userCreditSearching.getBalance() - t.getValue());
-		userCreditDelivering.setBalance(userCreditDelivering.getBalance() + t.getValue());
+		creditUserFrom.setBalance(creditUserFrom.getBalance() - t.getValue() - t.getFee());
+		creditUserTo.setBalance(creditUserTo.getBalance() + t.getValue() + t.getFee());
 		
-		userCreditSearching.setLastModification(new Date());
-		userCreditDelivering.setLastModification(new Date());
-		
-		if(! userCreditSearching.getReferencedTransactions().contains(t)) {
-			userCreditSearching.getReferencedTransactions().add(t);
+		if(! creditUserFrom.getReferencedTransactions().contains(t)) {
+			creditUserFrom.getReferencedTransactions().add(t);
 		}
-		if(! userCreditDelivering.getReferencedTransactions().contains(t)) {
-			userCreditDelivering.getReferencedTransactions().add(t);
+		if(! creditUserTo.getReferencedTransactions().contains(t)) {
+			creditUserTo.getReferencedTransactions().add(t);
 		}
 		
 		t.setExecutionDate(new Date());
 		t.setExecuted(true);
 		
+		logger.info("Executed transaction: " + t);
 		HibernateUpdate.updateObject(t);
+		HibernateUpdate.updateObject(t.getuFrom());
+		HibernateUpdate.updateObject(t.getuTo());
+		return true;
 	}
 	
-	public Transaction createAndSaveTransaction(double value, User userSearching, User userDelivering, String unlockToken) {
-		Transaction t = factory_createTransaction(value, userSearching, userDelivering, unlockToken);
+	public List<Transaction> getTransactionOfSearchRequest(long srId) {
+		List<Transaction> result = new ArrayList<Transaction>();
+		for(Transaction t : dC.getTransactionList()) {
+			if(t.getReferencedSr() != null && t.getReferencedSr().getId() == srId) {
+				result.add(t);
+			}
+		}
+		return result;
+	}
+	
+	public Transaction createAndSaveTransaction(double value, double fee, User userFrom, User userTo,
+			String unlockToken, SearchRequest sr) {
+		Transaction t = factory_createTransaction(value, fee, userFrom, userTo, unlockToken, sr);
 		HibernateSave.saveOrUpdateObject(t);
 		dC.getTransactionList().add(t);
 		return t;
+	}
+	
+	private Transaction factory_createTransaction(double value, double fee, User userFrom,
+			User userTo, String unlockToken, SearchRequest sr) {
+		return new Transaction(dC.getIdStorage().getNewTransactionId(), value, fee,
+				userFrom, userTo, unlockToken, sr);
+	}
+	
+	public JsonArray getActiveAndInProgressSearchRequestListAsJsonArray() {
+		JsonArray result = new JsonArray();
+		
+		for(SearchRequest sr : dC.getSearchRequestList()) {
+			if(sr.getStatus() == SearchRequestStatus.ACTIVE || sr.getStatus() == SearchRequestStatus.IN_PROGRESS) {
+				result.add(sr.getAsJsonObject());
+			}
+		}
+		
+		return result;
 	}
 	
 	public SearchRequest getSearchRequestWithId(long id) {
@@ -108,55 +141,31 @@ public class ApplicationManager {
 		return null;
 	}
 	
-	private Transaction factory_createTransaction(double value, User userSearching, User userDelivering, String unlockToken) {
-		return new Transaction(dC.getIdStorage().getNewTransactionId(), value, userSearching, userDelivering, unlockToken);
-	}
-	
 	public SearchRequest createAndSaveSearchRequest(String title, String description, String pathToDefaultImg,
-			Long possibleDelivery_from, Long possibleDelivery_to, double costsAndReward, double charges,
+			Long possibleDelivery_from, Long possibleDelivery_to, double costsAndReward, double fee,
 			Double lat, Double lng, String address, User userCreator) {
 		Long[] possibleDelivery = {possibleDelivery_from, possibleDelivery_to};
 		return createAndSaveSearchRequest(title, description, pathToDefaultImg, possibleDelivery, costsAndReward,
-				charges, lat, lng, address, userCreator);
+				fee, lat, lng, address, userCreator);
 	}
 	
 	public SearchRequest createAndSaveSearchRequest(String title, String description, String pathToDefaultImg,
-			Long[] possibleDelivery, double costsAndReward, double charges, 
+			Long[] possibleDelivery, double costsAndReward, double fee, 
 			Double lat, Double lng, String address, User userCreator) {
 		SearchRequest sr = factory_createSearchRequest(title, description, pathToDefaultImg, possibleDelivery,
-				costsAndReward, charges, lat, lng, address, userCreator);
+				costsAndReward, fee, lat, lng, address, userCreator);
 		HibernateSave.saveOrUpdateObject(sr);
 		dC.getSearchRequestList().add(sr);
 		return sr;
 	}
 	
 	private SearchRequest factory_createSearchRequest(String title, String description, String pathToDefaultImg,
-			Long[] possibleDelivery, double costsAndReward, double charges, Double lat,
+			Long[] possibleDelivery, double costsAndReward, double fee, Double lat,
 			Double lng, String address, User userCreator) {
 		return new SearchRequest(dC.getIdStorage().getNewSearchRequestId(), title, description, pathToDefaultImg,
-				possibleDelivery, costsAndReward, charges, lat, lng, address, userCreator);
+				possibleDelivery, costsAndReward, fee, lat, lng, address, userCreator);
 	}
 	
-	public void createAndSaveTestData() {
-		User u1 = uManager.createAndSaveUser("Lukas Test", "123", new Date(), Gender.MALE, "test@das.de", 100, UserType.NORMAL, "Aachen");
-		User u2 = uManager.createAndSaveUser("Hubertus Maximus", "123", new Date(), Gender.Female, "hubert@das.de", 100, UserType.NORMAL, "Aachen");
-		
-		Transaction t1 = createAndSaveTransaction(50, u1, u2, uManager.getTrimmedToken(true, 5, ""));
-		
-		createAndSaveFeedback(Rating.BAD, "War schlecht, Lieferant kam viel zu spät!", u1, t1);
-		createAndSaveFeedback(Rating.VERY_BAD, "Kam nur 5 Minuten zu spät und er war super unfreundlich!", u2, t1);
-		
-		Long[] possibleDelivery = {new Date().getTime(), new Date().getTime()};
-		SearchRequest sr1 = createAndSaveSearchRequest("Suche Brot", "Bis Mittag Brot.", "",
-				possibleDelivery, 3.56, 1.0, 0.0, 0.0, "Testweg 21", u1);
-		
-		sr1.setUserStasisfier(u2);
-		HibernateUpdate.updateObject(sr1);
-		
-		u1.setName("Manuel Neumann");
-		HibernateUpdate.updateObject(u1);
-	}
-
 	/**
 	 * @return the uManager
 	 */

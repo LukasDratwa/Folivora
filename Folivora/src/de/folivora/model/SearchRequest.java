@@ -2,11 +2,17 @@ package de.folivora.model;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+
+import com.google.gson.JsonObject;
+
+import de.folivora.util.Constants;
 
 @Entity
 public class SearchRequest {
@@ -16,7 +22,7 @@ public class SearchRequest {
 	private String description;
 	private String pathToDefaultImg;
 	private double costsAndReward;
-	private double charges;
+	private double fee;
 	private Double lat,
 				   lng;
 	private String address;
@@ -36,9 +42,13 @@ public class SearchRequest {
 	@OneToOne(targetEntity=User.class)
 	private User userStasisfier;
 	
+	@OneToOne(cascade=CascadeType.ALL, fetch=FetchType.EAGER, targetEntity=Feedback.class)
+	private Feedback feedbackOfSearchingUser = null,
+					 feedbackOfDeliveringUser = null;
+	
 	public SearchRequest(long id, String title, String description, String pathToDefaultImg,
 			Long  possibleDelivery_from, Long possibleDelivery_to,
-			double costsAndReward, double charges, Double lat, Double lng, String address,
+			double costsAndReward, double fee, Double lat, Double lng, String address,
 			User userCreator) {
 		this.id = id;
 		this.title = title;
@@ -49,7 +59,7 @@ public class SearchRequest {
 		this.possibleDelivery_to = possibleDelivery_to;
 		this.possibleDelivery_to_string = new Date(possibleDelivery_to).toString();
 		this.costsAndReward = costsAndReward;
-		this.charges = charges;
+		this.fee = fee;
 		this.lat = lat;
 		this.lng = lng;
 		this.status = shouldBeActive() ? SearchRequestStatus.ACTIVE : SearchRequestStatus.INACTIVE;
@@ -69,6 +79,55 @@ public class SearchRequest {
 	 */
 	protected SearchRequest() {
 		
+	}
+	
+	public JsonObject getAsJsonObject() {
+		JsonObject jo = new JsonObject();
+		
+		jo.addProperty("id", this.getId());
+		jo.addProperty("title", this.getTitle());
+		jo.addProperty("description", this.getDescription());
+		jo.addProperty("pathToDefaultImg", this.getPathToDefaultImg());
+		jo.addProperty("costsAndReward", this.getCostsAndReward());
+		jo.addProperty("fee", this.getFee());
+		jo.addProperty("lat", this.getLat());
+		jo.addProperty("lng", this.getLng());
+		jo.addProperty("address", this.getAddress());
+		jo.addProperty("possibleDelivery_from", this.getPossibleDelivery_from());
+		jo.addProperty("possibleDelivery_to", this.getPossibleDelivery_to());
+		jo.addProperty("status", this.getStatus().toString());
+		
+		jo.addProperty("marker_icon_path", getMarkerIconPath(this.getPossibleDelivery_to()));
+		
+		JsonObject creator = new JsonObject();
+		User userCreator = this.getUserCreator();
+		creator.addProperty("id", userCreator.getId());
+		creator.addProperty("name", userCreator.getName());
+		creator.addProperty("hometown", userCreator.getHometown());
+		jo.add("userCreator", creator);
+		
+		User userStatisfier = this.getUserStasisfier();
+		if(userStatisfier != null) {
+			JsonObject statisfier = new JsonObject();
+			statisfier.addProperty("id", userStatisfier.getId());
+			statisfier.addProperty("name", userStatisfier.getName());
+			statisfier.addProperty("hometown", userStatisfier.getHometown());
+			jo.add("userStatisfier", statisfier);
+		}
+		
+		return jo;
+	}
+	
+	private String getMarkerIconPath(long possibleDeliveryDo) {
+		long act = System.currentTimeMillis();
+		
+		if(possibleDeliveryDo - act < Constants.MAP_MARKER_RED_TIME_LEFT) {
+			return Constants.MAP_MARKER_RED_URL;
+		} else if(possibleDeliveryDo - act < Constants.MAP_MARKER_ORANGE_TIME_LEFT){
+			return Constants.MAP_MARKER_ORANGE_URL;
+		} else {
+			return Constants.MAP_MARKER_GREEN_URL;
+		}
 	}
 	
 	public boolean shouldBeActive() {
@@ -289,21 +348,6 @@ public class SearchRequest {
 		this.possibleDelivery_to_string = possibleDelivery_to_string;
 	}
 
-
-	/**
-	 * @return the charges
-	 */
-	public double getCharges() {
-		return charges;
-	}
-
-	/**
-	 * @param charges the charges to set
-	 */
-	public void setCharges(double charges) {
-		this.charges = charges;
-	}
-
 	/**
 	 * @return the status
 	 */
@@ -316,5 +360,47 @@ public class SearchRequest {
 	 */
 	public void setStatus(SearchRequestStatus status) {
 		this.status = status;
+	}
+
+	/**
+	 * @return the feedbackOfSearchingUser
+	 */
+	public Feedback getFeedbackOfSearchingUser() {
+		return feedbackOfSearchingUser;
+	}
+
+	/**
+	 * @param feedbackOfSearchingUser the feedbackOfSearchingUser to set
+	 */
+	public void setFeedbackOfSearchingUser(Feedback feedbackOfSearchingUser) {
+		this.feedbackOfSearchingUser = feedbackOfSearchingUser;
+	}
+
+	/**
+	 * @return the feedbackOfDeliveringUser
+	 */
+	public Feedback getFeedbackOfDeliveringUser() {
+		return feedbackOfDeliveringUser;
+	}
+
+	/**
+	 * @param feedbackOfDeliveringUser the feedbackOfDeliveringUser to set
+	 */
+	public void setFeedbackOfDeliveringUser(Feedback feedbackOfDeliveringUser) {
+		this.feedbackOfDeliveringUser = feedbackOfDeliveringUser;
+	}
+
+	/**
+	 * @return the fee
+	 */
+	public double getFee() {
+		return fee;
+	}
+
+	/**
+	 * @param fee the fee to set
+	 */
+	public void setFee(double fee) {
+		this.fee = fee;
 	}
 }

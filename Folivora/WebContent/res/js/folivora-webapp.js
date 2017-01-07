@@ -5,18 +5,34 @@ var webappDataObj = {
 		this.newSrObj.title = $("#srform-title").val();
 		this.newSrObj.description = $("#srform-description").val();
 		this.newSrObj.costsAndReward = $("#srform-maxcosts").val();
-		this.newSrObj.charges = $("#srform-charges").val();
+		this.newSrObj.fee = $("#srform-charges").val();
 	},
 	resetNewSrObj: function() {
 		this.newSrObj.title = "";
 		this.newSrObj.description = "";
 		this.newSrObj.costsAndReward = 0.0;
-		this.newSrObj.charges = 0.0;
+		this.newSrObj.fee = 0.0;
 		this.newSrObj.lat = 0;
 		this.newSrObj.lng = 0;
 		this.newSrObj.address = "";
 		this.newSrObj.possibleDelivery_from = 0;
 		this.newSrObj.possibleDelivery_to = 0;
+	},
+	srData: {
+		srs: [],
+		getSrWithId: function(id) {
+			for(var i in this.srs) {
+				var sr = this.srs[i];
+				if(sr.id == id) {
+					return sr;
+				}
+			}
+			return null;
+		}
+	},
+	userData: {
+		id: -1,
+		balance: 0
 	},
 	mapData: {
 		map: null,
@@ -95,7 +111,24 @@ $(document).ready(function() {
 });
 
 function stasifySr(signedInUserId, srId) {
-	console.log(signedInUserId + " want to statisfy: " + srId);
+	var payloadObj = {
+		userCallingId: signedInUserId,
+		srId: srId
+	};
+	
+	createRest("POST", "statisfysrservlet", JSON.stringify(payloadObj));
+	
+	setTimeout(function() {
+		if(lastRestStatus != null && lastRestStatus == 201 || lastRestStatus == 200) {
+			$.notify("Erfolg, Du erhälst in Kürze eine Nachricht.", "success");
+			
+			console.log(signedInUserId + " want to statisfy " + signedInUserId);
+		} else {
+			$.notify("Fehler beim Erstellen des Gesuchs!", "error");
+		}
+		
+		lastRestStatus = null;
+	}, 1000);
 }
 
 function cancelSr(signedInUserId, srId) {
@@ -162,6 +195,10 @@ function updateInputCostFields() {
 	
 	$("#srform-charges").val(charges);
 	$("#srform-final-costs").val(finalCosts);
+}
+
+function updateNavbarBalance(delta) {
+	// TODO 
 }
 
 function initDateTimeRange() {
@@ -254,11 +291,25 @@ function initMap(payload) {
 	var srArray = JSON.parse(payload);
 	for(var i in srArray) {
 		var sr = srArray[i];
+		webappDataObj.srData.srs.push(sr);
+		
+		// Show sr's which are in progress only the creator
+		var disableCancelBtn = false;
+		var disableStatisfyBtn = false;
+		if(sr.status == "IN_PROGRESS" && sr.userCreator.id != webappDataObj.userData.id) {
+			if(typeof sr.userStatisfier != "undefined" && sr.userStatisfier.id == webappDataObj.userData.id) {
+				disableStatisfyBtn = true;
+			} else {
+				continue;
+			}
+		} else if(sr.status == "IN_PROGRESS") {
+			disableCancelBtn = true;
+		}
 		
 		var marker = new google.maps.Marker({
 			position: new google.maps.LatLng(sr.lat , sr.lng),
 			map: map,
-			icon: ownUserId != sr.userCreator.id
+			icon: webappDataObj.userData.id != sr.userCreator.id
 				? sr.marker_icon_path 
 				: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
 			title: sr.title,
@@ -270,11 +321,13 @@ function initMap(payload) {
 			console.log("Marker clicked, referenced sr: ", sr);
 			
 			var btn = "";
-			if(typeof ownUserId != "undefined") {
-				if(ownUserId != sr.userCreator.id) {
-					btn = "<input type='button' class='btn btn-default' value='Wird erledigt!' onclick='stasifySr(" + ownUserId + "," + sr.id + ")'>";
+			if(typeof webappDataObj.userData.id != "undefined") {
+				if(webappDataObj.userData.id != sr.userCreator.id) {
+					btn = "<input type='button' class='btn btn-default' value='Wird erledigt!' onclick='stasifySr("
+							+ webappDataObj.userData.id + "," + sr.id + ")'"+ (disableStatisfyBtn ? "disabled" : "") + ">";
 				} else {
-					btn = "<input type='button' class='btn btn-default' value='Zurückziehen' onclick='cancelSr(" + ownUserId + "," + sr.id + ")'>"
+					btn = "<input type='button' class='btn btn-default' value='Zurückziehen' onclick='cancelSr("
+							+ webappDataObj.userData.id + "," + sr.id + ")'" + (disableCancelBtn ? "disabled" : "") + ">";
 				}
 			}
 			
@@ -285,6 +338,8 @@ function initMap(payload) {
 					+ sr.address + "</p>"
 					+ "<p>Von \"" + sr.userCreator.name + "\"</p></div>"
 					+ btn
+					+ (disableStatisfyBtn ? "<br><br><div><p>Sie wollen dieses Gesuch bereits befriedigen, setzten Sie sich mit X in Verbindung.</p></div>" : "")
+					+ (disableCancelBtn ? "<br><br><div><p>Jemand möchte bereits liefern, einfaches Zurückziehen ist leider nicht mehr möglich.</p></div>" : "")
 			);
 		    infowindow.open(map, this);
 		});

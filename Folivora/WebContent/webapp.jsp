@@ -1,6 +1,7 @@
 <%@page import="de.folivora.controller.UserManager"%>
 <%@page import="de.folivora.controller.ApplicationManager"%>
 <%@page import="de.folivora.model.User"%>
+<%@page import="de.folivora.model.UserCredit"%>
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="UTF-8" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -27,7 +28,6 @@
     <script type="text/javascript" src="res/js/folivora-webapp.js"></script>
     
     <script>
-    	var ownUserId;
     	$(document).ready(function() {
     		<%@ include file="customizeNavbar.jsp" %>
     		
@@ -37,7 +37,8 @@
     			User myUser = userManager.getUserWithSession(session);
     			if(myUser != null) {
     				%>
-    				ownUserId =  <% out.write("" + myUser.getId()); %>;
+    				webappDataObj.userData.id =  <% out.write("" + myUser.getId()); %>;
+    				webappDataObj.userData.balance =  <% out.write("" + myUser.getCredit().getBalance()); %>;
     				
     				$("#sr-toggle-btn").removeClass("hidden");
     				$("#sr-function-btns").removeClass("hidden");

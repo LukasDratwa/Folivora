@@ -33,6 +33,8 @@ public class UpdateDaemon extends Thread {
 				}
 			}
 			
+			// TODO 2. Check if transactions in progress should be finished or cancelled 
+			
 			try {
 				Thread.sleep(Constants.UPDATE_THREAD_INTERVAL);
 			} catch (InterruptedException e) {

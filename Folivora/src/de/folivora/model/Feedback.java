@@ -18,15 +18,15 @@ public class Feedback {
 	@OneToOne(targetEntity=User.class)
 	private User feedbackCreator;
 	
-	@OneToOne(targetEntity=Transaction.class)
-	private Transaction referencedTransaction;
+	@OneToOne(targetEntity=SearchRequest.class)
+	private SearchRequest referencedSearchRequest;
 	
-	public Feedback(long id, Rating rating, String description, User feedbackCreator, Transaction referencedTransaction) {
+	public Feedback(long id, Rating rating, String description, User feedbackCreator, SearchRequest referencedSr) {
 		this.id = id;
 		this.rating = rating;
 		this.description = description;
 		this.feedbackCreator = feedbackCreator;
-		this.referencedTransaction = referencedTransaction;
+		this.referencedSearchRequest = referencedSr;
 	}
 	
 	/**
@@ -38,7 +38,7 @@ public class Feedback {
 	
 	@Override
 	public String toString() {
-		return "[id=" + this.id + ", transactionRef=" + this.referencedTransaction.getId()
+		return "[id=" + this.id + ", searchRequestRef=" + this.referencedSearchRequest.getId()
 			+ ", userCreatorRef=" + this.feedbackCreator.getId() + ", rating=" + this.rating + "]";
 	}
 	
@@ -99,16 +99,16 @@ public class Feedback {
 	}
 
 	/**
-	 * @return the referencedTransaction
+	 * @return the referencedSearchRequest
 	 */
-	public Transaction getReferencedTransaction() {
-		return referencedTransaction;
+	public SearchRequest getReferencedSearchRequest() {
+		return referencedSearchRequest;
 	}
 
 	/**
-	 * @param referencedTransaction the referencedTransaction to set
+	 * @param referencedSearchRequest the referencedSearchRequest to set
 	 */
-	public void setReferencedTransaction(Transaction referencedTransaction) {
-		this.referencedTransaction = referencedTransaction;
+	public void setReferencedSearchRequest(SearchRequest referencedSearchRequest) {
+		this.referencedSearchRequest = referencedSearchRequest;
 	}
 }

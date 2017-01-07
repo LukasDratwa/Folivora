@@ -16,7 +16,6 @@ import org.apache.log4j.Logger;
 import com.google.gson.Gson;
 
 import de.folivora.controller.ApplicationManager;
-import de.folivora.controller.DataContainer;
 import de.folivora.util.Constants;
 
 /**
@@ -75,8 +74,8 @@ public class GetSrDataServlet extends HttpServlet {
 		
 		try {
 			Gson gson = new Gson();
-			DataContainer dC = ApplicationManager.getApplicationManagerInstance().getdC();
-			String s = gson.toJson(dC.getActiveAndInProgressSearchRequestListAsJsonArray());
+			ApplicationManager aManager = ApplicationManager.getApplicationManagerInstance();
+			String s = gson.toJson(aManager.getActiveAndInProgressSearchRequestListAsJsonArray());
 			ServletOutputStream sos = response.getOutputStream();
 			sos.write(s.getBytes());
 			sos.flush();
