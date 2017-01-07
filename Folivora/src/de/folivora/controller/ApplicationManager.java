@@ -182,8 +182,8 @@ public class ApplicationManager {
 				possibleDelivery, costsAndReward, fee, lat, lng, address, userCreator);
 	}
 	
-	public Message createAndSaveMessage(String title, String text, User sender, User receiver) {
-		Message msg = factory_createMessage(title, text, sender, receiver);
+	public Message createAndSaveMessage(String title, String text, User sender, User receiver, SearchRequest referencedSr) {
+		Message msg = factory_createMessage(title, text, sender, receiver, referencedSr);
 		HibernateSave.saveOrUpdateObject(msg);
 		dC.getMessageList().add(msg);
 		msg.getSender().getRelevantMessages().add(msg);
@@ -191,8 +191,8 @@ public class ApplicationManager {
 		return msg;
 	}
 	
-	private Message factory_createMessage(String title, String text, User sender, User receiver) {
-		return new Message(dC.getIdStorage().getNewMessageId(), title, text, sender, receiver);
+	private Message factory_createMessage(String title, String text, User sender, User receiver, SearchRequest referencedSr) {
+		return new Message(dC.getIdStorage().getNewMessageId(), title, text, sender, receiver, referencedSr);
 	}
 	
 	/**

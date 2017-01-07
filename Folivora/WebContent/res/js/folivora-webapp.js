@@ -78,27 +78,28 @@ $(document).ready(function() {
 		webappDataObj.updateNewSrObj();
 		webappDataObj.newSrObj.token = $.cookie("token");
 		
-		createRest("POST", "newsrservlet", JSON.stringify(webappDataObj.newSrObj));
-		
-		setTimeout(function() {
+		createRest("POST", "newsrservlet", JSON.stringify(webappDataObj.newSrObj), function(response) {
 			if(lastRestStatus != null && lastRestStatus == 201 || lastRestStatus == 200) {
+				var responseObj = JSON.parse(response);
+				var sr = responseObj.sr;
+				
 				$.notify("Gesuch \"" + webappDataObj.newSrObj.title + "\" erfolgreich erstellt.", "success");
 				
-				console.log("Created new search request: " , webappDataObj.newSrObj);
+				console.log("Created new search request: " , sr);
+				
+				webappDataObj.srData.srs.push(sr);
+				
+				addMarker(sr, webappDataObj.mapData.map);
+				updateNavbarBalance((sr.costsAndReward + sr.fee) * -1);
 				
 				webappDataObj.resetNewSrObj();
 				document.getElementById("srform").reset();
-				
-				setTimeout(function() {
-					location.reload();
-				}, 1500);
 			} else {
 				$.notify("Fehler beim Erstellen des Gesuchs!", "error");
 			}
 			
 			lastRestStatus = null;
-		}, 1000);
-		
+		});
 		
 		e.preventDefault();
 	});
@@ -121,7 +122,7 @@ function stasifySr(signedInUserId, srId) {
 	setTimeout(function() {
 		if(lastRestStatus != null && lastRestStatus == 201 || lastRestStatus == 200) {
 			$.notify("Erfolg, Du erhälst in Kürze eine Nachricht.", "success");
-			
+			$("#btn-map-infowindow-statisfy").prop("disabled", true);
 			console.log(signedInUserId + " want to statisfy " + signedInUserId);
 		} else {
 			$.notify("Fehler beim Erstellen des Gesuchs!", "error");
@@ -142,21 +143,21 @@ function cancelSr(signedInUserId, srId) {
 			srId: srId
 		};
 		
-		createRest("POST", "cancelsrservlet", JSON.stringify(payloadObj));
-		
-		setTimeout(function() {
+		createRest("POST", "cancelsrservlet", JSON.stringify(payloadObj), function() {
 			if(lastRestStatus != null && lastRestStatus == 201 || lastRestStatus == 200) {
 				$.notify("Gesuch erfolgreich zurückgezogen.", "success");
 				
 				webappDataObj.mapData.removeMarker(srId);
 				var sr = webappDataObj.srData.getSrWithId(srId);
 				updateNavbarBalance(sr.costsAndReward + sr.fee);
+				
+				$("#btn-map-infowindow-cancel").prop("disabled", true);
 			} else {
 				$.notify("Fehler beim Zurückziehen!", "error");
 			}
 			
 			lastRestStatus = null;
-		}, 1000);
+		});
 	}
 }
 
@@ -179,7 +180,6 @@ function updateGeoData(lat, lng, address) {
 			webappDataObj.newSrObj.address = address;
 			$("#srform-address").val(address);
 		}
-		console.log(webappDataObj.newSrObj);
 	}
 }
 
@@ -204,20 +204,21 @@ function updateNavbarBalance(delta) {
 	
 	if(delta < 0) {
 		$("#credit-animation-span").css("color", "red");
-		$("#credit-animation-span").text("   " + delta);
+		$("#credit-animation-span").text("   " + delta + " €");
 	} else {
 		$("#credit-animation-span").css("color", "green");
-		$("#credit-animation-span").text("   +" + delta);
+		$("#credit-animation-span").text("   +" + delta + " €");
 	}
 	
 	
 	$("#credit-animation-span").fadeIn(1000, function() {
 		setTimeout(function() {
 			$("#credit-animation-span").fadeOut(500, function() {
+				$("#credit-animation-span").text("");
 				var spanHtml = $("#credit-animation-span").wrap('<p/>').parent().html();
 				$("#credit-animation-span").unwrap();
 				
-				webappDataObj.userData.balance = webappDataObj.userData.balance + delta;
+				webappDataObj.userData.balance = parseFloat(new Number(webappDataObj.userData.balance) + new Number(delta)).toFixed(2);
 				$("#navbar-li-element-credit-link").html("Guthaben: " + webappDataObj.userData.balance + " €" + spanHtml);
 			});
 		}, 1000);
@@ -290,7 +291,7 @@ function initMap(payload) {
 	// Default on Darmstadt
 	var myLatlng = new google.maps.LatLng(49.874505,8.655980);
 	var mapOptions = {
-		zoom: 15,
+		zoom: 13,
 		center: myLatlng,
 		mapTypeId: google.maps.MapTypeId.ROADMAP
 	}
@@ -314,60 +315,8 @@ function initMap(payload) {
 	var srArray = JSON.parse(payload);
 	for(var i in srArray) {
 		var sr = srArray[i];
+		addMarker(sr, map);
 		webappDataObj.srData.srs.push(sr);
-		
-		// Show sr's which are in progress only the creator
-		var disableCancelBtn = false;
-		var disableStatisfyBtn = false;
-		if(sr.status == "IN_PROGRESS" && sr.userCreator.id != webappDataObj.userData.id) {
-			if(typeof sr.userStatisfier != "undefined" && sr.userStatisfier.id == webappDataObj.userData.id) {
-				disableStatisfyBtn = true;
-			} else {
-				continue;
-			}
-		} else if(sr.status == "IN_PROGRESS") {
-			disableCancelBtn = true;
-		}
-		
-		var marker = new google.maps.Marker({
-			position: new google.maps.LatLng(sr.lat , sr.lng),
-			map: map,
-			icon: webappDataObj.userData.id != sr.userCreator.id
-				? sr.marker_icon_path 
-				: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
-			title: sr.title,
-			sr: sr
-		});
-		
-		marker.addListener('click', function() {
-			var sr = this.sr;
-			console.log("Marker clicked, referenced sr: ", sr);
-			
-			var btn = "";
-			if(typeof webappDataObj.userData.id != "undefined") {
-				if(webappDataObj.userData.id != sr.userCreator.id) {
-					btn = "<input type='button' class='btn btn-default' value='Wird erledigt!' onclick='stasifySr("
-							+ webappDataObj.userData.id + "," + sr.id + ")'"+ (disableStatisfyBtn ? "disabled" : "") + ">";
-				} else {
-					btn = "<input type='button' class='btn btn-default' value='Zurückziehen' onclick='cancelSr("
-							+ webappDataObj.userData.id + "," + sr.id + ")'" + (disableCancelBtn ? "disabled" : "") + ">";
-				}
-			}
-			
-			infowindow.setContent("<div><p><b>" + sr.title + "</b> - für " + sr.costsAndReward + "€"
-					+ " - übrige Lieferungszeit: " + getTimeLeftAsString(sr.possibleDelivery_to) + "</p></div>"
-					+ "<div><p>" + sr.description + "</p>"
-					+ "<p>Lieferung möglich bis " + formatLongDate(sr.possibleDelivery_to) + " an "
-					+ sr.address + "</p>"
-					+ "<p>Von \"" + sr.userCreator.name + "\"</p></div>"
-					+ btn
-					+ (disableStatisfyBtn ? "<br><br><div><p>Sie wollen dieses Gesuch bereits befriedigen, setzten Sie sich mit X in Verbindung.</p></div>" : "")
-					+ (disableCancelBtn ? "<br><br><div><p>Jemand möchte bereits liefern, einfaches Zurückziehen ist leider nicht mehr möglich.</p></div>" : "")
-			);
-		    infowindow.open(map, this);
-		});
-		
-		webappDataObj.mapData.markers.push(marker);
 	}
 	
 	google.maps.event.addListener(map, 'click', function(e) {
@@ -405,4 +354,61 @@ function initMap(payload) {
 	});
 	
 	webappDataObj.mapData.map = map;
+}
+
+function addMarker(sr, map) {
+	// Show sr's which are in progress only the creator
+	var disableCancelBtn = false;
+	var disableStatisfyBtn = false;
+	if(sr.status == "IN_PROGRESS" && sr.userCreator.id != webappDataObj.userData.id) {
+		if(typeof sr.userStatisfier != "undefined" && sr.userStatisfier.id == webappDataObj.userData.id) {
+			disableStatisfyBtn = true;
+		} else {
+			return false;
+		}
+	} else if(sr.status == "IN_PROGRESS") {
+		disableCancelBtn = true;
+	}
+	
+	var marker = new google.maps.Marker({
+		position: new google.maps.LatLng(sr.lat , sr.lng),
+		map: map,
+		icon: webappDataObj.userData.id != sr.userCreator.id
+			? sr.marker_icon_path 
+			: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+		title: sr.title,
+		sr: sr
+	});
+	
+	marker.addListener('click', function() {
+		var sr = this.sr;
+		console.log("Marker clicked, referenced sr: ", sr);
+		
+		var btn = "";
+		if(typeof webappDataObj.userData.id != "undefined") {
+			if(webappDataObj.userData.id != sr.userCreator.id) {
+				btn = "<input type='button' class='btn btn-default' value='Wird erledigt!' onclick='stasifySr("
+						+ webappDataObj.userData.id + "," + sr.id + ")'"+ (disableStatisfyBtn ? " disabled " : "")
+						+ "id='btn-map-infowindow-statisfy'>";
+			} else {
+				btn = "<input type='button' class='btn btn-default' value='Zurückziehen' onclick='cancelSr("
+						+ webappDataObj.userData.id + "," + sr.id + ")'" + (disableCancelBtn ? " disabled " : "")
+						+ "id='btn-map-infowindow-cancel'>";
+			}
+		}
+		
+		infowindow.setContent("<div><p><b>" + sr.title + "</b> - für " + sr.costsAndReward + "€"
+				+ " - übrige Lieferungszeit: " + getTimeLeftAsString(sr.possibleDelivery_to) + "</p></div>"
+				+ "<div><p>" + sr.description + "</p>"
+				+ "<p>Lieferung möglich bis " + formatLongDate(sr.possibleDelivery_to) + " an "
+				+ sr.address + "</p>"
+				+ "<p>Von \"" + sr.userCreator.name + "\"</p></div>"
+				+ btn
+				+ (disableStatisfyBtn ? "<br><br><div><p>Sie wollen dieses Gesuch bereits befriedigen, setzten Sie sich mit X in Verbindung.</p></div>" : "")
+				+ (disableCancelBtn ? "<br><br><div><p>Jemand möchte bereits liefern, einfaches Zurückziehen ist leider nicht mehr möglich.</p></div>" : "")
+		);
+	    infowindow.open(map, this);
+	});
+	
+	webappDataObj.mapData.markers.push(marker);
 }

@@ -8,11 +8,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 
 public class ResponseObject {
 	private int httpStatus;
 	private String msg;
 	private String token = null;
+	private JsonObject sr = null;
 	private transient HttpServletResponse response;
 	
 	private transient static final Logger logger = Logger.getLogger(ResponseObject.class);
@@ -86,5 +88,19 @@ public class ResponseObject {
 	 */
 	public void setToken(String token) {
 		this.token = token;
+	}
+
+	/**
+	 * @return the sr
+	 */
+	public JsonObject getSr() {
+		return sr;
+	}
+
+	/**
+	 * @param sr the sr to set
+	 */
+	public void setSr(JsonObject sr) {
+		this.sr = sr;
 	}
 }

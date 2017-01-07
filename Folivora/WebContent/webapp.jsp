@@ -38,7 +38,7 @@
     			if(myUser != null) {
     				%>
     				webappDataObj.userData.id =  <% out.write("" + myUser.getId()); %>;
-    				webappDataObj.userData.balance =  <% out.write("" + myUser.getCredit().getBalance()); %>;
+    				webappDataObj.userData.balance = parseFloat(<% out.write("" + myUser.getCredit().getBalance()); %>).toFixed(2);
     				
     				$("#sr-toggle-btn").removeClass("hidden");
     				$("#sr-function-btns").removeClass("hidden");

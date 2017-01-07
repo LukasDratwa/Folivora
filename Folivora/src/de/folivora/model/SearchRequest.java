@@ -26,6 +26,7 @@ public class SearchRequest {
 	private Double lat,
 				   lng;
 	private String address;
+	private Date creationTimestamp;
 	
 	@Enumerated(EnumType.STRING)
 	private SearchRequestStatus status;
@@ -65,6 +66,7 @@ public class SearchRequest {
 		this.status = shouldBeActive() ? SearchRequestStatus.ACTIVE : SearchRequestStatus.INACTIVE;
 		this.userCreator = userCreator;
 		this.address = address;
+		this.creationTimestamp = new Date();
 	}
 	
 	public SearchRequest(long id, String title, String description, String pathToDefaultImg,
@@ -402,5 +404,12 @@ public class SearchRequest {
 	 */
 	public void setFee(double fee) {
 		this.fee = fee;
+	}
+
+	/**
+	 * @return the creationTimestamp
+	 */
+	public Date getCreationTimestamp() {
+		return creationTimestamp;
 	}
 }

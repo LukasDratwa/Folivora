@@ -24,7 +24,7 @@ public class Message {
 	@OneToOne(targetEntity=SearchRequest.class)
 	private SearchRequest referencedSr;
 	
-	public Message(long id, String title, String text, User sender, User receiver) {
+	public Message(long id, String title, String text, User sender, User receiver, SearchRequest referencedSr) {
 		this.id = id;
 		this.title = title;
 		this.text = text;
@@ -33,6 +33,7 @@ public class Message {
 		this.seen = false;
 		this.seenTimestamp = null;
 		this.creationTimestamp = new Date();
+		this.referencedSr = referencedSr;
 	}
 	
 	protected Message() {
@@ -140,13 +141,6 @@ public class Message {
 	 */
 	public Date getCreationTimestamp() {
 		return creationTimestamp;
-	}
-
-	/**
-	 * @param creationTimestamp the creationTimestamp to set
-	 */
-	public void setCreationTimestamp(Date creationTimestamp) {
-		this.creationTimestamp = creationTimestamp;
 	}
 
 	/**

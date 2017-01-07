@@ -28,7 +28,7 @@ public class AccessLayer {
 		user.setSession(session);
 	}
 	
-	public static boolean createSearchRequest(String title, String description, String pathToDefaultImg,
+	public static SearchRequest createSearchRequest(String title, String description, String pathToDefaultImg,
 			Long possibleDelivery_from, Long possibleDelivery_to, double costsAndReward, double fee,
 			Double lat, Double lng, String address, User userCreator, String token) {
 		
@@ -40,10 +40,10 @@ public class AccessLayer {
 			User folivora = aManager.getuManager().getFolivoraUser();
 			Transaction t = aManager.createAndSaveTransaction(sr.getCostsAndReward(), sr.getFee(), userCreator, folivora, null, sr);
 			aManager.executeTransaction(null, t);
-			return true;
-		} else {
-			return false;
+			return sr;
 		}
+		
+		return null;
 	}
 	
 	public static boolean statisfySearchRequest(User callingUser, SearchRequest sr) {
@@ -56,18 +56,29 @@ public class AccessLayer {
 		aManager.createAndSaveTransaction(sr.getCostsAndReward(), 0,
 				folivora, callingUser, Util.getSrUnlockToken(), sr);
 		
+		aManager.createAndSaveMessage("\"" + sr.getTitle() + "\" angenommen.",
+				"Das Gesuch \"" + sr.getTitle() + "\" von " + sr.getUserCreator().getName()
+				+ "wurde erfolgreich von Ihnen angenommen. Bitte setzen Sie sich mit "
+				+ sr.getUserCreator().getName() + " bezüglich der Lieferdetails in Verbindung."
+				+ "Bei erfolgreichem Abschluss erwartet Sie eine Gutschrift über "
+				+ sr.getCostsAndReward() + "€.", folivora, callingUser, sr);
+		
 		return true;
 	}
 	
 	public static boolean cancelSearchRequest(User callingUser, SearchRequest sr) {
 		ApplicationManager aManager = ApplicationManager.getApplicationManagerInstance();
 		User folivora = aManager.getuManager().getFolivoraUser();
-		System.out.println(folivora);
 		Transaction t = aManager.createAndSaveTransaction(sr.getCostsAndReward(), sr.getFee(), folivora, callingUser, null, sr);
 		aManager.executeTransaction(null, t);
 		
 		sr.setStatus(SearchRequestStatus.CANCELLED);
 		HibernateUpdate.updateObject(sr);
+		
+		aManager.createAndSaveMessage("\"" + sr.getTitle() + "\" zurückgezogen",
+				"Ihr Gesuch \"" + sr.getTitle() + "\" vom " + sr.getCreationTimestamp()
+				+ "wurde erfolgreich zurückgezogen. Sie erhalten in Kürze eine Gutschrift "
+				+ "über " + (sr.getCostsAndReward() + sr.getFee()) + "€.", folivora, callingUser, sr);
 		return true;
 	}
 	
@@ -81,6 +92,12 @@ public class AccessLayer {
 				if(executedSuccessfully) {
 					sr.setStatus(SearchRequestStatus.STATISFIED);
 					HibernateUpdate.updateObject(sr);
+					
+					User folivora = aManager.getuManager().getFolivoraUser();
+					aManager.createAndSaveMessage("\"" + sr.getTitle() + "\" abgeschlossen.",
+							"Das Gesuch \"" + sr.getTitle() + "\" von " + sr.getUserCreator().getName()
+							+ "wurde erfolgreich von Ihnen abeschlossen. Sie erhalten in Kürze eine Gutschrift "
+							+ "über " + sr.getCostsAndReward() + "€.", folivora, callingUser, sr);
 					return true;
 				}
 			}

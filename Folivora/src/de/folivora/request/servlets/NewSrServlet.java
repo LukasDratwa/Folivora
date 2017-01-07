@@ -76,10 +76,12 @@ public class NewSrServlet extends HttpServlet {
 				User userCreator = uManager.getUserWithSession(request.getSession());
 				
 				if(userCreator != null) {
-					AccessLayer.createSearchRequest(sr.getTitle(), sr.getDescription(), sr.getPathToDefaultImg(),
+					SearchRequest createdSr = AccessLayer.createSearchRequest(sr.getTitle(), sr.getDescription(), sr.getPathToDefaultImg(),
 							sr.getPossibleDelivery_from(), sr.getPossibleDelivery_to(), sr.getCostsAndReward(),
 							sr.getFee(), sr.getLat(), sr.getLng(), sr.getAddress(), userCreator, "");
-					new ResponseObject(200, "Successfully created searchrequest.", response).writeResponse();
+					ResponseObject ro = new ResponseObject(200, "Successfully created searchrequest.", response);
+					ro.setSr(createdSr.getAsJsonObject());
+					ro.writeResponse();
 				} else {
 					new ResponseObject(403, "Failed to create searchrequest. Please sign in first!", response).writeResponse();
 					logger.info("Failed to save new searchrequest. User wasn't logged in!");
