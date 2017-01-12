@@ -15,7 +15,6 @@ import javax.persistence.Transient;
 import javax.servlet.http.HttpSession;
 
 import de.folivora.model.messanger.Message;
-import de.folivora.util.Constants;
 
 @Entity
 public class User {

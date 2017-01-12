@@ -17,11 +17,11 @@ import com.google.gson.GsonBuilder;
 
 import de.folivora.controller.ApplicationManager;
 import de.folivora.controller.UserManager;
+import de.folivora.model.Constants;
 import de.folivora.model.SearchRequest;
 import de.folivora.model.User;
 import de.folivora.model.UserType;
 import de.folivora.request.AccessLayer;
-import de.folivora.util.Constants;
 
 /**
  * Servlet implementation class CancelSrServlet

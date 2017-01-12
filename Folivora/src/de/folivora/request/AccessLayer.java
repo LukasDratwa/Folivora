@@ -4,13 +4,13 @@ import javax.servlet.http.HttpSession;
 
 import de.folivora.controller.ApplicationManager;
 import de.folivora.controller.UserManager;
+import de.folivora.model.Constants;
 import de.folivora.model.SearchRequest;
 import de.folivora.model.SearchRequestStatus;
 import de.folivora.model.Transaction;
 import de.folivora.model.User;
 import de.folivora.model.UserType;
 import de.folivora.storage.HibernateUpdate;
-import de.folivora.util.Constants;
 import de.folivora.util.Util;
 
 public class AccessLayer {

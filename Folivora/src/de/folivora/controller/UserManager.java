@@ -6,13 +6,13 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import de.folivora.model.Constants;
 import de.folivora.model.Gender;
 import de.folivora.model.User;
 import de.folivora.model.UserCredit;
 import de.folivora.model.UserType;
 import de.folivora.storage.HibernateSave;
 import de.folivora.storage.HibernateUpdate;
-import de.folivora.util.Constants;
 import de.folivora.util.Util;
 
 public class UserManager {

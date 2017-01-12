@@ -16,9 +16,9 @@ import com.google.gson.Gson;
 
 import de.folivora.controller.ApplicationManager;
 import de.folivora.controller.UserManager;
+import de.folivora.model.Constants;
 import de.folivora.model.User;
 import de.folivora.request.AccessLayer;
-import de.folivora.util.Constants;
 import de.folivora.util.GsonUtil;
 
 /** 

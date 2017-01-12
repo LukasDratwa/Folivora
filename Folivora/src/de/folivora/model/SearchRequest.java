@@ -12,8 +12,6 @@ import javax.persistence.OneToOne;
 
 import com.google.gson.JsonObject;
 
-import de.folivora.util.Constants;
-
 @Entity
 public class SearchRequest {
 	@Id

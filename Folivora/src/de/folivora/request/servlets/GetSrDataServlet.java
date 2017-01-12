@@ -16,7 +16,7 @@ import org.apache.log4j.Logger;
 import com.google.gson.Gson;
 
 import de.folivora.controller.ApplicationManager;
-import de.folivora.util.Constants;
+import de.folivora.model.Constants;
 
 /**
  * Servlet implementation class GetSrDataServlet

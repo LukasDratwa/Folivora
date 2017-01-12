@@ -5,6 +5,8 @@ import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.security.SecureRandom;
 
+import de.folivora.model.Constants;
+
 public class Util {
 	private static SecureRandom secureRandom = new SecureRandom();
 	

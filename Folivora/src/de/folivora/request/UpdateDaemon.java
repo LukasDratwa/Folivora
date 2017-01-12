@@ -4,10 +4,10 @@ import org.apache.log4j.Logger;
 
 import de.folivora.controller.ApplicationManager;
 import de.folivora.controller.DataContainer;
+import de.folivora.model.Constants;
 import de.folivora.model.SearchRequest;
 import de.folivora.model.SearchRequestStatus;
 import de.folivora.storage.HibernateUpdate;
-import de.folivora.util.Constants;
 
 public class UpdateDaemon extends Thread {
 	private static final Logger logger = Logger.getLogger(UpdateDaemon.class);
