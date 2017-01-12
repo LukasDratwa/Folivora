@@ -3,7 +3,6 @@ package de.folivora.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.folivora.model.IdStorage;
 import de.folivora.model.SearchRequest;
 import de.folivora.model.Transaction;
 import de.folivora.model.User;
@@ -14,14 +13,12 @@ public class DataContainer {
 	private List<SearchRequest> searchRequestList;
 	private List<Transaction> transactionList;
 	private List<Message> messageList;
-	private IdStorage idStorage;
 	
 	public DataContainer() {
 		this.userList = new ArrayList<User>();
 		this.searchRequestList = new ArrayList<SearchRequest>();
 		this.transactionList = new ArrayList<Transaction>();
 		this.messageList = new ArrayList<Message>();
-		this.idStorage = new IdStorage(0, 0, 0, 0, 0, 0);
 	}
 	
 	/**
@@ -50,20 +47,6 @@ public class DataContainer {
 	 */
 	public void setSearchRequestList(List<SearchRequest> searchRequestList) {
 		this.searchRequestList = searchRequestList;
-	}
-
-	/**
-	 * @return the idStorage
-	 */
-	public IdStorage getIdStorage() {
-		return idStorage;
-	}
-
-	/**
-	 * @param idStorage the idStorage to set
-	 */
-	public void setIdStorage(IdStorage idStorage) {
-		this.idStorage = idStorage;
 	}
 
 	/**

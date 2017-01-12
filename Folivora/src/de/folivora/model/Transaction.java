@@ -2,9 +2,14 @@ package de.folivora.model;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+
+import org.bson.types.ObjectId;
 
 /**
  * @author Lukas
@@ -12,7 +17,9 @@ import javax.persistence.OneToOne;
 @Entity
 public class Transaction {
 	@Id
-	private long id;
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name = "id", updatable = false, nullable = false)
+	private ObjectId id;
 	private Date executionDate;
 	private double value;
 	private double fee;
@@ -28,9 +35,8 @@ public class Transaction {
 	private User uFrom,
 				 uTo;
 
-	public Transaction(long id, double value, double fee, User uFrom, User uTo,
+	public Transaction(double value, double fee, User uFrom, User uTo,
 			String unlockToken, SearchRequest referencedSr) {
-		this.id = id;
 		this.value = value;
 		this.fee = fee;
 		this.uFrom = uFrom;
@@ -43,8 +49,8 @@ public class Transaction {
 	
 	@Override
 	public String toString() {
-		return "[userFromRef=\"" + this.uFrom.getName() + "\" (" + this.uFrom.getId() + ")"
-			+ ", userToRef=\"" + this.uTo.getName() + "\" (" + this.uTo.getId() + ")"
+		return "[userFromRef=\"" + this.uFrom.getName() + "\" (" + this.uFrom.getId().toString() + ")"
+			+ ", userToRef=\"" + this.uTo.getName() + "\" (" + this.uTo.getId().toString() + ")"
 			+ ", value=" + this.value + ", fee=" + this.fee + ", executed=" + this.executed + "]";
 	}
 	
@@ -53,20 +59,6 @@ public class Transaction {
 	 */
 	protected Transaction() {
 		
-	}
-	
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
-	
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
 	}
 	
 	/**

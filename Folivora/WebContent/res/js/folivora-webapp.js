@@ -388,11 +388,11 @@ function addMarker(sr, map) {
 		if(typeof webappDataObj.userData.id != "undefined") {
 			if(webappDataObj.userData.id != sr.userCreator.id) {
 				btn = "<input type='button' class='btn btn-default' value='Wird erledigt!' onclick='stasifySr("
-						+ webappDataObj.userData.id + "," + sr.id + ")'"+ (disableStatisfyBtn ? " disabled " : "")
+						+ "\"" + webappDataObj.userData.id + "\", \"" + sr.id + "\")'"+ (disableStatisfyBtn ? " disabled " : "")
 						+ "id='btn-map-infowindow-statisfy'>";
 			} else {
 				btn = "<input type='button' class='btn btn-default' value='Zurückziehen' onclick='cancelSr("
-						+ webappDataObj.userData.id + "," + sr.id + ")'" + (disableCancelBtn ? " disabled " : "")
+						+ "\"" + webappDataObj.userData.id + "\", \"" + sr.id + "\")'" + (disableCancelBtn ? " disabled " : "")
 						+ "id='btn-map-infowindow-cancel'>";
 			}
 		}

@@ -4,17 +4,24 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
+
+import org.bson.types.ObjectId;
 
 import de.folivora.util.Util;
 
 @Entity
 public class UserCredit {
 	@Id
-	private long id;
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name = "id", updatable = false, nullable = false)
+	private ObjectId id;
 	private double balance;
 	private Date lastModification;
 	
@@ -24,8 +31,7 @@ public class UserCredit {
 	@Transient
 	private List<Transaction> referencedTransactions = new ArrayList<Transaction>();
 	
-	public UserCredit(long id, double balance, User owner) {
-		this.id = id;
+	public UserCredit(double balance, User owner) {
 		this.balance = balance;
 		this.owner = owner;
 	}
@@ -67,13 +73,6 @@ public class UserCredit {
 		return lastModification;
 	}
 	
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
-
 	/**
 	 * @return the owner
 	 */

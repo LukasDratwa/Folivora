@@ -95,34 +95,34 @@ public class StatisfySrServlet extends HttpServlet {
 	}
 	
 	class Input {
-		private long userCallingId;
-		private long srId;
+		private String userCallingId;
+		private String srId;
 		
 		/**
 		 * @return the userCallingId
 		 */
-		public long getUserCallingId() {
+		public String getUserCallingId() {
 			return userCallingId;
 		}
 		
 		/**
 		 * @param userCallingId the userCallingId to set
 		 */
-		public void setUserCallingId(long userCallingId) {
+		public void setUserCallingId(String userCallingId) {
 			this.userCallingId = userCallingId;
 		}
 		
 		/**
 		 * @return the srId
 		 */
-		public long getSrId() {
+		public String getSrId() {
 			return srId;
 		}
 		
 		/**
 		 * @param srId the srId to set
 		 */
-		public void setSrId(long srId) {
+		public void setSrId(String srId) {
 			this.srId = srId;
 		}
 	}
