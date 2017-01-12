@@ -2,9 +2,14 @@ package de.folivora.model.messanger;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+
+import org.bson.types.ObjectId;
 
 import de.folivora.model.SearchRequest;
 import de.folivora.model.User;
@@ -12,7 +17,9 @@ import de.folivora.model.User;
 @Entity
 public class Message {
 	@Id
-	private long id;
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name = "id", updatable = false, nullable = false)
+	private ObjectId id;
 	private String title,
 				   text;
 	@OneToOne(targetEntity=User.class)
@@ -24,8 +31,7 @@ public class Message {
 	@OneToOne(targetEntity=SearchRequest.class)
 	private SearchRequest referencedSr;
 	
-	public Message(long id, String title, String text, User sender, User receiver, SearchRequest referencedSr) {
-		this.id = id;
+	public Message(String title, String text, User sender, User receiver, SearchRequest referencedSr) {
 		this.title = title;
 		this.text = text;
 		this.sender = sender;
@@ -129,13 +135,6 @@ public class Message {
 		this.seenTimestamp = seenTimestamp;
 	}
 	
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
-
 	/**
 	 * @return the creationTimestamp
 	 */

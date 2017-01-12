@@ -37,7 +37,7 @@
     			User myUser = userManager.getUserWithSession(session);
     			if(myUser != null) {
     				%>
-    				webappDataObj.userData.id =  <% out.write("" + myUser.getId()); %>;
+    				webappDataObj.userData.id =  <% out.write("\"" + myUser.getId() + "\""); %>;
     				webappDataObj.userData.balance = parseFloat(<% out.write("" + myUser.getCredit().getBalance()); %>).toFixed(2);
     				
     				$("#sr-toggle-btn").removeClass("hidden");

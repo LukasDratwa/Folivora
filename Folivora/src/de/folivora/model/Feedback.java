@@ -1,15 +1,22 @@
 package de.folivora.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+
+import org.bson.types.ObjectId;
 
 @Entity
 public class Feedback {
 	@Id
-	private long id;
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name = "id", updatable = false, nullable = false)
+	private ObjectId id;
 	private String description;
 	
 	@Enumerated(EnumType.STRING)
@@ -21,8 +28,7 @@ public class Feedback {
 	@OneToOne(targetEntity=SearchRequest.class)
 	private SearchRequest referencedSearchRequest;
 	
-	public Feedback(long id, Rating rating, String description, User feedbackCreator, SearchRequest referencedSr) {
-		this.id = id;
+	public Feedback(Rating rating, String description, User feedbackCreator, SearchRequest referencedSr) {
 		this.rating = rating;
 		this.description = description;
 		this.feedbackCreator = feedbackCreator;
@@ -39,7 +45,7 @@ public class Feedback {
 	@Override
 	public String toString() {
 		return "[id=" + this.id + ", searchRequestRef=" + this.referencedSearchRequest.getId()
-			+ ", userCreatorRef=" + this.feedbackCreator.getId() + ", rating=" + this.rating + "]";
+			+ ", userCreatorRef=" + this.feedbackCreator.getId().toString() + ", rating=" + this.rating + "]";
 	}
 	
 	/**
@@ -68,20 +74,6 @@ public class Feedback {
 	 */
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
-
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
 	}
 
 	/**

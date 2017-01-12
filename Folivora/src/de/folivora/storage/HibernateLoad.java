@@ -7,7 +7,6 @@ import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 
-import de.folivora.model.IdStorage;
 import de.folivora.model.SearchRequest;
 import de.folivora.model.TokenStorage;
 import de.folivora.model.Transaction;
@@ -23,22 +22,7 @@ import de.folivora.model.messanger.Message;
 */
 public class HibernateLoad {
 	private static final Logger logger = Logger.getLogger(HibernateLoad.class);
-	
-	public static IdStorage loadIdStorage(long id) {
-		IdStorage idStorage = null;
-		
-		try {
-			Session session = HibernateUtil.getSessionFactory().openSession();	
-	        idStorage = (IdStorage) session.createQuery("from IdStorage where id = '" + id + "'").uniqueResult();
-	        logger.info("Loaded idStorage: " + idStorage);
-	        session.close();
-		} catch(HibernateException e) {
-			logger.error("Failed to load the id storage!", e);
-		}
-		
-		return idStorage;
-	}
-	
+
 	/**
 	 * Method to load an User of the database
 	 * 

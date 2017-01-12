@@ -21,7 +21,6 @@
 		<mapping class="de.folivora.model.Transaction"></mapping>
 		<mapping class="de.folivora.model.SearchRequest"></mapping>
 		<mapping class="de.folivora.model.messanger.Message"></mapping>
-		<mapping class="de.folivora.model.IdStorage"></mapping>
 		<mapping class="de.folivora.model.TokenStorage"></mapping>
     </session-factory>
 </hibernate-configuration>

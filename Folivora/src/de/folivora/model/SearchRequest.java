@@ -3,19 +3,26 @@ package de.folivora.model;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+
+import org.bson.types.ObjectId;
 
 import com.google.gson.JsonObject;
 
 @Entity
 public class SearchRequest {
 	@Id
-	private long id;
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name = "id", updatable = false, nullable = false)
+	private ObjectId id;
 	private String title;
 	private String description;
 	private String pathToDefaultImg;
@@ -45,11 +52,10 @@ public class SearchRequest {
 	private Feedback feedbackOfSearchingUser = null,
 					 feedbackOfDeliveringUser = null;
 	
-	public SearchRequest(long id, String title, String description, String pathToDefaultImg,
+	public SearchRequest(String title, String description, String pathToDefaultImg,
 			Long  possibleDelivery_from, Long possibleDelivery_to,
 			double costsAndReward, double fee, Double lat, Double lng, String address,
 			User userCreator) {
-		this.id = id;
 		this.title = title;
 		this.description = description;
 		this.pathToDefaultImg = pathToDefaultImg;
@@ -67,10 +73,10 @@ public class SearchRequest {
 		this.creationTimestamp = new Date();
 	}
 	
-	public SearchRequest(long id, String title, String description, String pathToDefaultImg,
+	public SearchRequest(String title, String description, String pathToDefaultImg,
 			Long[] possibleDelivery, double costsAndReward, double charges,
 			Double lat, Double lng, String address, User userCreator) {
-		this(id, title, description, pathToDefaultImg, possibleDelivery[0], possibleDelivery[1],
+		this(title, description, pathToDefaultImg, possibleDelivery[0], possibleDelivery[1],
 				 costsAndReward, charges, lat, lng, address, userCreator);
 	}
 	
@@ -84,7 +90,7 @@ public class SearchRequest {
 	public JsonObject getAsJsonObject() {
 		JsonObject jo = new JsonObject();
 		
-		jo.addProperty("id", this.getId());
+		jo.addProperty("id", this.id.toString());
 		jo.addProperty("title", this.getTitle());
 		jo.addProperty("description", this.getDescription());
 		jo.addProperty("pathToDefaultImg", this.getPathToDefaultImg());
@@ -101,7 +107,7 @@ public class SearchRequest {
 		
 		JsonObject creator = new JsonObject();
 		User userCreator = this.getUserCreator();
-		creator.addProperty("id", userCreator.getId());
+		creator.addProperty("id", userCreator.getId().toString());
 		creator.addProperty("name", userCreator.getName());
 		creator.addProperty("hometown", userCreator.getHometown());
 		jo.add("userCreator", creator);
@@ -109,7 +115,7 @@ public class SearchRequest {
 		User userStatisfier = this.getUserStasisfier();
 		if(userStatisfier != null) {
 			JsonObject statisfier = new JsonObject();
-			statisfier.addProperty("id", userStatisfier.getId());
+			statisfier.addProperty("id", userStatisfier.getId().toString());
 			statisfier.addProperty("name", userStatisfier.getName());
 			statisfier.addProperty("hometown", userStatisfier.getHometown());
 			jo.add("userStatisfier", statisfier);
@@ -140,7 +146,7 @@ public class SearchRequest {
 	
 	@Override
 	public String toString() {
-		return "[id=" + this.id + ", title=" + this.title
+		return "[" + (id != null ? "id=" + this.id + ", ": "") + "title=" + this.title
 				+ ", userCreatorRef=\""
 					+ ((this.userCreator != null)
 							? this.userCreator.getName() + "\" (" + this.userCreator.getId() + ")"
@@ -150,20 +156,6 @@ public class SearchRequest {
 						? "\"" + this.userStasisfier.getName() + "\" (" + this.userStasisfier.getId() + ")"
 						: "null")
 				+ "]";
-	}
-	
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
-	
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
 	}
 	
 	/**
@@ -409,5 +401,12 @@ public class SearchRequest {
 	 */
 	public Date getCreationTimestamp() {
 		return creationTimestamp;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public ObjectId getId() {
+		return id;
 	}
 }

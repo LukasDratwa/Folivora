@@ -5,21 +5,28 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import javax.servlet.http.HttpSession;
+
+import org.bson.types.ObjectId;
 
 import de.folivora.model.messanger.Message;
 
 @Entity
 public class User {
 	@Id
-	private long id;
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name = "id", updatable = false, nullable = false)
+	private ObjectId id;
 	private String name;
 	private String password;
 	private Date birthday;
@@ -47,9 +54,8 @@ public class User {
 	@Transient
 	private List<Message> relevantMessages = new ArrayList<Message>();
 	
-	public User(long id, String name, String password, Date birthday, Gender gender,
+	public User(String name, String password, Date birthday, Gender gender,
 			String email, UserCredit userCredit, UserType userType, String hometown) {
-		this.id = id;
 		this.name = name;
 		this.password = password;
 		this.birthday = birthday;
@@ -57,7 +63,7 @@ public class User {
 		this.email = email;
 		this.credit = userCredit;
 		this.userType = userType;
-		this.tokenStorage = new TokenStorage(id);
+		this.tokenStorage = new TokenStorage(name);
 		this.hometown = hometown;
 	}
 	
@@ -84,7 +90,7 @@ public class User {
 	}
 	
 	public boolean isInvolvedIn(SearchRequest sr) {
-		if(sr.getUserCreator().getId() == getId() || sr.getUserStasisfier().getId() == getId()) {
+		if(sr.getUserCreator().id.toString().equals(getId()) || sr.getUserStasisfier().getId().equals(getId())) {
 			return true;
 		}
 		
@@ -100,21 +106,7 @@ public class User {
 	@Override
 	public String toString() {
 		return "[name=\"" + this.getName() + "\", email=\"" + this.getEmail() + "\", "
-				+ "id=" + this.getId() + ", credit=" + this.credit + ", httpSession=" + this.session + "]";
-	}
-	
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
-	
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
+				+ "id=" + this.id + ", credit=" + this.credit + ", httpSession=" + this.session + "]";
 	}
 	
 	/**
@@ -283,5 +275,12 @@ public class User {
 	 */
 	public void setRelevantMessages(List<Message> relevantMessages) {
 		this.relevantMessages = relevantMessages;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public ObjectId getId() {
+		return id;
 	}
 }

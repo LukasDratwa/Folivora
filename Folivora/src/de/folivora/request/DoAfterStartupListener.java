@@ -12,14 +12,12 @@ import de.folivora.controller.ApplicationManager;
 import de.folivora.controller.DataContainer;
 import de.folivora.controller.UserManager;
 import de.folivora.model.Feedback;
-import de.folivora.model.IdStorage;
 import de.folivora.model.SearchRequest;
 import de.folivora.model.Transaction;
 import de.folivora.model.User;
 import de.folivora.model.UserType;
 import de.folivora.model.messanger.Message;
 import de.folivora.storage.HibernateLoad;
-import de.folivora.storage.HibernateSave;
 
 /** 
  * Listener to init and shutdown the application
@@ -38,7 +36,6 @@ public class DoAfterStartupListener implements ServletContextListener {
 			ApplicationManager aManager = ApplicationManager.getApplicationManagerInstance(new DataContainer());
 			
 			// 2. Load and set data
-			loadIdStorage(aManager);
 			loadAndInitData(aManager);
 			
 			// 3. Be sure standard users are saved
@@ -55,19 +52,6 @@ public class DoAfterStartupListener implements ServletContextListener {
 			updateThread.start();
 		} catch(Exception e) {
 			logger.error("Error while startup!", e);
-		}
-	}
-	
-	private void loadIdStorage(ApplicationManager aManager) {
-		IdStorage idStorage = HibernateLoad.loadIdStorage(0);
-		if(idStorage == null) {
-			logger.warn("Could not load id storage, create default one.");
-			aManager.getdC().setIdStorage(new IdStorage(0, 0, 0, 0, 0, 0));
-			HibernateSave.saveOrUpdateObject(aManager.getdC().getIdStorage());
-			logger.warn("Created and saved new default id storage.");
-			// TODO Check if there are andy objects in the database, should be dropped then
-		} else {
-			aManager.getdC().setIdStorage(idStorage);
 		}
 	}
 	
@@ -136,8 +120,8 @@ public class DoAfterStartupListener implements ServletContextListener {
 		
 		for(Transaction t : dC.getTransactionList()) {
 			// Save transaction which influence the user credits
-			uManager.getUserWithId(t.getuFrom().getId()).getCredit().getReferencedTransactions().add(t);
-			uManager.getUserWithId(t.getuTo().getId()).getCredit().getReferencedTransactions().add(t);
+			uManager.getUserWithId(t.getuFrom().getId().toString()).getCredit().getReferencedTransactions().add(t);
+			uManager.getUserWithId(t.getuTo().getId().toString()).getCredit().getReferencedTransactions().add(t);
 		}
 		
 		// Save feedbacks
@@ -145,22 +129,22 @@ public class DoAfterStartupListener implements ServletContextListener {
 			// Feedback of delivering user -> searching user
 			Feedback fOfDeliveringUser = sr.getFeedbackOfDeliveringUser();
 			if(fOfDeliveringUser != null) {
-				uManager.getUserWithId(sr.getUserCreator().getId()).getReceivedFeedbacks().add(fOfDeliveringUser);
+				uManager.getUserWithId(sr.getUserCreator().getId().toString()).getReceivedFeedbacks().add(fOfDeliveringUser);
 			}
 			
 			// Feedback of searching user -> delivering user
 			Feedback fOfSearchingUser = sr.getFeedbackOfSearchingUser();
 			if(fOfSearchingUser != null) {
 				if(sr.getUserStasisfier() != null) {
-					uManager.getUserWithId(sr.getUserStasisfier().getId()).getReceivedFeedbacks().add(fOfSearchingUser);
+					uManager.getUserWithId(sr.getUserStasisfier().getId().toString()).getReceivedFeedbacks().add(fOfSearchingUser);
 				}
 			}
 		}
 		
 		// Save relevant messages for users
 		for(Message msg : dC.getMessageList()) {
-			uManager.getUserWithId(msg.getSender().getId()).getRelevantMessages().add(msg);
-			uManager.getUserWithId(msg.getReceiver().getId()).getRelevantMessages().add(msg);
+			uManager.getUserWithId(msg.getSender().getId().toString()).getRelevantMessages().add(msg);
+			uManager.getUserWithId(msg.getReceiver().getId().toString()).getRelevantMessages().add(msg);
 		}
 	}
 	

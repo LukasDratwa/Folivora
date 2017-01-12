@@ -85,7 +85,7 @@ public class AccessLayer {
 	public static boolean finsihSr(SearchRequest sr, String unlockToken, User callingUser) {
 		ApplicationManager aManager = ApplicationManager.getApplicationManagerInstance();
 		
-		for(Transaction t : aManager.getTransactionOfSearchRequest(sr.getId())) {
+		for(Transaction t : aManager.getTransactionOfSearchRequest(sr.getId().toString())) {
 			if(! t.isExecuted() && (t.getuFrom().getId() ==  callingUser.getId() || t.getuTo().getId() ==  callingUser.getId())) {
 				boolean executedSuccessfully = aManager.executeTransaction(unlockToken, t);
 				

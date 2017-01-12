@@ -2,24 +2,28 @@ package de.folivora.model;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import org.bson.types.ObjectId;
+
 @Entity
 public class TokenStorage {
 	@Id
-	@GeneratedValue(strategy=GenerationType.TABLE)
-	private long id;
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name = "id", updatable = false, nullable = false)
+	private ObjectId id;
 	private String token;
 	private Date dateExpiration,
 				 dateCreation;
 	
-	private long ownerId;
+	private String ownerName;
 
-	protected TokenStorage(long ownerId) {
-		this.ownerId = ownerId;
+	protected TokenStorage(String ownerName) {
+		this.ownerName = ownerName;
 	}
 	
 	protected TokenStorage() {
@@ -28,7 +32,7 @@ public class TokenStorage {
 	
 	@Override
 	public String toString() {
-		return "[UserRef=" + this.ownerId + ", created=" + this.dateCreation
+		return "[UserNameRef=" + this.ownerName + ", created=" + this.dateCreation
 				+ ", expiration=" + this.dateExpiration + ", token=" + this.token + "]";
 	}
 	
@@ -75,30 +79,16 @@ public class TokenStorage {
 	}
 	
 	/**
-	 * @return the id
+	 * @return the ownerName
 	 */
-	public long getId() {
-		return id;
+	public String getOwnerName() {
+		return ownerName;
 	}
 
 	/**
-	 * @param id the id to set
+	 * @param ownerName the ownerName to set
 	 */
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	/**
-	 * @return the ownerId
-	 */
-	public long getOwnerId() {
-		return ownerId;
-	}
-
-	/**
-	 * @param ownerId the ownerId to set
-	 */
-	public void setOwnerId(long ownerId) {
-		this.ownerId = ownerId;
+	public void setOwnerName(String ownerName) {
+		this.ownerName = ownerName;
 	}
 }

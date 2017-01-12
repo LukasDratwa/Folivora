@@ -9,7 +9,6 @@ import org.apache.log4j.Logger;
 import com.google.gson.JsonArray;
 
 import de.folivora.model.Feedback;
-import de.folivora.model.IdStorage;
 import de.folivora.model.Rating;
 import de.folivora.model.SearchRequest;
 import de.folivora.model.SearchRequestStatus;
@@ -24,7 +23,6 @@ public class ApplicationManager {
 	private UserManager uManager = null;
 	private static ApplicationManager instance = null;
 	private DataContainer dC;
-	private IdStorage idStorage;
 	private static final Logger logger = Logger.getLogger(ApplicationManager.class);
 	
 	private ApplicationManager(DataContainer dC) {
@@ -64,7 +62,7 @@ public class ApplicationManager {
 	
 	private Feedback factory_createFeedback(Rating rating, String description,
 			User feedbackCreator, SearchRequest referencedSearchRequest) {
-		return new Feedback(dC.getIdStorage().getNewFeedbackId(), rating, description, feedbackCreator, referencedSearchRequest);
+		return new Feedback(rating, description, feedbackCreator, referencedSearchRequest);
 	}
 	
 	public boolean executeTransaction(String token, Transaction t) {
@@ -96,10 +94,10 @@ public class ApplicationManager {
 		return true;
 	}
 	
-	public List<Transaction> getTransactionOfSearchRequest(long srId) {
+	public List<Transaction> getTransactionOfSearchRequest(String srId) {
 		List<Transaction> result = new ArrayList<Transaction>();
 		for(Transaction t : dC.getTransactionList()) {
-			if(t.getReferencedSr() != null && t.getReferencedSr().getId() == srId) {
+			if(t.getReferencedSr() != null && t.getReferencedSr().getId().toString().equals(srId)) {
 				result.add(t);
 			}
 		}
@@ -116,11 +114,10 @@ public class ApplicationManager {
 	
 	private Transaction factory_createTransaction(double value, double fee, User userFrom,
 			User userTo, String unlockToken, SearchRequest sr) {
-		return new Transaction(dC.getIdStorage().getNewTransactionId(), value, fee,
-				userFrom, userTo, unlockToken, sr);
+		return new Transaction(value, fee, userFrom, userTo, unlockToken, sr);
 	}
 	
-	public JsonArray getInvolvedSearchRequestsOfUserAsJsonArray(long userId) {
+	public JsonArray getInvolvedSearchRequestsOfUserAsJsonArray(String userId) {
 		JsonArray result = new JsonArray();
 		User user = getuManager().getUserWithId(userId);
 		
@@ -147,9 +144,9 @@ public class ApplicationManager {
 		return result;
 	}
 	
-	public SearchRequest getSearchRequestWithId(long id) {
+	public SearchRequest getSearchRequestWithId(String srId) {
 		for(SearchRequest sr : dC.getSearchRequestList()) {
-			if(sr.getId() == id) {
+			if(sr.getId().toString().equals(srId)) {
 				return sr;
 			}
 		}
@@ -178,7 +175,7 @@ public class ApplicationManager {
 	private SearchRequest factory_createSearchRequest(String title, String description, String pathToDefaultImg,
 			Long[] possibleDelivery, double costsAndReward, double fee, Double lat,
 			Double lng, String address, User userCreator) {
-		return new SearchRequest(dC.getIdStorage().getNewSearchRequestId(), title, description, pathToDefaultImg,
+		return new SearchRequest(title, description, pathToDefaultImg,
 				possibleDelivery, costsAndReward, fee, lat, lng, address, userCreator);
 	}
 	
@@ -192,7 +189,7 @@ public class ApplicationManager {
 	}
 	
 	private Message factory_createMessage(String title, String text, User sender, User receiver, SearchRequest referencedSr) {
-		return new Message(dC.getIdStorage().getNewMessageId(), title, text, sender, receiver, referencedSr);
+		return new Message(title, text, sender, receiver, referencedSr);
 	}
 	
 	/**
@@ -207,20 +204,6 @@ public class ApplicationManager {
 	 */
 	public void setuManager(UserManager uManager) {
 		this.uManager = uManager;
-	}
-
-	/**
-	 * @return the idStorage
-	 */
-	public IdStorage getIdStorage() {
-		return idStorage;
-	}
-
-	/**
-	 * @param idStorage the idStorage to set
-	 */
-	public void setIdStorage(IdStorage idStorage) {
-		this.idStorage = idStorage;
 	}
 
 	/**
