@@ -6,6 +6,9 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
+/**
+ * @author Lukas
+ */
 @Entity
 public class Transaction {
 	@Id
