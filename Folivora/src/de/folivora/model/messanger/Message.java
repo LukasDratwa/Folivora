@@ -11,6 +11,8 @@ import javax.persistence.OneToOne;
 
 import org.bson.types.ObjectId;
 
+import com.google.gson.JsonObject;
+
 import de.folivora.model.SearchRequest;
 import de.folivora.model.User;
 
@@ -50,6 +52,35 @@ public class Message {
 	
 	protected Message() {
 		
+	}
+	
+	public JsonObject getAsJsonObject() {
+		JsonObject jo = new JsonObject();
+		
+		jo.addProperty("id", this.getId().toString());
+		jo.addProperty("title", this.getTitle());
+		jo.addProperty("text", this.getText());
+		jo.addProperty("seend", this.isSeen());
+		jo.addProperty("seenTimestamp", this.getSeenTimestamp().toString());
+		
+		JsonObject sender = new JsonObject();
+		User userSender = this.getSender();
+		sender.addProperty("id", userSender.getId().toString());
+		sender.addProperty("name", userSender.getName());
+		sender.addProperty("hometown", userSender.getHometown());
+		jo.add("sender", sender);
+		
+		JsonObject receiver = new JsonObject();
+		User userCreator = this.getReceiver();
+		receiver.addProperty("id", userCreator.getId().toString());
+		receiver.addProperty("name", userCreator.getName());
+		receiver.addProperty("hometown", userCreator.getHometown());
+		jo.add("receiver", receiver);
+		
+		JsonObject referencedSr = this.getReferencedSr().getAsJsonObject();
+		jo.add("referencedSr", referencedSr);
+		
+		return jo;
 	}
 	
 	@Override
@@ -160,5 +191,12 @@ public class Message {
 	 */
 	public void setReferencedSr(SearchRequest referencedSr) {
 		this.referencedSr = referencedSr;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public ObjectId getId() {
+		return id;
 	}
 }

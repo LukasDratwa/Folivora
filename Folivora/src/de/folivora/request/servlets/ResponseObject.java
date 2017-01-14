@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 /**
@@ -21,6 +22,7 @@ public class ResponseObject {
 	private String msg;
 	private String token = null;
 	private JsonObject sr = null;
+	private JsonArray userMessages = null;
 	private transient HttpServletResponse response;
 	
 	private transient static final Logger logger = Logger.getLogger(ResponseObject.class);
@@ -119,5 +121,19 @@ public class ResponseObject {
 	 */
 	public void setSr(JsonObject sr) {
 		this.sr = sr;
+	}
+
+	/**
+	 * @return the userMessages
+	 */
+	public JsonArray getUserMessages() {
+		return userMessages;
+	}
+
+	/**
+	 * @param userMessages the userMessages to set
+	 */
+	public void setUserMessages(JsonArray userMessages) {
+		this.userMessages = userMessages;
 	}
 }

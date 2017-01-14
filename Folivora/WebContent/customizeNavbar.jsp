@@ -3,7 +3,6 @@
 <%@page import="de.folivora.model.*"%>
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 
-
 <%
 	UserManager uManager = ApplicationManager.getApplicationManagerInstance().getuManager();
 	User usr = uManager.getUserWithSession(session);
@@ -27,6 +26,22 @@
 			$("#navbar-left-ul").append("<li class='navbar-li-element' id='navbar-li-element-credit'><a id='navbar-li-element-credit-link' href='credit.jsp'>Guthaben: " + credit + " €<span id='credit-animation-span'></span></a></li>");
 		}
 		
+		// Navbar messages
+		if(window.location.href.indexOf("messages.jsp") != -1) {
+			$(".navbar-li-element").removeClass("active");
+			$("#navbar-li-element-messages").removeClass("hidden");
+		} else {
+			$("#navbar-li-element-messages").removeClass("hidden");
+			$("#navbar-li-element-messages").removeClass("active");
+		}
+		var amountUnseenMessages = "<% out.write("" + usr.getRelevantMessages().size()); %>";
+		if(amountUnseenMessages > 0) {
+			$("#messages-notification-number").html(amountUnseenMessages);
+			$("#messages-notification-number").removeClass("hidden");
+		} else {
+			$("#messages-notification-number").html("");
+			$("#messages-notification-number").addClass("hidden");
+		}
 		
 		var username = "<% out.write(usr.getName()); %>";
 		// Navbar userSettings

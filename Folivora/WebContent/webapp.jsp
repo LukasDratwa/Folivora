@@ -131,9 +131,14 @@
             <button type="submit" class="btn btn-default">Submit</button>
           </form>-->
           <ul class="nav navbar-nav navbar-right" id="navbar-right-ul">
-            <li>
-              <a href="index.jsp">About</a>
-            </li>
+          	<li class='navbar-li-element hidden' id='navbar-li-element-messages'>
+          		<a href='messages.jsp'>Nachrichten</a>
+          		
+          		<div class="button">
+    				<span class="notification-number" id="messages-notification-number"></span>
+  				</div>
+          	</li>
+          	
             <li>
           		<a href="" id="btn-show-loginform" class="" data-toggle="modal" data-target="#login">Login</a>
             </li>

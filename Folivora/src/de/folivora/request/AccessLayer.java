@@ -2,6 +2,8 @@ package de.folivora.request;
 
 import javax.servlet.http.HttpSession;
 
+import com.google.gson.JsonArray;
+
 import de.folivora.controller.ApplicationManager;
 import de.folivora.controller.UserManager;
 import de.folivora.model.Constants;
@@ -80,6 +82,11 @@ public class AccessLayer {
 			User folivora = aManager.getuManager().getFolivoraUser();
 			Transaction t = aManager.createAndSaveTransaction(sr.getCostsAndReward(), sr.getFee(), userCreator, folivora, null, sr);
 			aManager.executeTransaction(null, t);
+			
+			aManager.createAndSaveMessage("\"" + sr.getTitle() + "\" erfolgreich erstellt",
+					"Ihr Gesuch wurde erfolgreich erstellt und es wurden die Kosten von " + (t.getFee() + t.getValue())
+					+ " € von Ihrem Guthaben abgebucht.", folivora, userCreator, sr); // TODO weitere infos
+			
 			return sr;
 		}
 		
@@ -164,5 +171,16 @@ public class AccessLayer {
 		}
 		
 		return false;
+	}
+	
+	/**
+	 * Method to get the relevant messages of a {@link User} in a JsonArray.
+	 * 
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param callingUser - the {@link User}
+	 * @return the relevant messages
+	 */
+	public static JsonArray getRelevantMsgsOfUser(User callingUser) {
+		return ApplicationManager.getApplicationManagerInstance().getRelevantMessagesOfUserAsJsonArray(callingUser);
 	}
 }

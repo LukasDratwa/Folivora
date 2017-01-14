@@ -333,6 +333,38 @@ public class ApplicationManager {
 	}
 	
 	/**
+	 * Method to get the relevant messages of a {@link User} in a JsonArray.
+	 * 
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param user - the {@link User}
+	 * @return the messages in a JsonArray
+	 */
+	public JsonArray getRelevantMessagesOfUserAsJsonArray(User user) {
+		JsonArray jArray = new JsonArray();
+		
+		for(Message msg : getRelevantMessagesOfUser(user)) {
+			jArray.add(msg.getAsJsonObject());
+		}
+		
+		return jArray;
+	}
+	
+	/**
+	 * Method to get the relevant messages of a {@link User}.
+	 * 
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param user - the {@link User}
+	 * @return the messages
+	 */
+	public List<Message> getRelevantMessagesOfUser(User user) {
+		if(user != null && user.getRelevantMessages() != null)  {
+			return user.getRelevantMessages();
+		} else {
+			return new ArrayList<Message>();
+		}
+	}
+	
+	/**
 	 * Method to create and a {@link Message} in the database.
 	 * 
 	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
