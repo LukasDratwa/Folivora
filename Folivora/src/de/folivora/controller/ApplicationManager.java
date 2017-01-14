@@ -111,7 +111,7 @@ public class ApplicationManager {
 	 * 
 	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
 	 * @param token - the user entered unlock token which is needed to execute the transaction
-	 * @param t - the {@link Transaction)
+	 * @param t - the {@link Transaction}
 	 * @return true if the transaction was executed successfully
 	 */
 	public boolean executeTransaction(String token, Transaction t) {

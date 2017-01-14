@@ -24,8 +24,8 @@ public class AccessLayer {
 	 * TODO
 	 * 
 	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
-	 * @param user
-	 * @param token
+	 * @param user - the user
+	 * @param token - the token
 	 * @return true if the given token is equal to the user token which is saved in the database 
 	 */
 	private static boolean isValidToken(User user, String token) {
@@ -65,6 +65,7 @@ public class AccessLayer {
 	 * @param lng - lng
 	 * @param address - the address
 	 * @param userCreator - the creator
+	 * @param token - the unlock token for this search request
 	 * @return the created {@link SearchRequest}
 	 */
 	public static SearchRequest createSearchRequest(String title, String description, String pathToDefaultImg,

@@ -142,8 +142,8 @@ public class SearchRequest {
 	 * 
 	 * 
 	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
-	 * @param possibleDeliveryDo
-	 * @return
+	 * @param possibleDeliveryDo - the possible delivery as unix time
+	 * @return the path to the marker map icon which should used for this search request
 	 */
 	private String getMarkerIconPath(long possibleDeliveryDo) {
 		long act = System.currentTimeMillis();
@@ -166,7 +166,7 @@ public class SearchRequest {
 	 * <b>Note: </b> the field active will not be changed in this method!
 	 * 
 	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
-	 * @return
+	 * @return true if this search request should be active
 	 */
 	public boolean shouldBeActive() {
 		Date actDate = new Date();

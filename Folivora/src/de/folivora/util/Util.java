@@ -21,7 +21,7 @@ public class Util {
 	 * 
 	 * @param value - the input double value
 	 * @param places - number of wished digits after the comma 
-	 * @return
+	 * @return the rounded double value
 	 */
 	public static double round(double value, int places) {
 	    if (places < 0) throw new IllegalArgumentException();
@@ -70,7 +70,7 @@ public class Util {
 	}
 	
 	/**
-	 * Method to get a token with the length of {@link Constants.TOKEN_SEARCHREQUEST_LENGTH}
+	 * Method to get a token with the length of {@link Constants#TOKEN_SEARCHREQUEST_LENGTH}
 	 * 
 	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
 	 * @return the generated token

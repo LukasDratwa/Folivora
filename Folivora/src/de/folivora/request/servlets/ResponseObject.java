@@ -54,7 +54,7 @@ public class ResponseObject {
 	 * Method to get the bytes of this object.
 	 * 
 	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
-	 * @return
+	 * @return the byte array of this object
 	 */
 	public byte[] getBytes() {
 		return this.toString().getBytes();

@@ -1,0 +1,7 @@
+de.folivora.controller
+de.folivora.model
+de.folivora.model.messanger
+de.folivora.request
+de.folivora.request.servlets
+de.folivora.storage
+de.folivora.util

@@ -184,6 +184,11 @@ public class HibernateMongoDBDialect extends BaseGridDialect implements Queryabl
 
 	/**
 	 * Returns a {@link DBObject} representing the entity which embeds the specified association.
+	 * 
+	 * <hr>Adaption on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param key - the key
+	 * @param associationContext - the association context
+	 * @return the created DBObject
 	 */
 	private DBObject getEmbeddingEntity(AssociationKey key, AssociationContext associationContext) {
 		DBObject embeddingEntityDocument = associationContext.getEntityTuple() != null ? ( (MongoDBTupleSnapshot) associationContext.getEntityTuple().getSnapshot() ).getDbObject() : null;
@@ -216,7 +221,7 @@ public class HibernateMongoDBDialect extends BaseGridDialect implements Queryabl
 		return getProjection( tupleContext.getSelectableColumns() );
 	}
 
-	/**
+	/*
 	 * Returns a projection object for specifying the fields to retrieve during a specific find operation.
 	 */
 	private BasicDBObject getProjection(List<String> fieldNames) {
@@ -233,7 +238,7 @@ public class HibernateMongoDBDialect extends BaseGridDialect implements Queryabl
 	 * In case of simple id objects the json representation will look like {_id: "theIdValue"}
 	 * In case of composite id objects the json representation will look like {_id: {author: "Guillaume", title: "What this method is used for?"}}
 	 *
-	 * @param key
+	 * @param key - the key
 	 *
 	 * @return the DBObject which represents the id field
 	 */
@@ -348,7 +353,7 @@ public class HibernateMongoDBDialect extends BaseGridDialect implements Queryabl
 		return dbObject;
 	}
 
-	/**
+	/*
 	 * Creates a dbObject that can be pass to the mongoDB batch insert function
 	 */
 	private DBObject objectForInsert(Tuple tuple, DBObject dbObject) {
@@ -514,7 +519,7 @@ public class HibernateMongoDBDialect extends BaseGridDialect implements Queryabl
 		return new Association( new MongoDBAssociationSnapshot( document, key, storageStrategy ) );
 	}
 
-	/**
+	/*
 	 * Returns the rows of the given association as to be stored in the database. Elements of the returned list are
 	 * either
 	 * <ul>
@@ -798,6 +803,7 @@ public class HibernateMongoDBDialect extends BaseGridDialect implements Queryabl
 	 * <li>from the given query descriptor (in case the query has been translated from JP-QL or it is a native query
 	 * using the extended syntax {@code db.<COLLECTION>.<OPERATION>(...)}</li>
 	 * <li>or from the single mapped entity type if it is a native query using the criteria-only syntax
+	 * </ul>
 	 *
 	 * @param customQuery the original query to execute
 	 * @param queryDescriptor descriptor for the query
@@ -846,7 +852,7 @@ public class HibernateMongoDBDialect extends BaseGridDialect implements Queryabl
 		return getAssociationStorageStrategy( key.getMetadata(), associationContext.getAssociationTypeContext() );
 	}
 
-	/**
+	/*
 	 * Returns the {@link AssociationStorageStrategy} effectively applying for the given association. If a setting is
 	 * given via the option mechanism, that one will be taken, otherwise the default value as given via the
 	 * corresponding configuration property is applied.
