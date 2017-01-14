@@ -19,12 +19,12 @@ import de.folivora.model.UserType;
 import de.folivora.model.messanger.Message;
 import de.folivora.storage.HibernateLoad;
 
-/** 
- * Listener to init and shutdown the application
- * <br><br>
- * ---------------------------------------------------------------<br>
- * @author Lukas Dratwa
-*/
+/**
+ * Listener to launch, init and shutdown the application.
+ * 
+ * <hr>Created on 14.01.2017<hr>
+ * @author <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a>
+ */
 public class DoAfterStartupListener implements ServletContextListener {
 	private static final Logger logger = Logger.getLogger(DoAfterStartupListener.class);
 	private UpdateDaemon updateThread;
@@ -55,6 +55,12 @@ public class DoAfterStartupListener implements ServletContextListener {
 		}
 	}
 	
+	/**
+	 * Method to initially load the data from the database.
+	 * 
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param aManager - the manager
+	 */
 	private void loadAndInitData(ApplicationManager aManager) {
 		// Load users
 		List<User> loadedUsers = HibernateLoad.loadUserList();
@@ -81,6 +87,13 @@ public class DoAfterStartupListener implements ServletContextListener {
 		}	
 	}
 	
+	/**
+	 * Check if the standard users (actually folivora, paypal and admin) are already saved. If not, they
+	 * will be created and saved. 
+	 * 
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param aManager - the manager
+	 */
 	private void checkForStandardUsers(ApplicationManager aManager) {
 		UserManager uManager = aManager.getuManager();
 		boolean foundAdmin = false,
@@ -114,6 +127,12 @@ public class DoAfterStartupListener implements ServletContextListener {
 		}
 	}
 	
+	/**
+	 * Method to enrich the loaded data (map them to transient lists in objects etc.)
+	 * 
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param aManager - the manager
+	 */
 	private void enrichLoadedDatabaseData(ApplicationManager aManager) {
 		DataContainer dC = aManager.getdC();
 		UserManager uManager = aManager.getuManager();

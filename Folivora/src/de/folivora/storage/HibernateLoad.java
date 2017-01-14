@@ -13,19 +13,19 @@ import de.folivora.model.Transaction;
 import de.folivora.model.User;
 import de.folivora.model.messanger.Message;
 
-/** 
+/**
  * Class with method to load something of the database
- * <br><br>
- * ---------------------------------------------------------------<br>
- *
- * @author Lukas Dratwa
-*/
+ * 
+ * <hr>Created on 14.01.2017<hr>
+ * @author <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a>
+ */
 public class HibernateLoad {
 	private static final Logger logger = Logger.getLogger(HibernateLoad.class);
 
 	/**
 	 * Method to load an User of the database
 	 * 
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
 	 * @param id - the userId
 	 * @return - the loaded User or null, if there is no User with the given id in the database
 	 */
@@ -52,6 +52,7 @@ public class HibernateLoad {
 	/**
 	 * Method to load an User with his email of the database
 	 * 
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
 	 * @param email - the email
 	 * @return loaded User or null, if there is no User with the given email in the database
 	 */
@@ -79,6 +80,7 @@ public class HibernateLoad {
 	/**
 	 * Method to load all Users of the database
 	 * 
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
 	 * @return the loaded list of users which are saved in the database
 	 */
 	@SuppressWarnings("unchecked")
@@ -105,6 +107,7 @@ public class HibernateLoad {
 	/**
 	 * Method to load a specific Transaction of the database
 	 * 
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
 	 * @param id - the transaction id
 	 * @return - the loaded Transaction or null, if there is no Transaction with the given id in the database
 	 */
@@ -131,6 +134,7 @@ public class HibernateLoad {
 	/**
 	 * Method to load all Transactions of the database
 	 * 
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
 	 * @return the loaded Transactions 
 	 */
 	@SuppressWarnings("unchecked")
@@ -157,6 +161,7 @@ public class HibernateLoad {
 	/**
 	 * Method to load a specific SearchRequest of the database
 	 * 
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
 	 * @param id - the search request id
 	 * @return - the loaded SearchRequest or null, if there is no SearchRequest with the given id in the database
 	 */
@@ -183,6 +188,7 @@ public class HibernateLoad {
 	/**
 	 * Method to load all SearchRequest of the database
 	 * 
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
 	 * @return the loaded SearchRequest 
 	 */
 	@SuppressWarnings("unchecked")
@@ -209,6 +215,7 @@ public class HibernateLoad {
 	/**
 	 * Method to load a specific Message of the database
 	 * 
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
 	 * @param id - the transaction id
 	 * @return - the loaded Message or null, if there is no Message with the given id in the database
 	 */
@@ -235,6 +242,7 @@ public class HibernateLoad {
 	/**
 	 * Method to load all Messages of the database
 	 * 
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
 	 * @return the loaded Messages 
 	 */
 	@SuppressWarnings("unchecked")
@@ -261,6 +269,7 @@ public class HibernateLoad {
 	/**
 	 * Method to load a specific TokenStorage of the database
 	 * 
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
 	 * @param id - the TokenStorage id
 	 * @return - the loaded TokenStorage or null, if there is no TokenStorage with the given id in the database
 	 */

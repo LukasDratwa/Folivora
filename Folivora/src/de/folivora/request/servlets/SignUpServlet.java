@@ -21,13 +21,12 @@ import de.folivora.model.User;
 import de.folivora.request.AccessLayer;
 import de.folivora.util.GsonUtil;
 
-/** 
+/**
  * Servlet to allow users to make an account for folivora
- * <br><br>
- * ---------------------------------------------------------------<br>
- *
- * @author Lukas Dratwa
-*/
+ * 
+ * <hr>Created on 14.01.2017<hr>
+ * @author <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a>
+ */
 @WebServlet("/signupservlet")
 public class SignUpServlet extends HttpServlet {
 	private static final long serialVersionUID = Constants.SERIAL_VERSION_UID;

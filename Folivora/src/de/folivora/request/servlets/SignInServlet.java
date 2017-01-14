@@ -22,12 +22,11 @@ import de.folivora.model.Constants;
 import de.folivora.model.User;
 
 
-/** 
- * Servlet to allow users to log in
- * <br><br>
- * ---------------------------------------------------------------<br>
- *
- * @author Lukas Dratwa
+/**
+ * Servlet implementation to sign a user in.
+ * 
+ * <hr>Created on 14.01.2017<hr>
+ * @author <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a>
  */
 @WebServlet("/signinservlet")
 public class SignInServlet extends HttpServlet {

@@ -24,6 +24,9 @@ import de.folivora.request.AccessLayer;
 
 /**
  * Servlet implementation class FinishSrServlet
+ * 
+ * <hr>Created on 14.01.2017<hr>
+ * @author <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a>
  */
 @WebServlet("/finishsrservlet")
 public class FinishSrServlet extends HttpServlet {

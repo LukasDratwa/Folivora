@@ -6,7 +6,10 @@ import org.hibernate.ogm.cfg.OgmConfiguration;
 import org.hibernate.service.ServiceRegistry;
 
 /**
- * @author Lukas Dratwa
+ * Methods with utility methods for hibernate.
+ * 
+ * <hr>Created on 14.01.2017<hr>
+ * @author <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a>
  */
 public class HibernateUtil {
 	private static final SessionFactory sessionFactory;  
@@ -25,7 +28,7 @@ public class HibernateUtil {
     }  
     
     /**
-     * @since 1.0
+     * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
      * @return initialized session factory instance
      */
     public static SessionFactory getSessionFactory() {  

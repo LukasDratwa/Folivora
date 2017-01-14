@@ -16,6 +16,12 @@ import org.bson.types.ObjectId;
 
 import de.folivora.util.Util;
 
+/**
+ * Class to represent the credit of a {@link User}
+ * 
+ * <hr>Created on 14.01.2017<hr>
+ * @author <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a>
+ */
 @Entity
 public class UserCredit {
 	@Id
@@ -43,6 +49,13 @@ public class UserCredit {
 		
 	}
 	
+	/**
+	 * Method to get the max. costs and rewards which are possible with this credit to get not a 
+	 * negative credit balance of the user.
+	 * 
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @return the max costs and rewards
+	 */
 	public double getMaxPossiblePriceForSr() {
 		if(getBalance() <= 1) {
 			return (getBalance() - 0.1 > 0) ? getBalance() - 0.1 : 0;

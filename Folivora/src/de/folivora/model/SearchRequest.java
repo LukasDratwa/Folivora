@@ -17,6 +17,12 @@ import org.bson.types.ObjectId;
 
 import com.google.gson.JsonObject;
 
+/**
+ * Class to represent a search request.
+ * 
+ * <hr>Created on 14.01.2017<hr>
+ * @author <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a>
+ */
 @Entity
 public class SearchRequest {
 	@Id
@@ -87,6 +93,12 @@ public class SearchRequest {
 		
 	}
 	
+	/**
+	 * Method to get the search request as a JsonObject where not all fields are exported.
+	 * 
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @return the JsonObject 
+	 */
 	public JsonObject getAsJsonObject() {
 		JsonObject jo = new JsonObject();
 		
@@ -124,6 +136,15 @@ public class SearchRequest {
 		return jo;
 	}
 	
+	/**
+	 * Method calculate the left possible delivery time and return a path to the corresponding
+	 * map marker.
+	 * 
+	 * 
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param possibleDeliveryDo
+	 * @return
+	 */
 	private String getMarkerIconPath(long possibleDeliveryDo) {
 		long act = System.currentTimeMillis();
 		
@@ -136,6 +157,17 @@ public class SearchRequest {
 		}
 	}
 	
+	/**
+	 * Method to calculate if the search request should be active. Other explanation: 
+	 * is the actual date in [possible deliver from, p. d. to]?
+	 * 
+	 * <br><br>
+	 * 
+	 * <b>Note: </b> the field active will not be changed in this method!
+	 * 
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @return
+	 */
 	public boolean shouldBeActive() {
 		Date actDate = new Date();
 		Date a = new Date(this.getPossibleDelivery_from());

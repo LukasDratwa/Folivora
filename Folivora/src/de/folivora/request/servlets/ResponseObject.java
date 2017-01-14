@@ -10,6 +10,12 @@ import org.apache.log4j.Logger;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
+/**
+ * Object for a consistent response within the response of the servlets.
+ * 
+ * <hr>Created on 14.01.2017<hr>
+ * @author <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a>
+ */
 public class ResponseObject {
 	private int httpStatus;
 	private String msg;
@@ -25,6 +31,11 @@ public class ResponseObject {
 		this.response = response;
 	}
 	
+	/**
+	 * Method to flush the object in the response.
+	 * 
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 */
 	public void writeResponse() {
 		response.setStatus(this.httpStatus);
 		response.setContentType("application/json");
@@ -39,6 +50,12 @@ public class ResponseObject {
 		}
 	}
 	
+	/**
+	 * Method to get the bytes of this object.
+	 * 
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @return
+	 */
 	public byte[] getBytes() {
 		return this.toString().getBytes();
 	}

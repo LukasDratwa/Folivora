@@ -16,6 +16,9 @@ import de.folivora.model.User;
 
 /**
  * Servlet implementation class SignOutServlet
+ * 
+ * <hr>Created on 14.01.2017<hr>
+ * @author <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a>
  */
 @WebServlet("/signoutservlet")
 public class SignOutServlet extends HttpServlet {

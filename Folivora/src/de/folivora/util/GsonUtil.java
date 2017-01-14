@@ -10,11 +10,18 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 
+/**
+ * Utility to bundle methods for for google gson.
+ * 
+ * <hr>Created on 14.01.2017<hr>
+ * @author <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a>
+ */
 public class GsonUtil {
 	/**
 	 * Small utility method to create a Gson which will handle date as long values.
 	 * 
-	 * @return
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @return gson
 	 */
 	public static Gson getGsonDateAsLongHandling() {
 		// Creates the json object which will manage the information received 

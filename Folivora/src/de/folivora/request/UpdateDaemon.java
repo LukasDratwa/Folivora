@@ -9,6 +9,15 @@ import de.folivora.model.SearchRequest;
 import de.folivora.model.SearchRequestStatus;
 import de.folivora.storage.HibernateUpdate;
 
+/**
+ * Daemon-Thread which will check:
+ * <ul>
+ * 	<li>if the search requests have the right {@link SearchRequestStatus}</li>
+ * </ul>
+ * 
+ * <hr>Created on 14.01.2017<hr>
+ * @author <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a>
+ */
 public class UpdateDaemon extends Thread {
 	private static final Logger logger = Logger.getLogger(UpdateDaemon.class);
 	private boolean isRunning = false;

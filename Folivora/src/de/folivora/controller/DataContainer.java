@@ -8,6 +8,12 @@ import de.folivora.model.Transaction;
 import de.folivora.model.User;
 import de.folivora.model.messanger.Message;
 
+/**
+ * Class to bundle the application data.
+ * 
+ * <hr>Created on 14.01.2017<hr>
+ * @author <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a>
+ */
 public class DataContainer {
 	private List<User> userList;
 	private List<SearchRequest> searchRequestList;

@@ -7,14 +7,20 @@ import java.security.SecureRandom;
 
 import de.folivora.model.Constants;
 
+/**
+ * Utility class for folivora.
+ * 
+ * <hr>Created on 14.01.2017<hr>
+ * @author <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a>
+ */
 public class Util {
 	private static SecureRandom secureRandom = new SecureRandom();
 	
 	/**
 	 * THX: http://stackoverflow.com/questions/2808535/round-a-double-to-2-decimal-places
 	 * 
-	 * @param value
-	 * @param places
+	 * @param value - the input double value
+	 * @param places - number of wished digits after the comma 
 	 * @return
 	 */
 	public static double round(double value, int places) {
@@ -25,6 +31,13 @@ public class Util {
 	    return bd.doubleValue();
 	}
 	
+	/**
+	 * Method to get a random string / token.
+	 * 
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param uppercase - true if all chars of the token should be uppercase
+	 * @return the generated token with the length of ~32
+	 */
 	public static String getToken(boolean uppercase) {
 		if(uppercase) {
 			return new BigInteger(130, secureRandom).toString(32).toUpperCase();
@@ -33,6 +46,15 @@ public class Util {
 		}
 	}
 	
+	/**
+	 * Method to get a random string / token.
+	 * 
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param uppercase - true if all chars of the token should be uppercase
+	 * @param length - the wished length of the returned token
+	 * @param inputString - input for recursion, should be an empty string!
+	 * @return the generated token with the specified length
+	 */
 	public static String getTrimmedToken(boolean uppercase, int length, String inputString) {
 		String token = getToken(uppercase);
 		
@@ -47,6 +69,12 @@ public class Util {
 		}
 	}
 	
+	/**
+	 * Method to get a token with the length of {@link Constants.TOKEN_SEARCHREQUEST_LENGTH}
+	 * 
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @return the generated token
+	 */
 	public static String getSrUnlockToken() {
 		return getTrimmedToken(true, Constants.TOKEN_SEARCHREQUEST_LENGTH, "");
 	}

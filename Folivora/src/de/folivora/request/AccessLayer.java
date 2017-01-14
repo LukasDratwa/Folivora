@@ -13,12 +13,33 @@ import de.folivora.model.UserType;
 import de.folivora.storage.HibernateUpdate;
 import de.folivora.util.Util;
 
+/**
+ * Class to implement a controlled layer between requests and controller.
+ * 
+ * <hr>Created on 14.01.2017<hr>
+ * @author <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a>
+ */
 public class AccessLayer {
+	/**
+	 * TODO
+	 * 
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param user
+	 * @param token
+	 * @return true if the given token is equal to the user token which is saved in the database 
+	 */
 	private static boolean isValidToken(User user, String token) {
 		return true;
 		// TODO be sure that in every call is a token ... return user.getTokenStorage().getToken().equals(token);
 	}
 	
+	/**
+	 * Method to sign up a new {@link User}.
+	 * 
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param newUser - the data of the new user
+	 * @param session - the session of the request
+	 */
 	public static void signUp(User newUser, HttpSession session) {
 		UserManager uManager = ApplicationManager.getApplicationManagerInstance().getuManager();
 		User user = uManager.createAndSaveUser(newUser.getName(), newUser.getPassword(), newUser.getBirthday(), newUser.getGender(),
@@ -28,6 +49,24 @@ public class AccessLayer {
 		user.setSession(session);
 	}
 	
+	/**
+	 * Method to call {@link ApplicationManager#createAndSaveSearchRequest(String, String, String, Long, Long, double, double,
+	 * Double, Double, String, User)} and create the needed {@link Transaction} between the creator and folivora.
+	 * 
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param title - the title
+	 * @param description - the description
+	 * @param pathToDefaultImg - the path to the default img
+	 * @param possibleDelivery_from - unix time from which the delivery is possible
+	 * @param possibleDelivery_to - unix time till which the delivery is possible
+	 * @param costsAndReward - the costs and reward for the delivering person
+	 * @param fee - the fee which the creator have to pay folivora
+	 * @param lat - lat
+	 * @param lng - lng
+	 * @param address - the address
+	 * @param userCreator - the creator
+	 * @return the created {@link SearchRequest}
+	 */
 	public static SearchRequest createSearchRequest(String title, String description, String pathToDefaultImg,
 			Long possibleDelivery_from, Long possibleDelivery_to, double costsAndReward, double fee,
 			Double lat, Double lng, String address, User userCreator, String token) {
@@ -46,7 +85,14 @@ public class AccessLayer {
 		return null;
 	}
 	
-	public static boolean statisfySearchRequest(User callingUser, SearchRequest sr) {
+	/**
+	 * Method to statisfy a search request.
+	 * 
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param callingUser - the calling {@link User}
+	 * @param sr - the referenced {@link SearchRequest}
+	 */
+	public static void statisfySearchRequest(User callingUser, SearchRequest sr) {
 		sr.setStatus(SearchRequestStatus.IN_PROGRESS);
 		sr.setUserStasisfier(callingUser);
 		HibernateUpdate.updateObject(sr);
@@ -62,11 +108,16 @@ public class AccessLayer {
 				+ sr.getUserCreator().getName() + " bezüglich der Lieferdetails in Verbindung."
 				+ "Bei erfolgreichem Abschluss erwartet Sie eine Gutschrift über "
 				+ sr.getCostsAndReward() + "€.", folivora, callingUser, sr);
-		
-		return true;
 	}
 	
-	public static boolean cancelSearchRequest(User callingUser, SearchRequest sr) {
+	/**
+	 * Method cancel a search request.
+	 * 
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param callingUser - the calling {@link User}
+	 * @param sr - the referenced {@link SearchRequest}
+	 */
+	public static void cancelSearchRequest(User callingUser, SearchRequest sr) {
 		ApplicationManager aManager = ApplicationManager.getApplicationManagerInstance();
 		User folivora = aManager.getuManager().getFolivoraUser();
 		Transaction t = aManager.createAndSaveTransaction(sr.getCostsAndReward(), sr.getFee(), folivora, callingUser, null, sr);
@@ -79,9 +130,17 @@ public class AccessLayer {
 				"Ihr Gesuch \"" + sr.getTitle() + "\" vom " + sr.getCreationTimestamp()
 				+ "wurde erfolgreich zurückgezogen. Sie erhalten in Kürze eine Gutschrift "
 				+ "über " + (sr.getCostsAndReward() + sr.getFee()) + "€.", folivora, callingUser, sr);
-		return true;
 	}
 	
+	/**
+	 * Method to finish a search request.
+	 * 
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param sr - the referenced {@link SearchRequest}
+	 * @param unlockToken - the token to unlock
+	 * @param callingUser - the calling {@link User}
+	 * @return true if the search request could finished (entered token was correct to execute finishing transaction)
+	 */
 	public static boolean finsihSr(SearchRequest sr, String unlockToken, User callingUser) {
 		ApplicationManager aManager = ApplicationManager.getApplicationManagerInstance();
 		

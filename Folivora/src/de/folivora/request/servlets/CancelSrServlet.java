@@ -24,7 +24,10 @@ import de.folivora.model.UserType;
 import de.folivora.request.AccessLayer;
 
 /**
- * Servlet implementation class CancelSrServlet
+ * Servlet to cancel a search request.
+ * 
+ * <hr>Created on 14.01.2017<hr>
+ * @author <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a>
  */
 @WebServlet("/cancelsrservlet")
 public class CancelSrServlet extends HttpServlet {

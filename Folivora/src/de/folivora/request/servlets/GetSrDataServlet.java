@@ -20,6 +20,9 @@ import de.folivora.model.Constants;
 
 /**
  * Servlet implementation class GetSrDataServlet
+ * 
+ * <hr>Created on 14.01.2017<hr>
+ * @author <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a>
  */
 @WebServlet("/getsrdataservlet")
 public class GetSrDataServlet extends HttpServlet {

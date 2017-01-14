@@ -1,5 +1,11 @@
 package de.folivora.model;
 
+/**
+ * Class to bundle constants.
+ * 
+ * <hr>Created on 14.01.2017<hr>
+ * @author <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a>
+ */
 public class Constants {
 	public static final double VERSION = 1.1;
 	public static final long SERIAL_VERSION_UID = 1841986427873375189L;

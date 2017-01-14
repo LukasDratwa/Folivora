@@ -21,6 +21,12 @@ import org.bson.types.ObjectId;
 
 import de.folivora.model.messanger.Message;
 
+/**
+ * Class to represent a user.
+ * 
+ * <hr>Created on 14.01.2017<hr>
+ * @author <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a>
+ */
 @Entity
 public class User {
 	@Id

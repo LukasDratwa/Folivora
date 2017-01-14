@@ -6,18 +6,19 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.Mongo;
 
-/** 
+/**
  * Class with methods to drop Collections or Databases.
- * <br><br>
- * ---------------------------------------------------------------<br>
- *
- * @author Lukas Dratwa
-*/
+ * 
+ * <hr>Created on 14.01.2017<hr>
+ * @author <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a>
+ */
 public class HibernateDrop {
 	private static final Logger logger = Logger.getLogger(HibernateDrop.class);
 	
 	/**
 	 * Method to drop our database "folivora" in the MongoDB.
+	 * 
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
 	 */
 	@SuppressWarnings("deprecation")
 	public static void dropDatabase() {
@@ -33,7 +34,10 @@ public class HibernateDrop {
 	}
 	
 	/**
-	 * Method to drop a collection with the given name.
+	 * Method to drop a collection with the given name
+	 * 
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param collectionName - the name
 	 */
 	@SuppressWarnings("deprecation")
 	public static void dropCollection(String collectionName) {

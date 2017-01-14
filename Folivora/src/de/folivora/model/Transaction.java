@@ -12,7 +12,10 @@ import javax.persistence.OneToOne;
 import org.bson.types.ObjectId;
 
 /**
- * @author Lukas
+ * Class to represent a transaction. 
+ * 
+ * <hr>Created on 14.01.2017<hr>
+ * @author <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a>
  */
 @Entity
 public class Transaction {

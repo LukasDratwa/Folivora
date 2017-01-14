@@ -11,6 +11,12 @@ import javax.persistence.OneToOne;
 
 import org.bson.types.ObjectId;
 
+/**
+ * Class to represent feedbacks between users based on a finished search request.
+ * 
+ * <hr>Created on 14.01.2017<hr>
+ * @author <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a>
+ */
 @Entity
 public class Feedback {
 	@Id

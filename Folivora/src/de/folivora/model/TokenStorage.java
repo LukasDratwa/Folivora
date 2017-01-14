@@ -10,6 +10,12 @@ import javax.persistence.Id;
 
 import org.bson.types.ObjectId;
 
+/**
+ * Class to storage the authentication token of a user.
+ * 
+ * <hr>Created on 14.01.2017<hr>
+ * @author <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a>
+ */
 @Entity
 public class TokenStorage {
 	@Id

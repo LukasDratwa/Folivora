@@ -19,6 +19,12 @@ import de.folivora.model.messanger.Message;
 import de.folivora.storage.HibernateSave;
 import de.folivora.storage.HibernateUpdate;
 
+/**
+ * Singleton to bundle all methods to handle the logic of folivora.
+ *
+ * <hr>Created on 14.01.2017<hr>
+ * @author <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a>
+ */
 public class ApplicationManager {
 	private UserManager uManager = null;
 	private static ApplicationManager instance = null;
@@ -30,6 +36,14 @@ public class ApplicationManager {
 		this.setuManager(new UserManager(dC));
 	}
 	
+	/**
+	 * Method to get the instance of the manager and to set the DataContainer. (This method should
+	 * be called in the startup of the server!)
+	 * 
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param dC - the DataContainer to set
+	 * @return the instance of the ApplicationManager
+	 */
 	public static ApplicationManager getApplicationManagerInstance(DataContainer dC) {
 		if(instance == null) {
 			instance = new ApplicationManager(dC);
@@ -37,10 +51,27 @@ public class ApplicationManager {
 		return instance;
 	}
 	
+	/**
+	 * Method to get the instance of the manager.
+	 * 
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @return the instance of the ApplicationManager
+	 */
 	public static ApplicationManager getApplicationManagerInstance() {
 		return getApplicationManagerInstance(null);
 	}
 	
+	/**
+	 * Method to create and save a {@link Feedback} in the database. The Feedback 
+	 * will be saved in the list of received feedbacks of the feedback.
+	 * 
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param rating - the rating
+	 * @param description - the description of the feedback, can be empty
+	 * @param feedbackCreator - the creator of the feedback
+	 * @param referencedSearchRequest - the receiver of the feedback
+	 * @return the created {@link Feedback}
+	 */
 	public Feedback createAndSaveFeedback(Rating rating, String description,
 			User feedbackCreator, SearchRequest referencedSearchRequest) {
 		Feedback f = factory_createFeedback(rating, description, feedbackCreator, referencedSearchRequest);
@@ -60,11 +91,29 @@ public class ApplicationManager {
 		return f;
 	}
 	
+	/**
+	 * Factory method to create a {@link Feedback}.
+	 * 
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param rating - the rating
+	 * @param description - the description of the feedback, can be empty
+	 * @param feedbackCreator - the creator of the feedback
+	 * @param referencedSearchRequest - the referenced search request
+	 * @return the created {@link Feedback}
+	 */
 	private Feedback factory_createFeedback(Rating rating, String description,
 			User feedbackCreator, SearchRequest referencedSearchRequest) {
 		return new Feedback(rating, description, feedbackCreator, referencedSearchRequest);
 	}
 	
+	/**
+	 * Method to execute a transaction.
+	 * 
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param token - the user entered unlock token which is needed to execute the transaction
+	 * @param t - the {@link Transaction)
+	 * @return true if the transaction was executed successfully
+	 */
 	public boolean executeTransaction(String token, Transaction t) {
 		if(t.getUnlockToken() != null && !token.equals(t.getUnlockToken())) {
 			logger.warn("Failed to unlock " + t + " with token " + token + "!! Execution cancelled.");
@@ -94,6 +143,14 @@ public class ApplicationManager {
 		return true;
 	}
 	
+	/**
+	 * Method to get a list of transactions which were referenced to the input 
+	 * search request.
+	 * 
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param srId - the search request
+	 * @return the list of transactions, can be empty
+	 */
 	public List<Transaction> getTransactionOfSearchRequest(String srId) {
 		List<Transaction> result = new ArrayList<Transaction>();
 		for(Transaction t : dC.getTransactionList()) {
@@ -104,6 +161,19 @@ public class ApplicationManager {
 		return result;
 	}
 	
+	/**
+	 * Method to create and save a {@link Transaction} in the database.
+	 * 
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param value - the value of the transaction, <u>without</u> any fees
+	 * @param fee - the fee
+	 * @param userFrom - userFrom
+	 * @param userTo - userTo
+	 * @param unlockToken - the token which will be needed to execute the created transaction.
+	 * 						Enter an empty string if no token should be needed.
+	 * @param sr - the referenced search request
+	 * @return the created {@link Transaction} 
+	 */
 	public Transaction createAndSaveTransaction(double value, double fee, User userFrom, User userTo,
 			String unlockToken, SearchRequest sr) {
 		Transaction t = factory_createTransaction(value, fee, userFrom, userTo, unlockToken, sr);
@@ -112,11 +182,32 @@ public class ApplicationManager {
 		return t;
 	}
 	
+	/**
+	 * Factory method to create a {@link Transaction}.
+	 * 
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param value - the value of the transaction, <u>without</u> any fees
+	 * @param fee - the fee
+	 * @param userFrom - userFrom
+	 * @param userTo - userTo
+	 * @param unlockToken - the token which will be needed to execute the created transaction.
+	 * 						Enter an empty string if no token should be needed.
+	 * @param sr - the referenced search request
+	 * @return the created {@link Transaction}
+	 */
 	private Transaction factory_createTransaction(double value, double fee, User userFrom,
 			User userTo, String unlockToken, SearchRequest sr) {
 		return new Transaction(value, fee, userFrom, userTo, unlockToken, sr);
 	}
 	
+	/**
+	 * Get all {@link SearchRequest}s as JsonObjects in a JsonArray where the user
+	 * with the input id is involved in. 
+	 * 
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param userId - the id of the user
+	 * @return all involved search requests
+	 */
 	public JsonArray getInvolvedSearchRequestsOfUserAsJsonArray(String userId) {
 		JsonArray result = new JsonArray();
 		User user = getuManager().getUserWithId(userId);
@@ -132,6 +223,12 @@ public class ApplicationManager {
 		return result;
 	}
 	
+	/**
+	 * Get all active {@link SearchRequest}s as a JsonArray to return them to the client.
+	 * 
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @return all active search requests as a JsonArray
+	 */
 	public JsonArray getActiveAndInProgressSearchRequestListAsJsonArray() {
 		JsonArray result = new JsonArray();
 		
@@ -144,6 +241,13 @@ public class ApplicationManager {
 		return result;
 	}
 	
+	/**
+	 * Method to find a {@link SearchRequest} with a unique id.
+	 * 
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param srId - the unique id of the {@link SearchRequest}
+	 * @return the search request with the input id or null
+	 */
 	public SearchRequest getSearchRequestWithId(String srId) {
 		for(SearchRequest sr : dC.getSearchRequestList()) {
 			if(sr.getId().toString().equals(srId)) {
@@ -154,6 +258,23 @@ public class ApplicationManager {
 		return null;
 	}
 	
+	/**
+	 * Method to create and save a {@link SearchRequest} in the database.
+	 * 
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param title - the title
+	 * @param description - the description
+	 * @param pathToDefaultImg - the path to the default img
+	 * @param possibleDelivery_from - unix time from which the delivery is possible
+	 * @param possibleDelivery_to - unix time till which the delivery is possible
+	 * @param costsAndReward - the costs and reward for the delivering person
+	 * @param fee - the fee which the creator have to pay folivora
+	 * @param lat - lat
+	 * @param lng - lng
+	 * @param address - the address
+	 * @param userCreator - the creator
+	 * @return the created {@link SearchRequest}
+	 */
 	public SearchRequest createAndSaveSearchRequest(String title, String description, String pathToDefaultImg,
 			Long possibleDelivery_from, Long possibleDelivery_to, double costsAndReward, double fee,
 			Double lat, Double lng, String address, User userCreator) {
@@ -162,6 +283,22 @@ public class ApplicationManager {
 				fee, lat, lng, address, userCreator);
 	}
 	
+	/**
+	 * Method to create and save a {@link SearchRequest} in the database.
+	 * 
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param title - the title
+	 * @param description - the description
+	 * @param pathToDefaultImg - the path to the default img
+	 * @param possibleDelivery - long array with unix time [possible delivery from, p. d. to]
+	 * @param costsAndReward - the costs and reward for the delivering person
+	 * @param fee - the fee which the creator have to pay folivora
+	 * @param lat - lat
+	 * @param lng - lng
+	 * @param address - the address
+	 * @param userCreator - the creator
+	 * @return the created {@link SearchRequest}
+	 */
 	public SearchRequest createAndSaveSearchRequest(String title, String description, String pathToDefaultImg,
 			Long[] possibleDelivery, double costsAndReward, double fee, 
 			Double lat, Double lng, String address, User userCreator) {
@@ -172,6 +309,22 @@ public class ApplicationManager {
 		return sr;
 	}
 	
+	/**
+	 * Factory method to create a {@link SearchRequest}.
+	 * 
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param title - the title
+	 * @param description - the description
+	 * @param pathToDefaultImg - the path to the default img
+	 * @param possibleDelivery - long array with unix time [possible delivery from, p. d. to]
+	 * @param costsAndReward - the costs and reward for the delivering person
+	 * @param fee - the fee which the creator have to pay folivora
+	 * @param lat - lat
+	 * @param lng - lng
+	 * @param address - the address
+	 * @param userCreator - the creator
+	 * @return the created {@link SearchRequest}
+	 */
 	private SearchRequest factory_createSearchRequest(String title, String description, String pathToDefaultImg,
 			Long[] possibleDelivery, double costsAndReward, double fee, Double lat,
 			Double lng, String address, User userCreator) {
@@ -179,6 +332,17 @@ public class ApplicationManager {
 				possibleDelivery, costsAndReward, fee, lat, lng, address, userCreator);
 	}
 	
+	/**
+	 * Method to create and a {@link Message} in the database.
+	 * 
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param title - the title of the {@link Message}
+	 * @param text - the text of the {@link Message}
+	 * @param sender - the sending {@link User}
+	 * @param receiver - the receiving {@link User}
+	 * @param referencedSr - the referenced {@link SearchRequest}
+	 * @return the created {@link Message}
+	 */
 	public Message createAndSaveMessage(String title, String text, User sender, User receiver, SearchRequest referencedSr) {
 		Message msg = factory_createMessage(title, text, sender, receiver, referencedSr);
 		HibernateSave.saveOrUpdateObject(msg);
@@ -188,6 +352,17 @@ public class ApplicationManager {
 		return msg;
 	}
 	
+	/**
+	 * Factory method create a {@link Message}.
+	 * 
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param title - the title of the {@link Message}
+	 * @param text - the text of the {@link Message}
+	 * @param sender - the sending {@link User}
+	 * @param receiver - the receiving {@link User}
+	 * @param referencedSr - the referenced {@link SearchRequest}
+	 * @return the created {@link Message}
+	 */
 	private Message factory_createMessage(String title, String text, User sender, User receiver, SearchRequest referencedSr) {
 		return new Message(title, text, sender, receiver, referencedSr);
 	}
