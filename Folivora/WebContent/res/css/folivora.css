@@ -23,6 +23,10 @@
 	color: red;
 }
 
+.full-width {
+	width: 100%;
+}
+
 #webapp-map-container {
 	position: relative;
 }

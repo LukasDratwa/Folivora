@@ -20,7 +20,7 @@
 				collapsible: true,
 				active: false,
 				activate: function(event, ui) {
-					console.log("after" , ui);
+					// console.log("after" , ui);
 					if(typeof ui.newPanel[0] != "undefined") {
 						var payload = {
 							userCallingId: webappDataObj.userData.id,
@@ -34,15 +34,24 @@
 					}
 				},
 				beforeActivate: function(event, ui) {
-					console.log("before " , ui);
+					// console.log("before " , ui);
 					// TODO scroll down in display
 				}
 			});
 			$("#message-accordion").removeClass("hidden");
 			$(".message-chatcontainer").css("max-height", $(window).height() * 0.5);
+			
+			
+			// Mobile view adaption
+			if(screen.width < 550) {
+				$(".message-amount-unread-msgs-number").each(function(i) {
+					var o = $(".message-amount-unread-msgs-number")[i];
+					var spanHtml = $(o).wrap('<p/>').parent().html();
+					$(o).unwrap();
+					$(o.parentElement).html(spanHtml);
+				});
+			}
 		});
-		
-		// TODO implementieren eine Nachricht schreiben zu können
 	</script>
     
     <div class="container">
@@ -61,14 +70,14 @@
     						
     						%><h3 class="message-chatheader">Gesuch "<% out.write(sr.getTitle()); %>" vom <% out.write(srCreationDateTimeString); %>
     							<span class="message-amount-unread-msgs">
-    								<span class="message-amount-unread-msgs message-amount-unread-msgs-number" id="message-amount-unread-msgs-<% out.write(sr.getId().toString()); %>">
+    								<span class="message-amount-unread-msgs-number" id="message-amount-unread-msgs-<% out.write(sr.getId().toString()); %>">
     									<% 	if(unseenMessages > 0){ out.write("<b class='red'>"); };
     											out.write("" + unseenMessages);
     										if(unseenMessages > 0){ out.write("</b>"); };
     									%>
     								</span>
-    								<% out.write("Ungelesene Nachrichten:"); %>
     								
+    								<% out.write("Ungelesene Nachrichten:"); %>
     							</span>
     						</h3>
     						
@@ -114,8 +123,23 @@
     									<%
     								}
     							}
-    						%>
     						
+    							// Enable chat-row
+    							if(sr.getUserStasisfier() != null) {
+    								%>
+    									<div class="row">
+    										<div class="col-md-10 col-xs-12">
+    											<textarea class="full-width" rows="2"></textarea>
+    										</div>
+    										
+    										<div class="col-md-2 col-xs-12">
+    											<input type="button" class="btn bt-default full-width" value="Senden"/>
+    										</div>
+    									</div>
+    								<%
+    							}
+    						%>
+    							
     						</div>
     					<%}%>
     			</div>
