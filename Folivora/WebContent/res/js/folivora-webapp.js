@@ -184,6 +184,26 @@ $(document).ready(function() {
 		updateViewIfNeeded();
 	}, 1000);
 	
+	$(".filter-urgency").click(function(el) {
+		$(this).toggleClass('active');
+		var showRed = $('#filter-urgency-red').hasClass('active');
+		var showYellow = $('#filter-urgency-yellow').hasClass('active');
+		var showGreen = $('#filter-urgency-green').hasClass('active');
+		$.each(webappDataObj.mapData.markers, function(index, value) {
+			if (
+					(value.icon.includes('red') && !showRed) ||
+					(value.icon.includes('orange') && !showYellow) ||
+					(value.icon.includes('green') && !showGreen)
+			) {
+				webappDataObj.mapData.removeMarker(value.sr.id);
+			}
+			else if (webappDataObj.mapData.getMarkerWithSrId(value.sr.id).map == null) {
+				addMarker(value.sr, webappDataObj.mapData.map);
+			}
+		});
+		// webappDataObj.mapData.markers = [];		
+	});
+	
 	$("#btn-select-address").click(function() {
 		webappDataObj.newSearchRequestClicked = true;
 	});
