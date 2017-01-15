@@ -186,15 +186,26 @@ $(document).ready(function() {
 	
 	$(".filter-urgency").click(function(el) {
 		$(this).toggleClass('active');
+	});
+	$("#filter-apply").click(function(el) {
 		var showRed = $('#filter-urgency-red').hasClass('active');
 		var showYellow = $('#filter-urgency-yellow').hasClass('active');
 		var showGreen = $('#filter-urgency-green').hasClass('active');
+		var minReward = +($('#filter-reward-min').val()) || 0;
+		var maxReward = +($('#filter-reward-max').val()) || Number.MAX_VALUE;
 		$.each(webappDataObj.mapData.markers, function(index, value) {
-			if (
-					(value.icon.includes('red') && !showRed) ||
-					(value.icon.includes('orange') && !showYellow) ||
-					(value.icon.includes('green') && !showGreen)
-			) {
+			var removeMarker = false;
+			removeMarker |= 
+				(value.icon.includes('red') && !showRed) ||
+				(value.icon.includes('orange') && !showYellow) ||
+				(value.icon.includes('green') && !showGreen);
+			removeMarker |=
+				value.sr.costsAndReward < minReward ||
+				value.sr.costsAndReward > maxReward;
+				
+			console.log(value);
+			
+			if (removeMarker) {
 				webappDataObj.mapData.removeMarker(value.sr.id);
 			}
 			else if (webappDataObj.mapData.getMarkerWithSrId(value.sr.id).map == null) {
@@ -214,16 +225,15 @@ $(document).ready(function() {
 	});
 	
 	$("#sr-toggle-btn").click(function() {
-		if($("#sr-toggle-btn").val() == "Zum Filter") {
-			$("#sr-toggle-btn").val("Neues Gesuch erstellen");
-			
-			$("#sr-filter-container").removeClass("hidden");
-			$("#srform").addClass("hidden");
-		} else {
-			$("#sr-toggle-btn").val("Zum Filter");
-			
-			$("#sr-filter-container").addClass("hidden");
+		if ($("#srform").hasClass("hidden")) {
+			$("#sr-toggle-btn i").addClass("glyphicon-menu-up");
+			$("#sr-toggle-btn i").removeClass("glyphicon-menu-down");
 			$("#srform").removeClass("hidden");
+		}
+		else {
+			$("#sr-toggle-btn i").addClass("glyphicon-menu-down");
+			$("#sr-toggle-btn i").removeClass("glyphicon-menu-up");
+			$("#srform").addClass("hidden");
 		}
 	});
 	
