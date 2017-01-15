@@ -28,6 +28,11 @@ var webappDataObj = {
 				}
 			}
 			return null;
+		},
+		add: function(sr) {
+			if(this.getSrWithId(sr.id) == null) {
+				this.srs.push(sr);
+			}
 		}
 	},
 	userData: {
@@ -38,44 +43,133 @@ var webappDataObj = {
 		map: null,
 		markers: [],
 		removeMarker: function(srId) {
+			var indexToRemove = -1;
 			for(var i in this.markers) {
 				var marker = this.markers[i];
 				
 				if(marker.sr.id == srId) {
+					indexToRemove = i;
 					marker.setMap(null);
 				}
 			}
+			
+			if(indexToRemove != -1) {
+				webappDataObj.removeElementOfArray(indexToRemove, this.markers);
+				webappDataObj.removeElementOfArray(indexToRemove, webappDataObj.srData.srs);
+			}
+		},
+		getMarkerWithSrId: function(srId) {
+			for(var i in this.markers) {
+				var marker = this.markers[i];
+				
+				if(marker.sr.id == srId) {
+					return marker;
+				}
+			}
+			
+			return null;
 		}
+	},
+	removeElementOfArray: function(index, array) {
+		var result = [];
+		for(var i in array) {
+			if(index != i) {
+				result.push(array[i]);
+			}
+		}
+		return result;
 	}
 };
 webappDataObj.resetNewSrObj();
 
+var updateViewCounter = 0;
 function updateViewIfNeeded(){
+	updateViewCounter++;
 	var payload = {
 		userCallingId: webappDataObj.userData.id,
 		onlyUnseen: true
 	};
 	
 	// Check notification banner (unread msgs)
-	createRest("POST", "getmessagesservlet", JSON.stringify(payload), function(response) {
-		var responseObj = JSON.parse(response);
-		var unreadMsgsLength = new Number(responseObj.userMessages.length);
-		
-		if(unreadMsgsLength > 0) {
-			$("#messages-notification-number").html(unreadMsgsLength);
-			$("#messages-notification-number").removeClass("hidden")
-		} else {
-			$("#messages-notification-number").html("");
-			$("#messages-notification-number").addClass("hidden")
-		}
-		
-		return;
-	});
+	if(typeof payload.userCallingId != "undefined") {
+		createRest("POST", "getmessagesservlet", JSON.stringify(payload), function(response) {
+			var responseObj = JSON.parse(response);
+			var unreadMsgsLength = new Number(responseObj.userMessages.length);
+			
+			if(unreadMsgsLength > 0) {
+				$("#messages-notification-number").html(unreadMsgsLength);
+				$("#messages-notification-number").removeClass("hidden")
+			} else {
+				$("#messages-notification-number").html("");
+				$("#messages-notification-number").addClass("hidden")
+			}
+			
+			return;
+		});
+	}
 	
-	// TODO check if there are new markers
+	// Check if there are new requests
+	if(updateViewCounter % 6 == 0) {
+		if(window.location.href.indexOf("webapp.jsp") != -1) {
+			createRest("POST", "getsrdataservlet", null, function(response) {
+				var srArray = JSON.parse(response);
+				
+				// Check for loaded sr's which are not on the map yet
+				for(var i in srArray) {
+					var loadedSr = srArray[i];
+					
+					if(webappDataObj.mapData.getMarkerWithSrId(loadedSr.id) == null) {
+						var choice = confirm("Es liegen neue Gesuche vor, neu laden?");
+						if(choice) {
+							window.location.reload(true);
+						}
+						// TODO könnte man hier adden, müsste aber noch regeln dass die jeweiligen btns
+						// in den windowinfos ein- bzw. ausgeblendet werden.
+						/*console.log("Added marker for " , loadedSr);
+						
+						// Because all active and in progress search request are saved in the client,
+						// but in progress search requests are only displayed to involved and logged in
+						// users
+						var isDisplayed = addMarker(loadedSr, webappDataObj.mapData.map);
+						if(! isDisplayed) {
+							webappDataObj.mapData.markers.push({map: null, sr: loadedSr});
+						}
+						
+						webappDataObj.srData.add(loadedSr);*/
+					}
+				}
+				
+				// Check for markers which actually are not active any more
+				for(var x in webappDataObj.mapData.markers) {
+					var existingMarker = webappDataObj.mapData.markers[x];
+					var existingSr = existingMarker.sr;
+					var existingSrStillActive = false;
+					
+					for(var i in srArray) {
+						var loadedSr = srArray[i];
+						
+						if(existingSr.id == loadedSr.id) {
+							existingSrStillActive = true;
+							break;
+						}
+					}
+					
+					if(! existingSrStillActive) {
+						webappDataObj.mapData.removeMarker(existingSr.id);
+						console.log("Removed marker which referes to " , existingSr);
+					}
+				}
+			});
+		}
+	}
 }
 
 $(document).ready(function() {
+	// Check if the displayed data is actual
+	setInterval(function() {
+		updateViewIfNeeded();
+	}, 5000);
+	
 	$("#btn-select-address").click(function() {
 		webappDataObj.newSearchRequestClicked = true;
 	});
@@ -389,6 +483,7 @@ function addMarker(sr, map) {
 		if(typeof sr.userStatisfier != "undefined" && sr.userStatisfier.id == webappDataObj.userData.id) {
 			disableStatisfyBtn = true;
 		} else {
+			webappDataObj.mapData.markers.push({map: null, sr: sr});
 			return false;
 		}
 	} else if(sr.status == "IN_PROGRESS") {

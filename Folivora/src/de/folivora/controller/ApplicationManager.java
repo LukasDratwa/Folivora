@@ -399,7 +399,26 @@ public class ApplicationManager {
 			result.add(oneSrMsgList);
 		}
 		
-		// TODO sort result -> 1. Most unreaded msgs, 2. last msg timestamp
+		// Sort resilt -> 1. Most unreaded msgs, 2. last msg timestamp
+		result.sort(new Comparator<List<Message>>() {
+			@Override
+			public int compare(List<Message> list1, List<Message> list2) {
+				if(countUnreadMsgsInList(list1) > countUnreadMsgsInList(list2)) {
+					return -1;
+				} else if(countUnreadMsgsInList(list1) < countUnreadMsgsInList(list2)) {
+					return 1;
+				} else {
+					if(list1.size() <= 0 || list2.size() <= 0) {
+						return 0;
+					} else {
+						Date d1 = list1.get(0).getReferencedSr().getCreationTimestamp();
+						Date d2 = list2.get(0).getReferencedSr().getCreationTimestamp();
+						
+						return d2.compareTo(d1);
+					}
+				}
+			}
+		});
 		
 		return result;
 	}

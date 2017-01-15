@@ -79,11 +79,6 @@
 			
 			if(usr != null) {
 				%>
-				// Check if the displayed data is actual
-				setInterval(function() {
-					updateViewIfNeeded();
-				}, 10000);
-				
 				// Navbar searchrequests
 				if(window.location.href.indexOf("searchrequests.jsp") != -1) {
 					$(".navbar-li-element").removeClass("active");
