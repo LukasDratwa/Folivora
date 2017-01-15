@@ -111,12 +111,7 @@
 				</form>
 				
 				<div class="container" id="sr-filter-container">
-					<div class="row">
-						<div class="col-md-12">
-							<h4>Filtereinstellungen:</h4>
-							<p>Bald ...</p>
-						</div>
-					</div>
+    				<%@ include file="webappFilter.jsp" %>
 				</div>
     		</div>
     	</div>

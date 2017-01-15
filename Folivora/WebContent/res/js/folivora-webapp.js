@@ -170,6 +170,27 @@ $(document).ready(function() {
 		updateViewIfNeeded();
 	}, 5000);
 	
+	$(".filter-urgency").click(function(el) {
+		$(this).toggleClass('active');
+		var showRed = $('#filter-urgency-red').hasClass('active');
+		var showYellow = $('#filter-urgency-yellow').hasClass('active');
+		var showGreen = $('#filter-urgency-green').hasClass('active');
+		$.each(webappDataObj.srData.srs, function(index, value) {
+			var iconPath = value.marker_icon_path;
+			if (
+					(iconPath.includes('red') && !showRed) ||
+					(iconPath.includes('orange') && !showYellow) ||
+					(iconPath.includes('green') && !showGreen)
+			) {
+				webappDataObj.mapData.removeMarker(value.id);
+			}
+			else if (webappDataObj.mapData.getMarkerWithSrId(value.id).map == null) {
+				addMarker(value, webappDataObj.mapData.map);
+			}
+		});
+		// webappDataObj.mapData.markers = [];		
+	});
+	
 	$("#btn-select-address").click(function() {
 		webappDataObj.newSearchRequestClicked = true;
 	});
@@ -532,3 +553,4 @@ function addMarker(sr, map) {
 	
 	webappDataObj.mapData.markers.push(marker);
 }
+
