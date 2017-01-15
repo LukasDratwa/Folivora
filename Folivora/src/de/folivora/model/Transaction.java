@@ -30,6 +30,7 @@ public class Transaction {
 	private boolean cancelled;
 	private Long cacelTransactionId;
 	private String unlockToken;
+	private Date creationTimestamp;
 	
 	@OneToOne(targetEntity=SearchRequest.class)
 	private SearchRequest referencedSr;
@@ -48,6 +49,7 @@ public class Transaction {
 		this.cancelled = false;
 		this.unlockToken = unlockToken;
 		this.referencedSr = referencedSr;
+		this.creationTimestamp = new Date();
 	}
 	
 	@Override
@@ -199,5 +201,12 @@ public class Transaction {
 	 */
 	public void setuTo(User uTo) {
 		this.uTo = uTo;
+	}
+
+	/**
+	 * @return the creationTimestamp
+	 */
+	public Date getCreationTimestamp() {
+		return creationTimestamp;
 	}
 }

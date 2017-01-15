@@ -7,6 +7,8 @@ import de.folivora.controller.DataContainer;
 import de.folivora.model.Constants;
 import de.folivora.model.SearchRequest;
 import de.folivora.model.SearchRequestStatus;
+import de.folivora.model.Transaction;
+import de.folivora.model.User;
 import de.folivora.storage.HibernateUpdate;
 
 /**
@@ -26,6 +28,7 @@ public class UpdateDaemon extends Thread {
 	public void run() {
 		this.isRunning = true;
 		ApplicationManager aManager = ApplicationManager.getApplicationManagerInstance();
+		User folivora = aManager.getuManager().getFolivoraUser();
 		DataContainer dC = aManager.getdC();
 		
 		while(this.isRunning) {
@@ -39,6 +42,12 @@ public class UpdateDaemon extends Thread {
 				} else if(sr.getStatus() == SearchRequestStatus.ACTIVE) {
 					sr.setStatus(SearchRequestStatus.INACTIVE);
 					HibernateUpdate.updateObject(sr);
+					
+					// Refund paid fees, costs and reward
+					Transaction t = aManager.createAndSaveTransaction(sr.getCostsAndReward(), sr.getFee(),
+							folivora, sr.getUserCreator(), "", sr);
+					aManager.executeTransaction("", t);
+					logger.info("Refund for " + sr.getUserCreator() + " because of the expired " + sr);
 				}
 			}
 			

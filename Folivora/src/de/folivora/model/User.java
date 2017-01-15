@@ -38,6 +38,7 @@ public class User {
 	private Date birthday;
 	private String email;
 	private String hometown;
+	private Date creationTimestamp;
 	
 	@Enumerated(EnumType.STRING)
 	private Gender gender;
@@ -71,6 +72,7 @@ public class User {
 		this.userType = userType;
 		this.tokenStorage = new TokenStorage(name);
 		this.hometown = hometown;
+		this.creationTimestamp = new Date();
 	}
 	
 	/**
@@ -288,5 +290,12 @@ public class User {
 	 */
 	public ObjectId getId() {
 		return id;
+	}
+
+	/**
+	 * @return the creationTimestamp
+	 */
+	public Date getCreationTimestamp() {
+		return creationTimestamp;
 	}
 }

@@ -91,7 +91,7 @@ function updateViewIfNeeded(){
 	};
 	
 	// Check notification banner (unread msgs)
-	if(typeof payload.userCallingId != "undefined") {
+	if(typeof payload.userCallingId != "undefined" && payload.userCallingId != -1) {
 		createRest("POST", "getmessagesservlet", JSON.stringify(payload), function(response) {
 			var responseObj = JSON.parse(response);
 			var unreadMsgsLength = new Number(responseObj.userMessages.length);

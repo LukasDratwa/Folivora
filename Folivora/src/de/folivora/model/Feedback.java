@@ -1,5 +1,7 @@
 package de.folivora.model;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -24,6 +26,7 @@ public class Feedback {
 	@Column(name = "id", updatable = false, nullable = false)
 	private ObjectId id;
 	private String description;
+	private Date creationTimestamp;
 	
 	@Enumerated(EnumType.STRING)
 	private Rating rating;
@@ -39,6 +42,7 @@ public class Feedback {
 		this.description = description;
 		this.feedbackCreator = feedbackCreator;
 		this.referencedSearchRequest = referencedSr;
+		this.creationTimestamp = new Date();
 	}
 	
 	/**
@@ -108,5 +112,12 @@ public class Feedback {
 	 */
 	public void setReferencedSearchRequest(SearchRequest referencedSearchRequest) {
 		this.referencedSearchRequest = referencedSearchRequest;
+	}
+
+	/**
+	 * @return the creationTimestamp
+	 */
+	public Date getCreationTimestamp() {
+		return creationTimestamp;
 	}
 }

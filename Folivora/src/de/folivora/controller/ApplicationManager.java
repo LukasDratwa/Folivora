@@ -120,7 +120,7 @@ public class ApplicationManager {
 	public boolean executeTransaction(String token, Transaction t) {
 		if(t.getUnlockToken() != null && !token.equals(t.getUnlockToken())) {
 			logger.warn("Failed to unlock " + t + " with token " + token + "!! Execution cancelled.");
-			return true;
+			return false;
 		}
 		
 		UserCredit creditUserFrom = t.getuFrom().getCredit();

@@ -29,7 +29,8 @@ public class UserCredit {
 	@Column(name = "id", updatable = false, nullable = false)
 	private ObjectId id;
 	private double balance;
-	private Date lastModification;
+	private Date lastModification,
+				 creationTimestamp;
 	
 	@OneToOne(targetEntity=User.class)
 	private User owner;
@@ -40,6 +41,7 @@ public class UserCredit {
 	public UserCredit(double balance, User owner) {
 		this.balance = balance;
 		this.owner = owner;
+		this.creationTimestamp = new Date();
 	}
 	
 	/**
@@ -127,5 +129,19 @@ public class UserCredit {
 	 */
 	public void setReferencedTransactions(List<Transaction> referencedTransactions) {
 		this.referencedTransactions = referencedTransactions;
+	}
+
+	/**
+	 * @return the creationTimestamp
+	 */
+	public Date getCreationTimestamp() {
+		return creationTimestamp;
+	}
+
+	/**
+	 * @param creationTimestamp the creationTimestamp to set
+	 */
+	public void setCreationTimestamp(Date creationTimestamp) {
+		this.creationTimestamp = creationTimestamp;
 	}
 }
