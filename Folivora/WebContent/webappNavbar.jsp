@@ -12,7 +12,7 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<a href="index.jsp"><img src="res\img\brand.png" class="img-responsive webapp-brand"></a>
+			<a href="index.jsp"><img src="res/img/brand.png" class="img-responsive webapp-brand"></a>
 		</div>
 		
 		<!-- Collect the nav links, forms, and other content for toggling -->

@@ -43,6 +43,13 @@ public class UpdateDaemon extends Thread {
 					sr.setStatus(SearchRequestStatus.INACTIVE);
 					HibernateUpdate.updateObject(sr);
 					
+					// Message to the creator of the expired search request
+					aManager.createAndSaveMessage("\"" + sr.getTitle() + "\" leider abgelaufen",
+							"Leider hat sich für Ihr Gesuch \"" + sr.getTitle() + "\" kein Lieferant "
+							+ "finden lassen, weswegen es abgelaufen ist. Die abguchten Kosten von "
+							+ (sr.getCostsAndReward() + sr.getFee()) + " € werden Ihnen in Kürze erstattet.",
+							folivora, sr.getUserCreator(), sr);
+					
 					// Refund paid fees, costs and reward
 					Transaction t = aManager.createAndSaveTransaction(sr.getCostsAndReward(), sr.getFee(),
 							folivora, sr.getUserCreator(), "", sr);

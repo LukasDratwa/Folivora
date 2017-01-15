@@ -27,7 +27,7 @@
               <span class="icon-bar"></span>
             </button>
             <!--<a class="navbar-brand" href="#"><span>Brand</span></a>-->
-            <img src="res\img\brand.png" class="img-responsive index-brand">
+            <img src="res/img/brand.png" class="img-responsive index-brand">
           </div>
           <div class="collapse navbar-collapse" id="navbar-ex-collapse">
             <ul class="nav navbar-nav navbar-right">
