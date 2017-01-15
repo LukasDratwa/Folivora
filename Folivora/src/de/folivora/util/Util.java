@@ -24,7 +24,7 @@ public class Util {
 	 * <hr>Created on 15.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
 	 * @param date - the date
 	 * @param pattern - the pattern, have a look at https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
-	 * @return
+	 * @return a string with the formatted date
 	 */
 	public static String formatDate(Date date, String pattern) {
 		SimpleDateFormat sdf = new SimpleDateFormat(pattern);

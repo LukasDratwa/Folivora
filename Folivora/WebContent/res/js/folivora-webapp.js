@@ -18,23 +18,6 @@ var webappDataObj = {
 		this.newSrObj.possibleDelivery_from = 0;
 		this.newSrObj.possibleDelivery_to = 0;
 	},
-	srData: {
-		srs: [],
-		getSrWithId: function(id) {
-			for(var i in this.srs) {
-				var sr = this.srs[i];
-				if(sr.id == id) {
-					return sr;
-				}
-			}
-			return null;
-		},
-		add: function(sr) {
-			if(this.getSrWithId(sr.id) == null) {
-				this.srs.push(sr);
-			}
-		}
-	},
 	userData: {
 		id: -1,
 		balance: 0
@@ -55,7 +38,6 @@ var webappDataObj = {
 			
 			if(indexToRemove != -1) {
 				webappDataObj.removeElementOfArray(indexToRemove, this.markers);
-				webappDataObj.removeElementOfArray(indexToRemove, webappDataObj.srData.srs);
 			}
 		},
 		getMarkerWithSrId: function(srId) {
@@ -68,6 +50,32 @@ var webappDataObj = {
 			}
 			
 			return null;
+		},
+		updateMarker: function(srId) {
+			var marker = this.getMarkerWithSrId(srId);
+			if(marker != null) {
+				this.removeMarker(srId);
+				addMarker(marker.sr, this.map);
+			}
+		},
+		updateSrOfMarker: function(srId, newSr) {
+			for(var i in this.markers) {
+				var marker = this.markers[i];
+				
+				if(marker.sr.id == srId) {
+					this.markers[i].sr = newSr;
+				}
+			}
+		},
+		getAllSrs: function() {
+			var result = [];
+			for(var i in this.markers) {
+				if(typeof this.markers[i].sr != "undefined") {
+					result.push(this.markers[i].sr);
+				}
+			}
+			
+			return result;
 		}
 	},
 	removeElementOfArray: function(index, array) {
@@ -108,7 +116,7 @@ function updateViewIfNeeded(){
 		});
 	}
 	
-	// Check if there are new requests
+	// Check if there are new requests (every 30 sec)
 	if(updateViewCounter % 6 == 0) {
 		if(window.location.href.indexOf("webapp.jsp") != -1) {
 			createRest("POST", "getsrdataservlet", null, function(response) {
@@ -117,15 +125,16 @@ function updateViewIfNeeded(){
 				// Check for loaded sr's which are not on the map yet
 				for(var i in srArray) {
 					var loadedSr = srArray[i];
+					var savedMarker = webappDataObj.mapData.getMarkerWithSrId(loadedSr.id);
+					var savedSr = (savedMarker == null) ? null : savedMarker.sr;
 					
-					if(webappDataObj.mapData.getMarkerWithSrId(loadedSr.id) == null) {
-						var choice = confirm("Es liegen neue Gesuche vor, neu laden?");
+					if(savedSr == null) {
+						/*var choice = confirm("Es liegen neue Gesuche vor, neu laden?");
 						if(choice) {
 							window.location.reload(true);
-						}
-						// TODO könnte man hier adden, müsste aber noch regeln dass die jeweiligen btns
-						// in den windowinfos ein- bzw. ausgeblendet werden.
-						/*console.log("Added marker for " , loadedSr);
+						}*/
+						
+						console.log("Added marker for " , loadedSr);
 						
 						// Because all active and in progress search request are saved in the client,
 						// but in progress search requests are only displayed to involved and logged in
@@ -134,8 +143,13 @@ function updateViewIfNeeded(){
 						if(! isDisplayed) {
 							webappDataObj.mapData.markers.push({map: null, sr: loadedSr});
 						}
-						
-						webappDataObj.srData.add(loadedSr);*/
+					} else {
+						// Check if the actual data is saved
+						if(savedSr.status != loadedSr.status) {
+							console.log("Changed status of " , savedSr , " from " + savedSr.status + " to " + loadedSr.status);
+							webappDataObj.mapData.updateSrOfMarker(loadedSr.id, loadedSr);
+							webappDataObj.mapData.updateMarker(loadedSr.id);
+						}
 					}
 				}
 				
@@ -168,24 +182,23 @@ $(document).ready(function() {
 	// Check if the displayed data is actual
 	setInterval(function() {
 		updateViewIfNeeded();
-	}, 5000);
+	}, 1000);
 	
 	$(".filter-urgency").click(function(el) {
 		$(this).toggleClass('active');
 		var showRed = $('#filter-urgency-red').hasClass('active');
 		var showYellow = $('#filter-urgency-yellow').hasClass('active');
 		var showGreen = $('#filter-urgency-green').hasClass('active');
-		$.each(webappDataObj.srData.srs, function(index, value) {
-			var iconPath = value.marker_icon_path;
+		$.each(webappDataObj.mapData.markers, function(index, value) {
 			if (
-					(iconPath.includes('red') && !showRed) ||
-					(iconPath.includes('orange') && !showYellow) ||
-					(iconPath.includes('green') && !showGreen)
+					(value.icon.includes('red') && !showRed) ||
+					(value.icon.includes('orange') && !showYellow) ||
+					(value.icon.includes('green') && !showGreen)
 			) {
-				webappDataObj.mapData.removeMarker(value.id);
+				webappDataObj.mapData.removeMarker(value.sr.id);
 			}
-			else if (webappDataObj.mapData.getMarkerWithSrId(value.id).map == null) {
-				addMarker(value, webappDataObj.mapData.map);
+			else if (webappDataObj.mapData.getMarkerWithSrId(value.sr.id).map == null) {
+				addMarker(value.sr, webappDataObj.mapData.map);
 			}
 		});
 		// webappDataObj.mapData.markers = [];		
@@ -226,8 +239,6 @@ $(document).ready(function() {
 				$.notify("Gesuch \"" + webappDataObj.newSrObj.title + "\" erfolgreich erstellt.", "success");
 				
 				console.log("Created new search request: " , sr);
-				
-				webappDataObj.srData.srs.push(sr);
 				
 				addMarker(sr, webappDataObj.mapData.map);
 				updateNavbarBalance((sr.costsAndReward + sr.fee) * -1);
@@ -288,7 +299,7 @@ function cancelSr(signedInUserId, srId) {
 				$.notify("Gesuch erfolgreich zurückgezogen.", "success");
 				
 				webappDataObj.mapData.removeMarker(srId);
-				var sr = webappDataObj.srData.getSrWithId(srId);
+				var sr = webappDataObj.mapData.getMarkerWithSrId(srId).sr;
 				updateNavbarBalance(sr.costsAndReward + sr.fee);
 				
 				$("#btn-map-infowindow-cancel").prop("disabled", true);
@@ -456,7 +467,6 @@ function initMap(payload) {
 	for(var i in srArray) {
 		var sr = srArray[i];
 		addMarker(sr, map);
-		webappDataObj.srData.srs.push(sr);
 	}
 	
 	google.maps.event.addListener(map, 'click', function(e) {
@@ -552,5 +562,5 @@ function addMarker(sr, map) {
 	});
 	
 	webappDataObj.mapData.markers.push(marker);
+	return true;
 }
-
