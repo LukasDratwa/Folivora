@@ -43,3 +43,33 @@
   top: 0;
   right: 0;
 }
+
+.message-chatheader {
+	border: 1px solid #d0cdcd;
+	background: #f8f8f8;
+	font-weight: normal;
+	color: #555555;
+}
+
+.message-time-and-date {
+	text-decoration: underline;
+}
+
+.message-title,
+.message-author,
+.message-time-and-date {
+	font-size: 0.77em;
+}
+
+.message-amount-unread-msgs {
+	float: right;
+}
+
+.ui-state-active .ui-icon,
+.ui-button:active .ui-icon {
+	background-image: url("images/ui-icons_444444_256x240.png");
+}
+
+.ui-widget-content a {
+	color: #23547f;
+}

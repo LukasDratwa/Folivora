@@ -1,8 +1,11 @@
 package de.folivora.controller;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
@@ -15,7 +18,7 @@ import de.folivora.model.SearchRequestStatus;
 import de.folivora.model.Transaction;
 import de.folivora.model.User;
 import de.folivora.model.UserCredit;
-import de.folivora.model.messanger.Message;
+import de.folivora.model.messenger.Message;
 import de.folivora.storage.HibernateSave;
 import de.folivora.storage.HibernateUpdate;
 
@@ -347,6 +350,89 @@ public class ApplicationManager {
 		}
 		
 		return jArray;
+	}
+	
+	/**
+	 * Method to the relevant messages of an {@link User} mapped to get easily all messages
+	 * to a specific {@link SearchRequest}
+	 * 
+	 * <hr>Created on 15.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param user - the {@link User}
+	 * @return the mapped relevant messages
+	 */
+	public List<List<Message>> getRelevantMessagesOfUserForChatDisplay(User user) {
+		// 1. Map data
+		Map<SearchRequest, List<Message>> mappedData = new HashMap<SearchRequest, List<Message>>();
+		for(Message msg : getRelevantMessagesOfUser(user)) {
+			SearchRequest sr = getSearchRequestWithId(msg.getReferencedSr().getId().toString());
+			
+			if(mappedData.containsKey(sr)) {
+				mappedData.get(sr).add(msg);
+			} else {
+				List<Message> messageList = new ArrayList<Message>();
+				messageList.add(msg);
+				mappedData.put(sr, messageList);
+			}
+		}
+		
+		// 2. Transform, sort and return
+		List<List<Message>> result = new ArrayList<List<Message>>();
+		for(SearchRequest sr : mappedData.keySet()) {
+			List<Message> oneSrMsgList = mappedData.get(sr);
+			oneSrMsgList.sort(new Comparator<Message>() {
+				@Override
+				public int compare(Message m1, Message m2) {
+					if(m1.getCreationTimestamp().getTime() > m2.getCreationTimestamp().getTime()) {
+						return 1;
+					} else {
+						return -1;
+					}
+				}
+			});
+			result.add(oneSrMsgList);
+		}
+		
+		// TODO sort result -> 1. Most unreaded msgs, 2. last msg timestamp
+		
+		return result;
+	}
+	
+	/**
+	 * Method to count the unseen messages in a list of messages.
+	 * 
+	 * <hr>Created on 15.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param inputMsgList - the input list
+	 * @return the amount of unseen messages in the given list
+	 */
+	public int countUnreadMsgsInList(List<Message> inputMsgList) {
+		int counter = 0;
+		for(Message msg : inputMsgList) {
+			if(!msg.isSeen()) {
+				counter++;
+			}
+		}
+		return counter;
+	}
+	
+	/**
+	 * Method to get the ids of messages in a list as a string and separated by a comma.
+	 * 
+	 * <hr>Created on 15.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param inputMsgList - the input list
+	 * @return the ids as a string
+	 */
+	public String getMsgIdsOfMsgList(List<Message> inputMsgList) {
+		StringBuilder sB = new StringBuilder();
+		
+		for(Message msg : inputMsgList) {
+			sB.append(msg.getId().toString());
+			
+			if(inputMsgList.indexOf(msg) != inputMsgList.size()-1) {
+				sB.append(",");
+			}
+		}
+		
+		return sB.toString();
 	}
 	
 	/**

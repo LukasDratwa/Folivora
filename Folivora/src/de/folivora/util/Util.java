@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.security.SecureRandom;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import de.folivora.model.Constants;
 
@@ -15,6 +17,31 @@ import de.folivora.model.Constants;
  */
 public class Util {
 	private static SecureRandom secureRandom = new SecureRandom();
+	
+	/**
+	 * Method to format a date.
+	 * 
+	 * <hr>Created on 15.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param date - the date
+	 * @param pattern - the pattern, have a look at https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
+	 * @return
+	 */
+	public static String formatDate(Date date, String pattern) {
+		SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+		return sdf.format(date);
+	}
+	
+	/**
+	 * Method to format a date to f.e. "01.01.2010, 13:14 Uhr" with the pattern "dd.MM.yyyy ', ' HH:mm 'Uhr'".
+	 * Have a look at {@link Util#formatDate(Date, String)}.
+	 * 
+	 * <hr>Created on 15.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param date - the date
+	 * @return the formatted date
+	 */
+	public static String formatDateToDateAndTimeString(Date date) {
+		return formatDate(date, "dd.MM.yyyy', ' HH:mm 'Uhr'");
+	}
 	
 	/**
 	 * THX: http://stackoverflow.com/questions/2808535/round-a-double-to-2-decimal-places

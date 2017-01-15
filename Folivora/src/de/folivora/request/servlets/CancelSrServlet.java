@@ -80,7 +80,7 @@ public class CancelSrServlet extends HttpServlet {
 				User userSrCreator = sr.getUserCreator();
 				User userCanceller = uManager.getUserWithId(input.getUserCallingId());
 				
-				if(userSrCreator.getId() == userCanceller.getId() || userCanceller.getUserType() == UserType.ADMIN) {
+				if(userSrCreator.getId().equals(userCanceller.getId()) || userCanceller.getUserType() == UserType.ADMIN) {
 					AccessLayer.cancelSearchRequest(userCanceller, sr);
 					new ResponseObject(200, "Successfully cancelled sr.", response).writeResponse();
 					logger.info("Cancelled SR: " + sr);

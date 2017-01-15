@@ -6,7 +6,7 @@ import java.util.List;
 import de.folivora.model.SearchRequest;
 import de.folivora.model.Transaction;
 import de.folivora.model.User;
-import de.folivora.model.messanger.Message;
+import de.folivora.model.messenger.Message;
 
 /**
  * Class to bundle the application data.

@@ -19,7 +19,7 @@ import javax.servlet.http.HttpSession;
 
 import org.bson.types.ObjectId;
 
-import de.folivora.model.messanger.Message;
+import de.folivora.model.messenger.Message;
 
 /**
  * Class to represent a user.

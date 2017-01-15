@@ -16,7 +16,7 @@ import de.folivora.model.SearchRequest;
 import de.folivora.model.Transaction;
 import de.folivora.model.User;
 import de.folivora.model.UserType;
-import de.folivora.model.messanger.Message;
+import de.folivora.model.messenger.Message;
 import de.folivora.storage.HibernateLoad;
 
 /**

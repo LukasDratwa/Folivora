@@ -1,4 +1,4 @@
-package de.folivora.model.messanger;
+package de.folivora.model.messenger;
 
 import java.util.Date;
 
