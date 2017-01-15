@@ -1,4 +1,5 @@
 <%@page import="de.folivora.model.*"%>
+<%@page import="de.folivora.controller.ApplicationManager"%>
 <%@page language="java" contentType="text/html; charset=utf-8" pageEncoding="UTF-8" %>
 
 <nav class="navbar navbar-default">
@@ -78,6 +79,11 @@
 			
 			if(usr != null) {
 				%>
+				// Check if the displayed data is actual
+				setInterval(function() {
+					updateViewIfNeeded();
+				}, 10000);
+				
 				// Navbar searchrequests
 				if(window.location.href.indexOf("searchrequests.jsp") != -1) {
 					$(".navbar-li-element").removeClass("active");
@@ -103,7 +109,7 @@
 					$("#navbar-li-element-messages").removeClass("hidden");
 					$("#navbar-li-element-messages").removeClass("active");
 				}
-				var amountUnseenMessages = "<% out.write("" + usr.getRelevantMessages().size()); %>";
+				var amountUnseenMessages = "<% out.write("" + ApplicationManager.getApplicationManagerInstance().countUnreadMsgsInList(usr.getRelevantMessages())); %>";
 				if(amountUnseenMessages > 0) {
 					$("#messages-notification-number").html(amountUnseenMessages);
 					$("#messages-notification-number").removeClass("hidden");

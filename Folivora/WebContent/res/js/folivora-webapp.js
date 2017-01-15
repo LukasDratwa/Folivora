@@ -50,6 +50,31 @@ var webappDataObj = {
 };
 webappDataObj.resetNewSrObj();
 
+function updateViewIfNeeded(){
+	var payload = {
+		userCallingId: webappDataObj.userData.id,
+		onlyUnseen: true
+	};
+	
+	// Check notification banner (unread msgs)
+	createRest("POST", "getmessagesservlet", JSON.stringify(payload), function(response) {
+		var responseObj = JSON.parse(response);
+		var unreadMsgsLength = new Number(responseObj.userMessages.length);
+		
+		if(unreadMsgsLength > 0) {
+			$("#messages-notification-number").html(unreadMsgsLength);
+			$("#messages-notification-number").removeClass("hidden")
+		} else {
+			$("#messages-notification-number").html("");
+			$("#messages-notification-number").addClass("hidden")
+		}
+		
+		return;
+	});
+	
+	// TODO check if there are new markers
+}
+
 $(document).ready(function() {
 	$("#btn-select-address").click(function() {
 		webappDataObj.newSearchRequestClicked = true;

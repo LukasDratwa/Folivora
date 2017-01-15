@@ -60,8 +60,8 @@ public class Message {
 		jo.addProperty("id", this.getId().toString());
 		jo.addProperty("title", this.getTitle());
 		jo.addProperty("text", this.getText());
-		jo.addProperty("seend", this.isSeen());
-		jo.addProperty("seenTimestamp", this.getSeenTimestamp().toString());
+		jo.addProperty("seen", this.isSeen());
+		if(this.getSeenTimestamp() != null) jo.addProperty("seenTimestamp", this.getSeenTimestamp().toString());
 		
 		JsonObject sender = new JsonObject();
 		User userSender = this.getSender();

@@ -340,13 +340,20 @@ public class ApplicationManager {
 	 * 
 	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
 	 * @param user - the {@link User}
+	 * @param onlyUnseen - true if only unseen messages should be returned
 	 * @return the messages in a JsonArray
 	 */
-	public JsonArray getRelevantMessagesOfUserAsJsonArray(User user) {
+	public JsonArray getRelevantMessagesOfUserAsJsonArray(User user, boolean onlyUnseen) {
 		JsonArray jArray = new JsonArray();
 		
 		for(Message msg : getRelevantMessagesOfUser(user)) {
-			jArray.add(msg.getAsJsonObject());
+			if(onlyUnseen) {
+				if(!msg.isSeen()) {
+					jArray.add(msg.getAsJsonObject());
+				}
+			} else {
+				jArray.add(msg.getAsJsonObject());
+			}
 		}
 		
 		return jArray;
@@ -448,6 +455,23 @@ public class ApplicationManager {
 		} else {
 			return new ArrayList<Message>();
 		}
+	}
+	
+	/**
+	 * Method to get a {@link Message} with the id.
+	 * 
+	 * <hr>Created on 15.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param id - the id
+	 * @return the found {@link Message} or null
+	 */
+	public Message getMessageWithId(String id) {
+		for(Message msg : dC.getMessageList()) {
+			if(msg.getId().toString().equals(id)) {
+				return msg;
+			}
+		}
+		
+		return null;
 	}
 	
 	/**

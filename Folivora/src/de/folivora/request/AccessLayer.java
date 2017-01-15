@@ -12,6 +12,7 @@ import de.folivora.model.SearchRequestStatus;
 import de.folivora.model.Transaction;
 import de.folivora.model.User;
 import de.folivora.model.UserType;
+import de.folivora.model.messenger.Message;
 import de.folivora.storage.HibernateUpdate;
 import de.folivora.util.Util;
 
@@ -107,7 +108,7 @@ public class AccessLayer {
 		
 		ApplicationManager aManager = ApplicationManager.getApplicationManagerInstance();
 		User folivora = aManager.getuManager().getFolivoraUser();
-		aManager.createAndSaveTransaction(sr.getCostsAndReward(), 0,
+		Transaction t = aManager.createAndSaveTransaction(sr.getCostsAndReward(), 0,
 				folivora, callingUser, Util.getSrUnlockToken(), sr);
 		
 		aManager.createAndSaveMessage("\"" + sr.getTitle() + "\" angenommen.",
@@ -115,7 +116,16 @@ public class AccessLayer {
 				+ "wurde erfolgreich von Ihnen angenommen. Bitte setzen Sie sich mit "
 				+ sr.getUserCreator().getName() + " bezüglich der Lieferdetails in Verbindung."
 				+ "Bei erfolgreichem Abschluss erwartet Sie eine Gutschrift über "
-				+ sr.getCostsAndReward() + "€.", folivora, callingUser, sr);
+				+ sr.getCostsAndReward() + "€.\n\n"
+				+ "Vergessen Sie nicht nach erfolgreicher Lieferung nach dem Freischaltungscode "
+				+ "zu fragen, damit wir Ihnen die Kosten und die Belohnung gutschreiben können.", folivora, callingUser, sr);
+		
+		aManager.createAndSaveMessage("\"" + sr.getTitle() + "\" angenommen.",
+				"Ihr Gesuch \"" + sr.getTitle() + "\" wurde erfolgreich von " + callingUser.getName()
+				+ " angenommen. \n\n"
+				+ "Bitte vergessen Sie nicht dem Lieferanten bei erfolgreicher Lieferung folgenden Code zu übergeben: "
+				+  t.getUnlockToken(),
+				folivora, sr.getUserCreator(), sr);
 	}
 	
 	/**
@@ -178,9 +188,24 @@ public class AccessLayer {
 	 * 
 	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
 	 * @param callingUser - the {@link User}
+	 * @param onlyUnseen - true if only unseen messages should be returned
 	 * @return the relevant messages
 	 */
-	public static JsonArray getRelevantMsgsOfUser(User callingUser) {
-		return ApplicationManager.getApplicationManagerInstance().getRelevantMessagesOfUserAsJsonArray(callingUser);
+	public static JsonArray getRelevantMsgsOfUser(User callingUser, boolean onlyUnseen) {
+		return ApplicationManager.getApplicationManagerInstance().getRelevantMessagesOfUserAsJsonArray(callingUser, onlyUnseen);
+	}
+	
+	/**
+	 * Method to mark a message as seen.
+	 * 
+	 * <hr>Created on 15.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param callingUser - the calling user
+	 * @param msg - the message
+	 */
+	public static void setMsgSeen(User callingUser, Message msg) {
+		if(! msg.isSeen()) {
+			msg.setSeen(true);
+			HibernateUpdate.updateObject(msg);
+		}
 	}
 }

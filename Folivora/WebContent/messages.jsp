@@ -2,7 +2,7 @@
 <%@page import="de.folivora.controller.UserManager"%>
 <%@page import="de.folivora.controller.ApplicationManager"%>
 <%@page import="de.folivora.model.*"%>
-<%@page import="de.folivora.model.messanger.*"%>
+<%@page import="de.folivora.model.messenger.*"%>
 <%@page import="de.folivora.util.*"%>
 <%@page language="java" contentType="text/html; charset=utf-8" pageEncoding="UTF-8" %>
 
@@ -21,7 +21,17 @@
 				active: false,
 				activate: function(event, ui) {
 					console.log("after" , ui);
-					// TODO set the msgs unseen
+					if(typeof ui.newPanel[0] != "undefined") {
+						var payload = {
+							userCallingId: webappDataObj.userData.id,
+							msgIds: ui.newPanel[0].dataset.msgids
+						}
+						createRest("POST", "setmessageseenservlet", JSON.stringify(payload), null);
+					}
+					
+					if(typeof ui.newHeader[0] != "undefined") {
+						$(ui.newHeader[0]).find(".message-amount-unread-msgs-number").html(0);
+					}
 				},
 				beforeActivate: function(event, ui) {
 					console.log("before " , ui);
@@ -50,7 +60,16 @@
     						String srCreationDateTimeString = Util.formatDateToDateAndTimeString(sr.getCreationTimestamp());
     						
     						%><h3 class="message-chatheader">Gesuch "<% out.write(sr.getTitle()); %>" vom <% out.write(srCreationDateTimeString); %>
-    							<span class="message-amount-unread-msgs"><% out.write("Ungelesene Nachrichten: " + unseenMessages); %></span>
+    							<span class="message-amount-unread-msgs">
+    								<span class="message-amount-unread-msgs message-amount-unread-msgs-number" id="message-amount-unread-msgs-<% out.write(sr.getId().toString()); %>">
+    									<% 	if(unseenMessages > 0){ out.write("<b class='red'>"); };
+    											out.write("" + unseenMessages);
+    										if(unseenMessages > 0){ out.write("</b>"); };
+    									%>
+    								</span>
+    								<% out.write("Ungelesene Nachrichten:"); %>
+    								
+    							</span>
     						</h3>
     						
     						<div class="message-chatcontainer" data-msgids="<%out.write(aManager.getMsgIdsOfMsgList(messageListOneSr));%>">
