@@ -1,3 +1,8 @@
+<%@page import="de.folivora.controller.UserManager"%>
+<%@page import="de.folivora.controller.ApplicationManager"%>
+<%@page import="de.folivora.model.User"%>
+<%@page import="de.folivora.model.UserCredit"%>
+
 <h4><a href="#" id="sr-toggle-btn"><i class="glyphicon glyphicon-menu-down"></i> Gesuch einstellen</a></h4>
 			
 <form role="form" id="srform"  method="post" class="hidden">
