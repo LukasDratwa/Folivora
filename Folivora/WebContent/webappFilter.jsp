@@ -8,12 +8,17 @@
 <br />
 <p>Zahlungsbereitschaft</p>
 <div class="input-group">
-	<input type="text" id="filter-reward-min" class="form-control">
+	<input type="text" id="filter-reward-min" class="form-control filter-reward">
 	<span class="input-group-addon">-</span>
-	<input type="text" id="filter-reward-max" class="form-control">
+	<input type="text" id="filter-reward-max" class="form-control filter-reward">
 	<span class="input-group-addon">&euro;</span>
 </div>
 <br />
-<p>
-	<button class="btn btn-default btn-block" id="filter-apply">Filter anwenden</button>
-</p>
+<div class="btn-group btn-group-justified" role="group">
+	<div class="btn-group" role="group">
+		<button class="btn btn-success" id="filter-apply">Filter anwenden</button>
+	</div>
+	<div class="btn-group" role="group">
+		<button class="btn btn-default" id="filter-reset">Zurücksetzen</button>
+	</div>
+</div>

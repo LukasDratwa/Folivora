@@ -177,6 +177,11 @@ $(document).ready(function() {
 	$(".filter-urgency").click(function(el) {
 		$(this).toggleClass('active');
 	});
+	$("#filter-reset").click(function(el) {
+		$(".filter-urgency").addClass('active');
+		$(".filter-reward").val("");
+		$("#filter-apply").click();
+	});
 	$("#filter-apply").click(function(el) {
 		var showRed = $('#filter-urgency-red').hasClass('active');
 		var showYellow = $('#filter-urgency-yellow').hasClass('active');
@@ -200,7 +205,6 @@ $(document).ready(function() {
 				addMarker(value.sr, webappDataObj.mapData.map);
 			}
 		});
-		// webappDataObj.mapData.markers = [];		
 	});
 	
 	$("#btn-select-address").click(function() {
