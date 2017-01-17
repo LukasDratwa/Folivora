@@ -129,20 +129,10 @@ function updateViewIfNeeded(){
 					var savedSr = (savedMarker == null) ? null : savedMarker.sr;
 					
 					if(savedSr == null) {
-						/*var choice = confirm("Es liegen neue Gesuche vor, neu laden?");
-						if(choice) {
-							window.location.reload(true);
-						}*/
-						
+						// New found marker
 						console.log("Added marker for " , loadedSr);
 						
-						// Because all active and in progress search request are saved in the client,
-						// but in progress search requests are only displayed to involved and logged in
-						// users
-						var isDisplayed = addMarker(loadedSr, webappDataObj.mapData.map);
-						if(! isDisplayed) {
-							webappDataObj.mapData.markers.push({map: null, sr: loadedSr});
-						}
+						addMarker(loadedSr, webappDataObj.mapData.map);
 					} else {
 						// Check if the actual data is saved
 						if(savedSr.status != loadedSr.status) {
@@ -203,8 +193,6 @@ $(document).ready(function() {
 				value.sr.costsAndReward < minReward ||
 				value.sr.costsAndReward > maxReward;
 				
-			console.log(value);
-			
 			if (removeMarker) {
 				webappDataObj.mapData.removeMarker(value.sr.id);
 			}
@@ -517,20 +505,6 @@ function initMap(payload) {
 }
 
 function addMarker(sr, map) {
-	// Show sr's which are in progress only the creator
-	var disableCancelBtn = false;
-	var disableStatisfyBtn = false;
-	if(sr.status == "IN_PROGRESS" && sr.userCreator.id != webappDataObj.userData.id) {
-		if(typeof sr.userStatisfier != "undefined" && sr.userStatisfier.id == webappDataObj.userData.id) {
-			disableStatisfyBtn = true;
-		} else {
-			webappDataObj.mapData.markers.push({map: null, sr: sr});
-			return false;
-		}
-	} else if(sr.status == "IN_PROGRESS") {
-		disableCancelBtn = true;
-	}
-	
 	var marker = new google.maps.Marker({
 		position: new google.maps.LatLng(sr.lat , sr.lng),
 		map: map,
@@ -540,6 +514,21 @@ function addMarker(sr, map) {
 		title: sr.title,
 		sr: sr
 	});
+	
+	// Show sr's which are in progress only the creator
+	var disableCancelBtn = false;
+	var disableStatisfyBtn = false;
+	if(sr.status == "IN_PROGRESS" && sr.userCreator.id != webappDataObj.userData.id) {
+		if(typeof sr.userStatisfier != "undefined" && sr.userStatisfier.id == webappDataObj.userData.id) {
+			disableStatisfyBtn = true;
+		} else {
+			webappDataObj.mapData.markers.push(marker);
+			webappDataObj.mapData.removeMarker(sr.id)
+			return false;
+		}
+	} else if(sr.status == "IN_PROGRESS") {
+		disableCancelBtn = true;
+	}
 	
 	marker.addListener('click', function() {
 		var sr = this.sr;
