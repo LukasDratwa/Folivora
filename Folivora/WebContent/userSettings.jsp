@@ -3,6 +3,13 @@
 <%@page import="de.folivora.controller.ApplicationManager"%>
 <%@page import="de.folivora.model.User"%>
 <%@page import="de.folivora.model.UserCredit"%>
+<%
+User signedInUser = (User)request.getAttribute("user");
+if (signedInUser == null) {
+	response.sendError(403, "Authentication required");
+	return;
+}
+%>
 
 <%@page language="java" contentType="text/html; charset=utf-8" pageEncoding="UTF-8" %>
 
@@ -12,7 +19,6 @@
 
 <body>
     <%@ include file="webappNavbar.jsp" %>
-    <% User signedInUser = (User)request.getAttribute("user");%>
     <div class="container">
     	<div class="row">
     		<div class="col-md-9">
