@@ -19,6 +19,8 @@ import javax.servlet.http.HttpSession;
 
 import org.bson.types.ObjectId;
 
+import com.google.gson.JsonObject;
+
 import de.folivora.model.messenger.Message;
 
 /**
@@ -297,5 +299,26 @@ public class User {
 	 */
 	public Date getCreationTimestamp() {
 		return creationTimestamp;
+	}
+
+	
+	/**
+	 * Method to get the user as a JsonObject where not all fields are exported.
+	 * 
+	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @return the JsonObject 
+	 */
+	public JsonObject getAsJsonObject() {
+		JsonObject jo = new JsonObject();
+		
+		jo.addProperty("id", this.id.toString());
+		jo.addProperty("creationTimestamp", this.getCreationTimestamp().getTime());
+		jo.addProperty("name", this.getName());
+		jo.addProperty("hometown", this.getHometown());
+		jo.addProperty("birthday", getBirthday() != null ? getBirthday().getTime() : 0);
+		jo.addProperty("gender", this.getGender().toString());
+		jo.addProperty("credit", this.getCredit().getBalance());
+		
+		return jo;
 	}
 }
