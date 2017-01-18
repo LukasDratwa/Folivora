@@ -61,6 +61,13 @@ function createRest(method, servlet, payload, callback) {
 		}
 	}
 	
+	if (method == "GET" && typeof payload != "undefined") {
+		servlet += "?";
+		$.each(payload, function(key, val) {
+			servlet += "&" + key + "=" + val;
+		});
+		delete payload;
+	}
 	http_request.open(method, servlet, true);
 	http_request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	
@@ -103,4 +110,15 @@ function calculateAge(birthday) { // birthday is a date
     var ageDifMs = Date.now() - birthday.getTime();
     var ageDate = new Date(ageDifMs); // miliseconds from epoch
     return Math.abs(ageDate.getUTCFullYear() - 1970);
+}
+
+// From: http://stackoverflow.com/a/25359264
+$.urlParam = function(name) {
+    var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+    if (results==null) {
+       return null;
+    }
+    else {
+    	return decodeURI(results[1]) || 0;
+    }
 }
