@@ -3,19 +3,15 @@
 <%@page import="de.folivora.controller.ApplicationManager"%>
 <%@page import="de.folivora.model.User"%>
 <%@page import="de.folivora.model.UserCredit"%>
-<%
-User signedInUser = (User)request.getAttribute("user");
-if (signedInUser == null) {
-	response.sendError(403, "Authentication required");
-	return;
-}
-%>
-
 <%@page language="java" contentType="text/html; charset=utf-8" pageEncoding="UTF-8" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <%@ include file="webappHead.jsp" %>
+
+<%
+User signedInUser = (User)request.getAttribute("user");
+%>
 
 <body>
     <%@ include file="webappNavbar.jsp" %>

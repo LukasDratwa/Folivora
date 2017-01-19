@@ -28,24 +28,31 @@
     <script type="text/javascript" src="res/js/folivora-webapp.js"></script>
     
     <script>
-    	$(document).ready(function() {
-    		<%
-    			// Do stuff when someone is signed in
-    			UserManager userManager = ApplicationManager.getApplicationManagerInstance().getuManager();
-    			User myUser = userManager.getUserWithSession(session);
-    			if(myUser != null) {
-    				%>
-    				webappDataObj.userData.id =  <% out.write("\"" + myUser.getId() + "\""); %>;
-    				webappDataObj.userData.balance = parseFloat(<% out.write("" + myUser.getCredit().getBalance()); %>).toFixed(2);
-    				
-    				$("#sr-toggle-btn").removeClass("hidden");
-    				$("#sr-function-btns").removeClass("hidden");
-    				<%
-    			}
-    			
-    			// Set actual user in attribute of request
-    			request.setAttribute("user", myUser);
-    		%>
-    	});
+    <%
+	// Do stuff when someone is signed in
+	UserManager userManager = ApplicationManager.getApplicationManagerInstance().getuManager();
+	User myUser = userManager.getUserWithSession(session);
+	if(myUser != null) {
+		%>
+		webappDataObj.userData.id =  <% out.write("\"" + myUser.getId() + "\""); %>;
+		webappDataObj.userData.balance = parseFloat(<% out.write("" + myUser.getCredit().getBalance()); %>).toFixed(2);
+		
+		$("#sr-toggle-btn").removeClass("hidden");
+		$("#sr-function-btns").removeClass("hidden");
+		<%
+	}
+	
+	// Set actual user in attribute of request
+	request.setAttribute("user", myUser);
+	
+	if(myUser == null) {
+		if(!request.getRequestURL().toString().contains("webapp.jsp")
+				&& !request.getRequestURL().toString().contains("index.jsp")
+				&& !request.getRequestURL().toString().contains("signup.jsp")) {
+			response.sendError(403, "Authentication required");
+			return;
+		}
+	}
+	%>
     </script>
   </head>
