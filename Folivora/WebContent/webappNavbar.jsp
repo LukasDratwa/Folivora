@@ -126,12 +126,6 @@
 				
 				$("#btn-show-loginform").css("display", "none");
 				<%
-			} else {
-				%>
-					if(window.location.href.indexOf("webapp.jsp") == -1) {
-						location.href = "webapp.jsp";
-					}
-				<%
 			}
 		%>
 	});

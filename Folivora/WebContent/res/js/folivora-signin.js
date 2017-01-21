@@ -1,3 +1,6 @@
+/**
+ * @author Lukas Dratwa
+ */
 $(document).ready(function() {
 	initSignIn();
 });

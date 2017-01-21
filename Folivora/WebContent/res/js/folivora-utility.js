@@ -1,4 +1,9 @@
 /**
+ * @author Lukas Dratwa
+ */
+
+
+/**
  * A cache-variable to store the status-code of the last REST-Call
  */
 var lastRestStatus = null;
