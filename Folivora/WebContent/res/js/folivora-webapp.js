@@ -90,6 +90,18 @@ var webappDataObj = {
 };
 webappDataObj.resetNewSrObj();
 
+function countUnseenMessages(msgArray) {
+	var counter = 0;
+	for(var i in msgArray) {
+		var msg = msgArray[i];
+		
+		if(webappDataObj.userData.id != msg.sender.id) {
+			counter++;
+		}
+	}
+	return counter;
+}
+
 var updateViewCounter = 0;
 function updateViewIfNeeded(){
 	updateViewCounter++;
@@ -102,7 +114,7 @@ function updateViewIfNeeded(){
 	if(typeof payload.userCallingId != "undefined" && payload.userCallingId != -1) {
 		createRest("POST", "getmessagesservlet", JSON.stringify(payload), function(response) {
 			var responseObj = JSON.parse(response);
-			var unreadMsgsLength = new Number(responseObj.userMessages.length);
+			var unreadMsgsLength = countUnseenMessages(responseObj.userMessages);
 			
 			if(unreadMsgsLength > 0) {
 				$("#messages-notification-number").html(unreadMsgsLength);

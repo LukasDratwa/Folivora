@@ -52,6 +52,29 @@
 					$(o.parentElement).html(spanHtml);
 				});
 			}
+			
+			// Sumbit of msg
+			$(".btn-send-msg").click(function() {
+				if(typeof this.dataset.userreceiverid != "undefined"
+						&& typeof this.dataset.srid != "undefined") {
+					var textareaId = "textarea-msg-" + this.dataset.srid;
+					
+					var payload = {
+						userCallingId: webappDataObj.userData.id,
+						userMsgReceiverId: "",
+						srId: "",
+						msgText: $("#" + textareaId).val()
+					}
+					payload.userMsgReceiverId = this.dataset.userreceiverid;
+					payload.srId = this.dataset.srid;
+					createRest("POST", "sendmessageservlet", JSON.stringify(payload), function(responseText) {
+						$("#" + textareaId).val("");
+						$.notify("Nachricht erfolgreich gesendet", "success");
+					});
+				} else {
+					$.notify("Fehlgeschlagen Nachricht zu senden!", "error");
+				}
+			});
 		});
 	</script>
     
@@ -65,7 +88,7 @@
     				
     					List<List<Message>> relevantMsgs = aManager.getRelevantMessagesOfUserForChatDisplay(user);
     					for(List<Message> messageListOneSr : relevantMsgs) {
-    						int unseenMessages = aManager.countUnreadMsgsInList(messageListOneSr);
+    						int unseenMessages = aManager.countUnreadMsgsInList(user, messageListOneSr);
     						SearchRequest sr = messageListOneSr.get(0).getReferencedSr();
     						String srCreationDateTimeString = Util.formatDateToDateAndTimeString(sr.getCreationTimestamp());
     						
@@ -126,15 +149,23 @@
     							}
     						
     							// Enable chat-row
-    							if(sr.getUserStasisfier() != null) {
+    							if(sr.getUserStasisfier() != null && sr.getStatus() == SearchRequestStatus.IN_PROGRESS) {
+    								String msgUserReceiverId = "";
+    								if(sr.getUserStasisfier().getId().toString().equals(user.getId().toString())) {
+    									msgUserReceiverId = sr.getUserCreator().getId().toString();
+    								} else {
+    									msgUserReceiverId = sr.getUserStasisfier().getId().toString();
+    								}
+    								
     								%>
-    									<div class="row">
+    									<div class="row send-msg-container">
     										<div class="col-md-10 col-xs-12">
-    											<textarea class="full-width" rows="2"></textarea>
+    											<textarea id="textarea-msg-<% out.write(sr.getId().toString()); %>" class="full-width" rows="2"></textarea>
     										</div>
     										
     										<div class="col-md-2 col-xs-12">
-    											<input type="button" class="btn bt-default full-width" value="Senden"/>
+    											<input type="button" data-userreceiverid="<% out.write(msgUserReceiverId); %>" data-srid="<% out.write(sr.getId().toString()); %>"
+    												class="btn bt-default full-width btn-send-msg" value="Senden"/>
     										</div>
     									</div>
     								<%

@@ -403,9 +403,9 @@ public class ApplicationManager {
 		result.sort(new Comparator<List<Message>>() {
 			@Override
 			public int compare(List<Message> list1, List<Message> list2) {
-				if(countUnreadMsgsInList(list1) > countUnreadMsgsInList(list2)) {
+				if(countUnreadMsgsInList(user, list1) > countUnreadMsgsInList(user, list2)) {
 					return -1;
-				} else if(countUnreadMsgsInList(list1) < countUnreadMsgsInList(list2)) {
+				} else if(countUnreadMsgsInList(user, list1) < countUnreadMsgsInList(user, list2)) {
 					return 1;
 				} else {
 					if(list1.size() <= 0 || list2.size() <= 0) {
@@ -424,16 +424,19 @@ public class ApplicationManager {
 	}
 	
 	/**
-	 * Method to count the unseen messages in a list of messages.
+	 * Method to count the unseen messages in a list of messages. Messages where the sender is
+	 * equal to the calling user will not count.
 	 * 
 	 * <hr>Created on 15.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param user - the calling user
 	 * @param inputMsgList - the input list
 	 * @return the amount of unseen messages in the given list
 	 */
-	public int countUnreadMsgsInList(List<Message> inputMsgList) {
+	public int countUnreadMsgsInList(User callingUser, List<Message> inputMsgList) {
 		int counter = 0;
 		for(Message msg : inputMsgList) {
-			if(!msg.isSeen()) {
+			if(!msg.isSeen()
+					&& !callingUser.getId().toString().equals(msg.getSender().getId().toString())) {
 				counter++;
 			}
 		}

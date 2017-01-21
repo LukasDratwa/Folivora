@@ -18,24 +18,25 @@ import com.google.gson.GsonBuilder;
 import de.folivora.controller.ApplicationManager;
 import de.folivora.controller.UserManager;
 import de.folivora.model.Constants;
+import de.folivora.model.SearchRequest;
 import de.folivora.model.User;
+import de.folivora.model.messenger.Message;
 import de.folivora.request.AccessLayer;
 
 /**
- * Servlet implementation class SetMessageUnseenServlet
- * 
- * <hr>Created on 15.01.2017<hr>
+ * Servlet implementation class SendMessageServlet
+ * <hr>Created on 21.01.2017<hr>
  * @author <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a>
  */
-@WebServlet("/setmessageseenservlet")
-public class SetMessageSeenServlet extends HttpServlet {
+@WebServlet("/sendmessageservlet")
+public class SendMessageServlet extends HttpServlet {
 	private static final long serialVersionUID = Constants.SERIAL_VERSION_UID;
-	private static final Logger logger = Logger.getLogger(SetMessageSeenServlet.class);
+	private static final Logger logger = Logger.getLogger(SendMessageServlet.class);
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public SetMessageSeenServlet() {
+    public SendMessageServlet() {
         super();
     }
 
@@ -74,13 +75,27 @@ public class SetMessageSeenServlet extends HttpServlet {
 			Input input = gson.fromJson(sB.toString(), Input.class);
 			User callingUser = uManager.getUserWithId(input.getUserCallingId());
 			
-			if(input.getMsgIds() != null && !input.getMsgIds().equals("")) {
-				AccessLayer.setMsgSeen(callingUser, input.getMsgIds());
-				new ResponseObject(200, "Ok", response).writeResponse();
-				logger.info("Called servlet to mark \"" + input.getMsgIds() + "\" as seen.");
+			if(callingUser != null) {
+				SearchRequest sr = aManager.getSearchRequestWithId(input.getSrId());
+				
+				if(sr != null) {
+					User receivingUser = uManager.getUserWithId(input.getUserMsgReceiverId());
+					
+					if(receivingUser != null) {
+						Message m = AccessLayer.sendMsg("", input.getMsgText(), callingUser, receivingUser, sr);
+						new ResponseObject(200, "Ok", response).writeResponse();
+						logger.info(callingUser + " successfully sended " + receivingUser + " the message " + m);
+					} else {
+						new ResponseObject(400, "There is no user with the id=" + input.getUserMsgReceiverId() + "!", response).writeResponse();
+						logger.warn("Failed to send message!");
+					}
+				} else {
+					new ResponseObject(400, "There is no search request with the id=" + input.getSrId() + "!", response).writeResponse();
+					logger.warn("Failed to send message!");
+				}
 			} else {
-				new ResponseObject(400, "Please enter some msg id which should be set to seen.", response).writeResponse();
-				logger.warn("Failed to set messages seen!");
+				new ResponseObject(400, "There is no user with the id=" + input.getUserCallingId() + "!", response).writeResponse();
+				logger.warn("Failed to send message!");
 			}
 		} catch(Exception e) {
 			new ResponseObject(500, "Failed to map input with gson!", response).writeResponse();
@@ -89,21 +104,23 @@ public class SetMessageSeenServlet extends HttpServlet {
 	}
 	
 	class Input {
-		private String msgIds = "";
-		private String userCallingId = "";
-		
+		private String userCallingId,
+					   userMsgReceiverId,
+					   srId,
+					   msgText;
+
 		/**
-		 * @return the msgIds
+		 * @return the msgText
 		 */
-		public String getMsgIds() {
-			return msgIds;
+		public String getMsgText() {
+			return msgText;
 		}
 
 		/**
-		 * @param msgIds the msgIds to set
+		 * @param msgText the msgText to set
 		 */
-		public void setMsgIds(String msgIds) {
-			this.msgIds = msgIds;
+		public void setMsgText(String msgText) {
+			this.msgText = msgText;
 		}
 
 		/**
@@ -118,6 +135,34 @@ public class SetMessageSeenServlet extends HttpServlet {
 		 */
 		public void setUserCallingId(String userCallingId) {
 			this.userCallingId = userCallingId;
+		}
+
+		/**
+		 * @return the userMsgReceiverId
+		 */
+		public String getUserMsgReceiverId() {
+			return userMsgReceiverId;
+		}
+
+		/**
+		 * @param userMsgReceiverId the userMsgReceiverId to set
+		 */
+		public void setUserMsgReceiverId(String userMsgReceiverId) {
+			this.userMsgReceiverId = userMsgReceiverId;
+		}
+
+		/**
+		 * @return the srId
+		 */
+		public String getSrId() {
+			return srId;
+		}
+
+		/**
+		 * @param srId the srId to set
+		 */
+		public void setSrId(String srId) {
+			this.srId = srId;
 		}
 	}
 }

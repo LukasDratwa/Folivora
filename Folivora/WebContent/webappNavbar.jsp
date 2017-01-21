@@ -104,7 +104,7 @@
 					$("#navbar-li-element-messages").removeClass("hidden");
 					$("#navbar-li-element-messages").removeClass("active");
 				}
-				var amountUnseenMessages = "<% out.write("" + ApplicationManager.getApplicationManagerInstance().countUnreadMsgsInList(usr.getRelevantMessages())); %>";
+				var amountUnseenMessages = "<% out.write("" + ApplicationManager.getApplicationManagerInstance().countUnreadMsgsInList(usr, usr.getRelevantMessages())); %>";
 				if(amountUnseenMessages > 0) {
 					$("#messages-notification-number").html(amountUnseenMessages);
 					$("#messages-notification-number").removeClass("hidden");

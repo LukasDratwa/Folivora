@@ -77,6 +77,13 @@
 	padding-left: 5px;
 }
 
+.send-msg-container {
+	padding-top: 15px;
+	padding-bottom: 15px;
+	border: 1px solid grey;
+	border-radius: 3px; 
+}
+
 .ui-state-active .ui-icon,
 .ui-button:active .ui-icon {
 	background-image: url("images/ui-icons_444444_256x240.png");

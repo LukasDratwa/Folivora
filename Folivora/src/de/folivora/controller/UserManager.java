@@ -189,7 +189,6 @@ public class UserManager {
 			String email, double initialBalance, UserType userType, String hometown) {
 		User u = factory_createUser(name, pwd, birthday, gender, email, initialBalance, userType, hometown);
 		HibernateSave.saveOrUpdateObject(u);
-		System.out.println(u);
 		return u;
 	}
 	

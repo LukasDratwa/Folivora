@@ -200,12 +200,37 @@ public class AccessLayer {
 	 * 
 	 * <hr>Created on 15.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
 	 * @param callingUser - the calling user
-	 * @param msg - the message
+	 * @param msgIds - the messageIds separated with a ","
 	 */
-	public static void setMsgSeen(User callingUser, Message msg) {
-		if(! msg.isSeen()) {
-			msg.setSeen(true);
-			HibernateUpdate.updateObject(msg);
+	public static void setMsgSeen(User callingUser, String msgIds) {
+		ApplicationManager aManager = ApplicationManager.getApplicationManagerInstance();
+		for(String msgId : msgIds.split(",")) {
+			Message msg = aManager.getMessageWithId(msgId);
+			
+			if(msg != null
+					&& !msg.getSender().getId().toString().equals(callingUser.getId().toString())) {
+				// Second condition, because only the receiver can set a msg to seen
+				if(! msg.isSeen()) {
+					msg.setSeen(true);
+					HibernateUpdate.updateObject(msg);
+				}
+			}
+			
 		}
+	}
+	
+	/**
+	 * Message to send a new user message.
+	 * 
+	 * <hr>Created on 21.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param title - the title of the message
+	 * @param text - the text of the message
+	 * @param sender - the sender
+	 * @param receiver - the receiver of the message
+	 * @param referencedSr - the referenced search request
+	 * @return the created and send message
+	 */
+	public static Message sendMsg(String title, String text, User sender, User receiver, SearchRequest referencedSr) {
+		return ApplicationManager.getApplicationManagerInstance().createAndSaveMessage(title, text, sender, receiver, referencedSr);
 	}
 }
