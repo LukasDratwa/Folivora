@@ -83,7 +83,17 @@ public class FinishSrServlet extends HttpServlet {
 			
 			User callingUser = uManager.getUserWithId(input.getUserCallingId());
 			if(sr != null) {
-				AccessLayer.finsihSr(sr, input.getUnlockToken(), callingUser);
+				boolean success = AccessLayer.finsihSr(sr, input.getUnlockToken(), callingUser);
+				
+				if(success) {
+					ResponseObject ro = new ResponseObject(200, "Ok", response);
+					ro.setSr(sr.getAsJsonObject());
+					ro.writeResponse();
+					logger.warn("Successfully finished sr: " + sr);
+				} else {
+					new ResponseObject(400, "There is no SR with the id=" + input.getSrId() + "!", response).writeResponse();
+					logger.warn("Failed to finish SR! " + sr);
+				}
 			} else {
 				new ResponseObject(400, "There is no SR with the id=" + input.getSrId() + "!", response).writeResponse();
 				logger.warn("Failed to finish SR!");

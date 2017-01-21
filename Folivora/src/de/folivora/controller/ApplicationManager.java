@@ -123,8 +123,10 @@ public class ApplicationManager {
 			return false;
 		}
 		
-		UserCredit creditUserFrom = t.getuFrom().getCredit();
-		UserCredit creditUserTo = t.getuTo().getCredit();
+		User userFrom = getuManager().getUserWithId(t.getuFrom().getId().toString());
+		User userTo = getuManager().getUserWithId(t.getuTo().getId().toString());
+		UserCredit creditUserFrom = userFrom.getCredit();
+		UserCredit creditUserTo = userTo.getCredit();
 		
 		creditUserFrom.setBalance(creditUserFrom.getBalance() - t.getValue() - t.getFee());
 		creditUserTo.setBalance(creditUserTo.getBalance() + t.getValue() + t.getFee());
@@ -141,8 +143,8 @@ public class ApplicationManager {
 		
 		logger.info("Executed transaction: " + t);
 		HibernateUpdate.updateObject(t);
-		HibernateUpdate.updateObject(t.getuFrom());
-		HibernateUpdate.updateObject(t.getuTo());
+		HibernateUpdate.updateObject(userFrom);
+		HibernateUpdate.updateObject(userTo);
 		return true;
 	}
 	

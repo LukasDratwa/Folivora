@@ -59,6 +59,11 @@
 						&& typeof this.dataset.srid != "undefined") {
 					var textareaId = "textarea-msg-" + this.dataset.srid;
 					
+					if($("#" + textareaId).val() == "") {
+						$.notify("Bitte zuerst eine Nachricht eingeben.", "info");
+						return;
+					}
+					
 					var payload = {
 						userCallingId: webappDataObj.userData.id,
 						userMsgReceiverId: "",
@@ -75,6 +80,38 @@
 					$.notify("Fehlgeschlagen Nachricht zu senden!", "error");
 				}
 			});
+			
+			// Submit of unlock token
+			$(".btn-send-unlocktoken").click(function() {
+				if(typeof this.dataset.srid != "undefined") {
+					var textareaId = "textarea-unlocktoken-" + this.dataset.srid;
+					
+					if($("#" + textareaId).val() == "") {
+						$.notify("Bitte zuerst den Freischaltecode eingeben.", "info");
+						return;
+					}
+					
+					var payload = {
+						userCallingId: webappDataObj.userData.id,
+						srId: "",
+						unlockToken: $("#" + textareaId).val()
+					}
+					payload.srId = this.dataset.srid;
+					createRest("POST", "finishsrservlet", JSON.stringify(payload), function(responseText) {
+						if(lastRestStatus == 200) {
+							var finishedSr = JSON.parse(responseText).sr;
+							console.log(finishedSr);
+							$.notify("Gesuch erfolgreich abgeschlossen", "success");
+						} else {
+							$.notify("Abschluss fehlgeschlagen, falscher Freischaltecode!", "error");
+						}
+						
+						$("#" + textareaId).val("");
+					});
+				} else {
+					$.notify("Fehlgeschlagen Freischaltecode zu senden!", "error");
+				}
+			});
 		});
 	</script>
     
@@ -89,7 +126,7 @@
     					List<List<Message>> relevantMsgs = aManager.getRelevantMessagesOfUserForChatDisplay(user);
     					for(List<Message> messageListOneSr : relevantMsgs) {
     						int unseenMessages = aManager.countUnreadMsgsInList(user, messageListOneSr);
-    						SearchRequest sr = messageListOneSr.get(0).getReferencedSr();
+    						SearchRequest sr = aManager.getSearchRequestWithId(messageListOneSr.get(0).getReferencedSr().getId().toString());
     						String srCreationDateTimeString = Util.formatDateToDateAndTimeString(sr.getCreationTimestamp());
     						
     						%><h3 class="message-chatheader">Gesuch "<% out.write(sr.getTitle()); %>" vom <% out.write(srCreationDateTimeString); %>
@@ -115,8 +152,8 @@
     								
     								if(msg.getReceiver().getId().toString().equals(user.getId().toString())) {
     									// From other user, display on left side
-    									msgAuthor = msg.getReceiver().getName();
-    									msgAuthorId = msg.getReceiver().getId().toString();
+    									msgAuthor = msg.getSender().getName();
+    									msgAuthorId = msg.getSender().getId().toString();
     									%>
     										<div class="row">
 		    									<div class="col-md-8 col-xs-8">
@@ -137,19 +174,23 @@
     										<div class="row">
 	    										<div class="col-md-4 col-xs-4"></div>
 	    							
-			    								<div style="direction: rtl;" class="col-md-8 col-xs-8">
-			    									<% if(! msgTitle.equals("")){ %> <span class="message-title"><% out.write("- " + msgTitle); %></span><%}%>
-		    										<span class="message-time-and-date"><% out.write(msgCreationDateTimeString); %></span>
-		    										<span class="message-author"><% out.write(" von " + "<a href='user.jsp?id=" + msgAuthorId +  "'>" + msgAuthor + "</a>"); %></span>
-		    										<p><% out.write(msg.getText()); %></p>
+			    								<div class="col-md-8 col-xs-8">
+			    									<div style="width:100%; display:inline-block;">
+			    										<div style="float:right;">
+					    									<% if(! msgTitle.equals("")){ %> <span class="message-title"><% out.write("- " + msgTitle); %></span><%}%>
+				    										<span class="message-time-and-date"><% out.write(msgCreationDateTimeString); %></span>
+				    										<span class="message-author"><% out.write(" von " + "<a href='user.jsp?id=" + msgAuthorId +  "'>" + msgAuthor + "</a>"); %></span>
+		    											</div>
+		    										</div>
+		    										<p style="direction: rtl;"><% out.write(msg.getText()); %></p>
 		    									</div>
     										</div>
     									<%
     								}
     							}
     						
-    							// Enable chat-row
     							if(sr.getUserStasisfier() != null && sr.getStatus() == SearchRequestStatus.IN_PROGRESS) {
+    								// Enable chat-row
     								String msgUserReceiverId = "";
     								if(sr.getUserStasisfier().getId().toString().equals(user.getId().toString())) {
     									msgUserReceiverId = sr.getUserCreator().getId().toString();
@@ -158,6 +199,8 @@
     								}
     								
     								%>
+    									<br>
+        								<h4>Persönliche Nachricht senden:</h4>
     									<div class="row send-msg-container">
     										<div class="col-md-10 col-xs-12">
     											<textarea id="textarea-msg-<% out.write(sr.getId().toString()); %>" class="full-width" rows="2"></textarea>
@@ -169,6 +212,25 @@
     										</div>
     									</div>
     								<%
+    								
+    								
+    								// Enable row to enter unlock token
+        							if(!sr.getUserCreator().getId().toString().equals(user.getId().toString())) {
+        								%>
+        									<br>
+        									<h4>5 stelligen Freischaltecode eingeben:</h4>
+	        								<div class="row send-msg-container">
+	    										<div class="col-md-10 col-xs-12">
+	    											<textarea id="textarea-unlocktoken-<% out.write(sr.getId().toString()); %>" class="full-width" rows="2"></textarea>
+	    										</div>
+	    										
+	    										<div class="col-md-2 col-xs-12">
+	    											<input type="button" data-srid="<% out.write(sr.getId().toString()); %>"
+	    												class="btn bt-default full-width btn-send-unlocktoken" value="Senden"/>
+	    										</div>
+	    									</div>
+        								<%
+        							}
     							}
     						%>
     							

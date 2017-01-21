@@ -161,9 +161,9 @@ public class AccessLayer {
 	 */
 	public static boolean finsihSr(SearchRequest sr, String unlockToken, User callingUser) {
 		ApplicationManager aManager = ApplicationManager.getApplicationManagerInstance();
-		
 		for(Transaction t : aManager.getTransactionOfSearchRequest(sr.getId().toString())) {
-			if(! t.isExecuted() && (t.getuFrom().getId() ==  callingUser.getId() || t.getuTo().getId() ==  callingUser.getId())) {
+			if(! t.isExecuted() && (t.getuFrom().getId().toString().equals(callingUser.getId().toString())
+					|| t.getuTo().getId().toString().equals(callingUser.getId().toString()))) {
 				boolean executedSuccessfully = aManager.executeTransaction(unlockToken, t);
 				
 				if(executedSuccessfully) {
@@ -173,8 +173,16 @@ public class AccessLayer {
 					User folivora = aManager.getuManager().getFolivoraUser();
 					aManager.createAndSaveMessage("\"" + sr.getTitle() + "\" abgeschlossen.",
 							"Das Gesuch \"" + sr.getTitle() + "\" von " + sr.getUserCreator().getName()
-							+ "wurde erfolgreich von Ihnen abeschlossen. Sie erhalten in Kürze eine Gutschrift "
+							+ " wurde erfolgreich von Ihnen abeschlossen. Sie erhalten in Kürze eine Gutschrift "
 							+ "über " + sr.getCostsAndReward() + "€.", folivora, callingUser, sr);
+					
+					aManager.createAndSaveMessage("Bitte Feedback geben", "Das Gesuch wurde erfolgreich befriedigt, bitte "
+							+ "geben Sie der anderen Partei noch Feedback: <a href='/feedback.jsp?srId='" + sr.getId().toString() + ">link</a>",
+							folivora, sr.getUserCreator(), sr);
+					
+					aManager.createAndSaveMessage("Bitte Feedback geben", "Das Gesuch wurde erfolgreich befriedigt, bitte "
+							+ "geben Sie der anderen Partei noch Feedback: <a href='/feedback.jsp?srId='" + sr.getId().toString() + ">link</a>",
+							folivora, sr.getUserStasisfier(), sr);
 					return true;
 				}
 			}
