@@ -25,6 +25,7 @@
     <link href="res/css/folivora.css" rel="stylesheet" type="text/css">
     <script type="text/javascript" src="res/js/folivora-utility.js"></script>
     <script type="text/javascript" src="res/js/folivora-signin.js"></script>
+    <script type="text/javascript" src="res/js/folivora-signup.js"></script>
     <script type="text/javascript" src="res/js/folivora-webapp.js"></script>
     
     <script>
