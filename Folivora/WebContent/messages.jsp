@@ -21,7 +21,8 @@
 				active: false,
 				activate: function(event, ui) {
 					// console.log("after" , ui);
-					if(typeof ui.newPanel[0] != "undefined") {
+					if(typeof ui.newPanel[0] != "undefined"
+							&& typeof ui.newPanel[0].dataset.msgids != "undefined") {
 						var payload = {
 							userCallingId: webappDataObj.userData.id,
 							msgIds: ui.newPanel[0].dataset.msgids
@@ -63,15 +64,6 @@
     					ApplicationManager aManager = ApplicationManager.getApplicationManagerInstance();
     				
     					List<List<Message>> relevantMsgs = aManager.getRelevantMessagesOfUserForChatDisplay(user);
-    					
-    					// Quick & Dirty solution if there is no msg
-    					if(relevantMsgs.size() == 0) {
-    						List<Message> welcomeMsgList = new ArrayList<Message>();
-    						SearchRequest dummySr = new SearchRequest("Willkommen" + user.getName(), "", "", new Long(0), new Long(0), 0.0, 0.0, 0.0, 0.0, "", aManager.getuManager().getFolivoraUser());
-    						welcomeMsgList.add(new Message("Willkommen" + user.getName(), "....", aManager.getuManager().getFolivoraUser(), user, dummySr));
-    						relevantMsgs.add(welcomeMsgList);
-    					}
-    					
     					for(List<Message> messageListOneSr : relevantMsgs) {
     						int unseenMessages = aManager.countUnreadMsgsInList(messageListOneSr);
     						SearchRequest sr = messageListOneSr.get(0).getReferencedSr();
@@ -150,7 +142,20 @@
     						%>
     							
     						</div>
-    					<%}%>
+    					<%}
+    					
+    					// Display welcome-msg if there arent messsages
+    					if(relevantMsgs.size() == 0) {
+    						%>
+    							<h3 class="message-chatheader">Willkommen</h3>
+    							<div class="message-chatcontainer">
+    								<p>Wilkommen bei Folivora!</p>
+    								<p>TODO Erklärung</p>
+    								<p>TODO Links Kontakt & Handbuch</p>
+    							</div>
+    						<%
+    					}
+    					%>
     			</div>
     		</div>
     		
