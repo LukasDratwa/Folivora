@@ -124,7 +124,7 @@ public class AccessLayer {
 				"Ihr Gesuch \"" + sr.getTitle() + "\" wurde erfolgreich von " + callingUser.getName()
 				+ " angenommen. \n\n"
 				+ "Bitte vergessen Sie nicht dem Lieferanten bei erfolgreicher Lieferung folgenden Code zu übergeben: "
-				+  t.getUnlockToken(),
+				+ "<b class='msg-transaction-unlock-token'>" + t.getUnlockToken() + "</b>",
 				folivora, sr.getUserCreator(), sr);
 	}
 	

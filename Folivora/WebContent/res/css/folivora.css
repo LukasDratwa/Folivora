@@ -84,6 +84,10 @@
 	border-radius: 3px; 
 }
 
+.msg-transaction-unlock-token {
+	color: green;
+}
+
 .ui-state-active .ui-icon,
 .ui-button:active .ui-icon {
 	background-image: url("images/ui-icons_444444_256x240.png");

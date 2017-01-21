@@ -121,7 +121,7 @@
     										<div class="row">
 		    									<div class="col-md-8 col-xs-8">
 		    										<span class="message-time-and-date"><% out.write(msgCreationDateTimeString); %></span>
-		    										<span class="message-title"><% if(! msgTitle.equals("")) out.write("- " + msgTitle); %></span>
+		    										<% if(! msgTitle.equals("")){ %> <span class="message-title"><% out.write("- " + msgTitle); %></span><%}%>
 		    										<span class="message-author"><% out.write(" von " + "<a href='user.jsp?id=" + msgAuthorId +  "'>" + msgAuthor + "</a>"); %></span>
 		    										<p><% out.write(msg.getText()); %></p>
 		    									</div>
@@ -138,8 +138,8 @@
 	    										<div class="col-md-4 col-xs-4"></div>
 	    							
 			    								<div style="direction: rtl;" class="col-md-8 col-xs-8">
+			    									<% if(! msgTitle.equals("")){ %> <span class="message-title"><% out.write("- " + msgTitle); %></span><%}%>
 		    										<span class="message-time-and-date"><% out.write(msgCreationDateTimeString); %></span>
-		    										<span class="message-title"><% if(! msgTitle.equals("")) out.write("- " + msgTitle); %></span>
 		    										<span class="message-author"><% out.write(" von " + "<a href='user.jsp?id=" + msgAuthorId +  "'>" + msgAuthor + "</a>"); %></span>
 		    										<p><% out.write(msg.getText()); %></p>
 		    									</div>
