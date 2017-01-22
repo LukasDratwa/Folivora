@@ -221,6 +221,7 @@ $(document).ready(function() {
 	
 	$("#btn-select-address").click(function() {
 		webappDataObj.newSearchRequestClicked = true;
+		$.notify("Bitte klicken Sie den Lieferort auf der Karte an.", "info");
 	});
 	// initDateTimeRange();
 	

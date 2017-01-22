@@ -134,7 +134,7 @@
 						<input type="radio" name="example" class="rating star-rating-show-feedback" value="4" />
 						<input type="radio" name="example" class="rating star-rating-show-feedback" value="5" />
 					</div>
-	    			<p>Feedback: <% if(alreadyCreatedFeedback.getDescription() != null) out.write(alreadyCreatedFeedback.getDescription()); %></p>
+	    			<p>Feedback: "<% if(alreadyCreatedFeedback.getDescription() != null) out.write(alreadyCreatedFeedback.getDescription()); %>"</p>
 	    		</div>
 	    	<% } %>
     	</div>

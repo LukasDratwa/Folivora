@@ -179,8 +179,15 @@ public class AccessLayer {
 	public static void cancelSearchRequest(User callingUser, SearchRequest sr) {
 		ApplicationManager aManager = ApplicationManager.getApplicationManagerInstance();
 		User folivora = aManager.getuManager().getFolivoraUser();
+		
 		Transaction t = aManager.createAndSaveTransaction(sr.getCostsAndReward(), sr.getFee(), folivora, callingUser, null, sr);
 		aManager.executeTransaction(null, t);
+		
+		// Save a ref to the transaction which represents the cancellation in the initial transaction
+		Transaction initialT = aManager.getInitialTransactionOfSearchRequest(sr.getId().toString());
+		initialT.setCancelled(true);
+		initialT.setCacelTransactionId(t.getId().toString());
+		HibernateUpdate.updateObject(initialT);
 		
 		sr.setStatus(SearchRequestStatus.CANCELLED);
 		HibernateUpdate.updateObject(sr);

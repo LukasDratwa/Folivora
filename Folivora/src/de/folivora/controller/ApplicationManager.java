@@ -189,6 +189,24 @@ public class ApplicationManager {
 	}
 	
 	/**
+	 * Method to get the initial transaction (user -> folivora) of a search request.
+	 * 
+	 * <hr>Created on 22.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param srId - the search request id
+	 * @return the transaction or null
+	 */
+	public Transaction getInitialTransactionOfSearchRequest(String srId) {
+		String userFolivoraId = getuManager().getFolivoraUser().getId().toString();
+		for(Transaction t : getTransactionOfSearchRequest(srId)) {
+			if(t.getuTo().getId().toString().equals(userFolivoraId)) {
+				return t;
+			}
+		}
+		
+		return null;
+	}
+	
+	/**
 	 * Method to get a list of transactions which were referenced to the input 
 	 * search request.
 	 * 

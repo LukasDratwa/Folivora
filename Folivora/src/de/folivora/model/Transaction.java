@@ -28,7 +28,7 @@ public class Transaction {
 	private double fee;
 	private boolean executed;
 	private boolean cancelled;
-	private Long cacelTransactionId;
+	private String cacelTransactionId;
 	private String unlockToken;
 	private Date creationTimestamp;
 	
@@ -125,14 +125,14 @@ public class Transaction {
 	/**
 	 * @return the cacelTransactionId
 	 */
-	public Long getCacelTransactionId() {
+	public String getCacelTransactionId() {
 		return cacelTransactionId;
 	}
 
 	/**
 	 * @param cacelTransactionId the cacelTransactionId to set
 	 */
-	public void setCacelTransactionId(Long cacelTransactionId) {
+	public void setCacelTransactionId(String cacelTransactionId) {
 		this.cacelTransactionId = cacelTransactionId;
 	}
 
@@ -208,5 +208,12 @@ public class Transaction {
 	 */
 	public Date getCreationTimestamp() {
 		return creationTimestamp;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public ObjectId getId() {
+		return id;
 	}
 }
