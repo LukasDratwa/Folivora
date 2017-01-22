@@ -59,6 +59,10 @@
 	color: #555555;
 }
 
+.message-chatheader-givefeedback-demand {
+	color: green;
+}
+
 .message-time-and-date {
 	text-decoration: underline;
 }

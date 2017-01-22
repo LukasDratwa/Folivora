@@ -9,6 +9,12 @@
 var lastRestStatus = null;
 var lastResponse = null;
 
+/**
+ * Method to format a date to a wished format.
+ * 
+ * @param longDate - the date
+ * @returns {String} the formatted date
+ */
 function formatLongDate(longDate) {
 	var d = new Date(longDate);
 	var year = d.getFullYear();
@@ -20,6 +26,12 @@ function formatLongDate(longDate) {
 	return day + "." + month + "." + year + ", " + hours + ":" + minutes + " Uhr";
 }
 
+/**
+ * Method to calculate the left possible delivery time for a search request.
+ * 
+ * @param longDate - the date (end date)
+ * @returns {String} - the left time
+ */
 function getTimeLeftAsString(longDate) {
 	var d = new Date(longDate);
 	var actual = new Date();
@@ -31,6 +43,12 @@ function getTimeLeftAsString(longDate) {
 	return diffHrs + ":" + diffMins;
 }
 
+/**
+ * Method to get the time of a date
+ * 
+ * @param longDate - the long date
+ * @returns {String} the formatted time
+ */
 function getTimeAsString(longDate) {
 	var d = new Date(longDate);
 	return d.getHours() + ":" + d.getMinutes();

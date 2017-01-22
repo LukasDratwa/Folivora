@@ -138,7 +138,12 @@
     						SearchRequest sr = aManager.getSearchRequestWithId(messageListOneSr.get(0).getReferencedSr().getId().toString());
     						String srCreationDateTimeString = Util.formatDateToDateAndTimeString(sr.getCreationTimestamp());
     						
-    						%><h3 class="message-chatheader">Gesuch "<% out.write(sr.getTitle()); %>" vom <% out.write(srCreationDateTimeString); %>
+    						String giveFeedbackDemand = "";
+    						if(sr.getStatus() == SearchRequestStatus.STATISFIED && !aManager.userGaveFeedbackAlread(user, sr)) {
+    							giveFeedbackDemand = "  <b class='message-chatheader-givefeedback-demand'>Bitte noch Feedback geben!</b>";
+    						}
+    						
+    						%><h3 class="message-chatheader">Gesuch "<% out.write(sr.getTitle()); %>" vom <% out.write(srCreationDateTimeString + giveFeedbackDemand); %>
     							<span class="message-amount-unread-msgs">
     								<span class="message-amount-unread-msgs-number" id="message-amount-unread-msgs-<% out.write(sr.getId().toString()); %>">
     									<% 	if(unseenMessages > 0){ out.write("<b class='red'>"); };
@@ -243,15 +248,17 @@
     							}
     							
     							// Enable give feedback link
-    							if(sr.getStatus() == SearchRequestStatus.STATISFIED) {
-    								%>
-    								<div class="row send-msg-container">
-									<div class="col-md-12 col-xs-12">
-										<input type="button" data-srid="<% out.write(sr.getId().toString()); %>"
-											class="btn btn-success full-width btn-send-feedback" value="Feedback geben"/>
-									</div>
-								</div>
-								<%
+    							if(!aManager.userGaveFeedbackAlread(user, sr)) {
+    								if(sr.getStatus() == SearchRequestStatus.STATISFIED) {
+        								%>
+        								<div class="row send-msg-container">
+    									<div class="col-md-12 col-xs-12">
+    										<input type="button" data-srid="<% out.write(sr.getId().toString()); %>"
+    											class="btn btn-success full-width btn-send-feedback" value="Feedback geben"/>
+    									</div>
+    								</div>
+    								<%
+        							}
     							}
     						%>
     							

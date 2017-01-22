@@ -81,6 +81,30 @@ public class ApplicationManager {
 	}
 	
 	/**
+	 * Method to check if the calling user already gave the other party already feedback for
+	 * the referenced statisfied search request.
+	 * 
+	 * <hr>Created on 22.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param callingUser - the calling user
+	 * @param sr - the referenced search request
+	 * @return true if the user already gave feedback, false if not
+	 */
+	public boolean userGaveFeedbackAlread(User callingUser, SearchRequest sr) {
+		if(callingUser.getId().toString().equals(sr.getUserCreator().getId().toString())) {
+			// Feedback creator == creator of sr
+			if(sr.getFeedbackOfSearchingUser() != null) {
+				return true;
+			}
+		} else {
+			if(sr.getFeedbackOfDeliveringUser() != null) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	/**
 	 * Method to create and save a {@link Feedback} in the database. The Feedback 
 	 * will be saved in the list of received feedbacks of the feedback.
 	 * 
