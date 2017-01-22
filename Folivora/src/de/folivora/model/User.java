@@ -316,7 +316,7 @@ public class User {
 		jo.addProperty("name", this.getName());
 		jo.addProperty("hometown", this.getHometown());
 		jo.addProperty("birthday", getBirthday() != null ? getBirthday().getTime() : 0);
-		jo.addProperty("gender", this.getGender().toString());
+		jo.addProperty("gender", (this.getGender() != null) ? this.getGender().toString() : "");
 		jo.addProperty("credit", this.getCredit().getBalance());
 		
 		return jo;

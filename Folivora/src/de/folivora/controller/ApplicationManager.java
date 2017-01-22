@@ -65,6 +65,22 @@ public class ApplicationManager {
 	}
 	
 	/**
+	 * Method to get a {@link Rating} with a given value.
+	 * 
+	 * <hr>Created on 22.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param val - the value (stars)
+	 * @return the found {@link Rating} or null
+	 */
+	public Rating getRatingWithStars(int val) {
+		for(Rating r : Rating.values()) {
+			if(r.getVal() == val) {
+				return r;
+			}
+		}
+		return null;
+	}
+	
+	/**
 	 * Method to create and save a {@link Feedback} in the database. The Feedback 
 	 * will be saved in the list of received feedbacks of the feedback.
 	 * 

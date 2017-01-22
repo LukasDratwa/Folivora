@@ -112,6 +112,15 @@
 					$.notify("Fehlgeschlagen Freischaltecode zu senden!", "error");
 				}
 			});
+			
+			// Click of feedback btn
+			$(".btn-send-feedback").click(function() {
+				if(typeof this.dataset.srid != "undefined") {
+					window.location.href = "feedback.jsp?srId=" + this.dataset.srid;
+				} else {
+					$.notify("Error!", "error");
+				}
+			});
 		});
 	</script>
     
@@ -231,6 +240,18 @@
 	    									</div>
         								<%
         							}
+    							}
+    							
+    							// Enable give feedback link
+    							if(sr.getStatus() == SearchRequestStatus.STATISFIED) {
+    								%>
+    								<div class="row send-msg-container">
+									<div class="col-md-12 col-xs-12">
+										<input type="button" data-srid="<% out.write(sr.getId().toString()); %>"
+											class="btn btn-success full-width btn-send-feedback" value="Feedback geben"/>
+									</div>
+								</div>
+								<%
     							}
     						%>
     							

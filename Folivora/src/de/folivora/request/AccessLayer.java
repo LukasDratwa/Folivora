@@ -7,6 +7,7 @@ import com.google.gson.JsonArray;
 import de.folivora.controller.ApplicationManager;
 import de.folivora.controller.UserManager;
 import de.folivora.model.Constants;
+import de.folivora.model.Feedback;
 import de.folivora.model.SearchRequest;
 import de.folivora.model.SearchRequestStatus;
 import de.folivora.model.Transaction;
@@ -34,6 +35,46 @@ public class AccessLayer {
 	private static boolean isValidToken(User user, String token) {
 		return true;
 		// TODO be sure that in every call is a token ... return user.getTokenStorage().getToken().equals(token);
+	}
+	
+	/**
+	 * Method to create a new feedback.
+	 * 
+	 * <hr>Created on 22.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param stars - the rated stars
+	 * @param feedbackText - the optional feedback text
+	 * @param callingUser - the calling user
+	 * @param sr - the search request
+	 * @return true if the feedback could created successfully
+	 */
+	public static boolean createFeedback(int stars, String feedbackText, User callingUser, SearchRequest sr) {
+		ApplicationManager aManager = ApplicationManager.getApplicationManagerInstance();
+		User folivora = aManager.getuManager().getFolivoraUser();
+		User feedbackReceiver = null;
+		
+		// Check if users already gave feedback for this sr
+		if(callingUser.getId().toString().equals(sr.getUserCreator().getId().toString()) && sr.getFeedbackOfSearchingUser() != null
+				|| callingUser.getId().toString().equals(sr.getUserStasisfier().getId().toString()) && sr.getFeedbackOfDeliveringUser() != null) {
+			return false;
+		}
+		
+		Feedback f = aManager.createAndSaveFeedback(aManager.getRatingWithStars(stars),
+				feedbackText, callingUser, sr);
+		if(callingUser.getId().toString().equals(sr.getUserCreator().getId().toString())) {
+			sr.setFeedbackOfSearchingUser(f);
+			feedbackReceiver = sr.getUserStasisfier();
+		} else {
+			
+			sr.setFeedbackOfDeliveringUser(f);
+			feedbackReceiver = sr.getUserCreator();
+		}
+		HibernateUpdate.updateObject(sr);
+		
+		// TODO link zu dem feedback 
+		aManager.createAndSaveMessage("Erhaltenes Feedback", "Sie haben zu diesem Gesuch Feedback erhalten, schauen "
+				+ " Sie es sich gleich an.", folivora, feedbackReceiver, sr);
+		
+		return true;
 	}
 	
 	/**
@@ -177,12 +218,10 @@ public class AccessLayer {
 							+ "über " + sr.getCostsAndReward() + "€.", folivora, callingUser, sr);
 					
 					aManager.createAndSaveMessage("Bitte Feedback geben", "Das Gesuch wurde erfolgreich befriedigt, bitte "
-							+ "geben Sie der anderen Partei noch Feedback: <a href='/feedback.jsp?srId='" + sr.getId().toString() + ">link</a>",
-							folivora, sr.getUserCreator(), sr);
+							+ "geben Sie der anderen Partei noch Feedback: ", folivora, sr.getUserCreator(), sr);
 					
 					aManager.createAndSaveMessage("Bitte Feedback geben", "Das Gesuch wurde erfolgreich befriedigt, bitte "
-							+ "geben Sie der anderen Partei noch Feedback: <a href='/feedback.jsp?srId='" + sr.getId().toString() + ">link</a>",
-							folivora, sr.getUserStasisfier(), sr);
+							+ "geben Sie der anderen Partei noch Feedback: ", folivora, sr.getUserStasisfier(), sr);
 					return true;
 				}
 			}

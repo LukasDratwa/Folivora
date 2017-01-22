@@ -18,7 +18,7 @@
 		<!-- Collect the nav links, forms, and other content for toggling -->
 		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 			<ul class="nav navbar-nav" id="navbar-left-ul">
-				<li class="active">
+				<li class="navbar-li-element active">
 					<a href="webapp.jsp">WebApp <span class="sr-only">(current)</span></a>
 				</li>
 				<li role="separator" class="divider"></li>
@@ -99,7 +99,8 @@
 				// Navbar messages
 				if(window.location.href.indexOf("messages.jsp") != -1) {
 					$(".navbar-li-element").removeClass("active");
-					$("#navbar-li-element-messages").removeClass("hidden");
+					$("#navbar-li-element-messages").addClass("active");
+					$("#navbar-li-element-messages").removeClass("hidden")
 				} else {
 					$("#navbar-li-element-messages").removeClass("hidden");
 					$("#navbar-li-element-messages").removeClass("active");
@@ -114,6 +115,7 @@
 				}
 				
 				var username = "<% out.write(usr.getName()); %>";
+				
 				// Navbar userSettings
 				if(window.location.href.indexOf("userSettings.jsp") != -1) {
 					$(".navbar-li-element").removeClass("active");
@@ -122,8 +124,13 @@
 					$("#navbar-right-ul").append("<li class='navbar-li-element' id='navbar-li-element-username'><a href='userSettings.jsp'>" + username + "</a></li>");
 				}
 				
-				$("#navbar-right-ul").append("<li class='navbar-li-element' id='navbar-li-element-logout'><a href='webapp.jsp' onclick='signOut()'>Logout</a></li>");
 				
+				// Navbar giving feedback and public user profile
+				if(window.location.href.indexOf("feedback.jsp") != -1 || window.location.href.indexOf("user.jsp") != -1) {
+					$(".navbar-li-element").removeClass("active");
+				}
+				
+				$("#navbar-right-ul").append("<li class='navbar-li-element' id='navbar-li-element-logout'><a href='webapp.jsp' onclick='signOut()'>Logout</a></li>");
 				$("#btn-show-loginform").css("display", "none");
 				<%
 			}

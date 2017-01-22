@@ -20,6 +20,9 @@
     <link href="res/css/daterangepicker.css" rel="stylesheet" type="text/css">
     <script type="text/javascript" src="res/js/daterangepicker.js"></script>
     
+    <script type="text/javascript" src="res/js/rating.js"></script>
+    <link href="res/css/rating.css" rel="stylesheet" type="text/css">
+    
     <script type="text/javascript" src="res/js/notify.min.js"></script>
     
     <link href="res/css/folivora.css" rel="stylesheet" type="text/css">

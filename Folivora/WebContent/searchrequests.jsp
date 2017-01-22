@@ -1,12 +1,17 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+<%@page import="de.folivora.controller.UserManager"%>
+<%@page import="de.folivora.controller.ApplicationManager"%>
+<%@page language="java" contentType="text/html; charset=utf-8" pageEncoding="UTF-8" %>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
-</head>
+<%@ include file="webappHead.jsp" %>
+
 <body>
-	Comming soon ...
+    <%@ include file="webappNavbar.jsp" %>
+    <div class="container">
+    	<div class="row">
+    		<div class="col-md-12">comming soon ...</div>
+    	</div>
+    </div>
 </body>
 </html>

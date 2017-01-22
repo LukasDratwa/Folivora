@@ -551,7 +551,7 @@ function addMarker(sr, map) {
 		console.log("Marker clicked, referenced sr: ", sr);
 		
 		var btn = "";
-		if(typeof webappDataObj.userData.id != "undefined") {
+		if(typeof webappDataObj.userData.id != "undefined" && webappDataObj.userData.id != -1) {
 			if(webappDataObj.userData.id != sr.userCreator.id) {
 				btn = "<input type='button' class='btn btn-default' value='Wird erledigt!' onclick='stasifySr("
 						+ "\"" + webappDataObj.userData.id + "\", \"" + sr.id + "\")'"+ (disableStatisfyBtn ? " disabled " : "")
