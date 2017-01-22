@@ -73,6 +73,21 @@
 					payload.userMsgReceiverId = this.dataset.userreceiverid;
 					payload.srId = this.dataset.srid;
 					createRest("POST", "sendmessageservlet", JSON.stringify(payload), function(responseText) {
+						// Append new own msg in view
+						var msgDiv = "<div class='row'>"
+							+ "<div class='col-md-4 col-xs-4'></div>"
+							+ "<div class='col-md-8 col-xs-8'>"
+								+ "<div style='width:100%; display:inline-block;'>"
+									+ "<div style='float:right;'>"
+										+ "<span class='message-time-and-date'>" + formatLongDate(new Date()) + "</span>"
+										+ "<span class='message-author'>von <a href='user.jsp?id='" + payload.userCallingId + "'>Ihnen</a></span>"
+									+ "</div>"
+								+ "</div>"
+								+ "<p style='direction: rtl;'>" + payload.msgText + "</p>"
+							+ "</div>"
+						+ "</div>";
+						$("#send-msg-chatcontainer-" + payload.srId).append(msgDiv);
+						
 						$("#" + textareaId).val("");
 						$.notify("Nachricht erfolgreich gesendet", "success");
 					});
@@ -157,6 +172,7 @@
     						</h3>
     						
     						<div class="message-chatcontainer" data-msgids="<%out.write(aManager.getMsgIdsOfMsgList(messageListOneSr));%>">
+    							<div id="send-msg-chatcontainer-<% out.write(sr.getId().toString()); %>">
     						<%
     							for(Message msg : messageListOneSr) {
     								String msgCreationDateTimeString = Util.formatDateToDateAndTimeString(msg.getCreationTimestamp());
@@ -203,6 +219,10 @@
     								}
     							}
     						
+    							%>
+    							</div>
+    							<%
+    						
     							if(sr.getUserStasisfier() != null && sr.getStatus() == SearchRequestStatus.IN_PROGRESS) {
     								// Enable chat-row
     								String msgUserReceiverId = "";
@@ -214,7 +234,7 @@
     								
     								%>
     									<br>
-        								<h4>Persönliche Nachricht senden:</h4>
+        								<h4 id="send-msg-header-<% out.write(sr.getId().toString()); %>"">Persönliche Nachricht senden:</h4>
     									<div class="row send-msg-container">
     										<div class="col-md-10 col-xs-12">
     											<textarea id="textarea-msg-<% out.write(sr.getId().toString()); %>" class="full-width" rows="2"></textarea>
@@ -270,8 +290,7 @@
         						}
     								
     							
-    						%>
-    							
+    							%>
     						</div>
     					<%}
     					
@@ -287,6 +306,7 @@
     						<%
     					}
     					%>
+    				</div>
     			</div>
     		</div>
     		
