@@ -248,18 +248,28 @@
     							}
     							
     							// Enable give feedback link
-    							if(!aManager.userGaveFeedbackAlread(user, sr)) {
-    								if(sr.getStatus() == SearchRequestStatus.STATISFIED) {
-        								%>
+    							if(sr.getStatus() == SearchRequestStatus.STATISFIED) {
+    								if(!aManager.userGaveFeedbackAlread(user, sr)) {
+        							%>
         								<div class="row send-msg-container">
-    									<div class="col-md-12 col-xs-12">
-    										<input type="button" data-srid="<% out.write(sr.getId().toString()); %>"
-    											class="btn btn-success full-width btn-send-feedback" value="Feedback geben"/>
-    									</div>
-    								</div>
-    								<%
-        							}
-    							}
+	    									<div class="col-md-12 col-xs-12">
+	    										<input type="button" data-srid="<% out.write(sr.getId().toString()); %>"
+	    											class="btn btn-success full-width btn-send-feedback" value="Feedback geben"/>
+	    									</div>
+	   									</div>
+    							<%	} else { %>
+    									<div class="row send-msg-container">
+											<div class="col-md-12 col-xs-12">
+												<p>Vielen Dank für Ihr Feedback, dieses haben wir bereits dankend erhalten.
+												Unter folgendem Link können Sie es erneut einsehen: <a href="feedback.jsp?srId=<% out.write(sr.getId().toString()); %>">
+												link</a></p>
+											</div>
+										</div>
+									<%
+    								}
+        						}
+    								
+    							
     						%>
     							
     						</div>

@@ -44,6 +44,17 @@
 			feedbackRating = vote;
 		});
 		
+		
+		
+		<%
+			if(userCreatedFeedbackAlready) {
+				%>
+					$('#star-rating-show-feedback').rating();
+					setStars(<% out.write("" + alreadyCreatedFeedback.getRating().getVal()); %>)
+				<%
+			}
+		%>
+		
 		$('#btn-submit-feedback').click(function() {
 			if(feedbackRating == 0) {
 				$.notify("Bitte mindestens einen Stern vergeben.", "info");
@@ -68,6 +79,18 @@
 			});
 		});
 	});
+	
+	function setStars(stars) {
+		console.log(stars);
+		
+		var counter = 0;
+		$(".star").each(function(i, elem) {
+			if(counter < stars) {
+				$(elem).addClass("fullStar");
+				counter++;
+			}
+		});
+	}
 </script>
 
 <body>
@@ -75,8 +98,8 @@
     <div class="container">
     	<div class="row">
     		<div class="col-md-12">
-    			<h4><a href="user.jsp?id<% out.write(userFeedbackReceiver.getId().toString());%>"><% out.write(userFeedbackReceiver.getName()); %></a>
-    			Feedback zum Gesuch "<% out.write(srFeedback.getTitle()); %>" geben</h4>
+    			<h4>Feedback für <a href="user.jsp?id<% out.write(userFeedbackReceiver.getId().toString());%>"><% out.write(userFeedbackReceiver.getName()); %></a>
+    			 zum Gesuch "<% out.write(srFeedback.getTitle()); %>"</h4>
     		</div>
     		<% if(!userCreatedFeedbackAlready) {%>
 	    		<div class="col-md-12">
@@ -104,6 +127,13 @@
 	    		<div class="col-md-12">
 	    			<p>Folgendes Feedback wurde bereits dankend von Ihnen empfangen:</p>
 	    			<p>Bewertung: <% out.write(alreadyCreatedFeedback.getRating().getAsString()); %></p>
+	    			<div id="star-rating-show-feedback">
+						<input type="radio" name="example" class="rating star-rating-show-feedback" value="1" />
+						<input type="radio" name="example" class="rating star-rating-show-feedback" value="2" />
+						<input type="radio" name="example" class="rating star-rating-show-feedback" value="3" />
+						<input type="radio" name="example" class="rating star-rating-show-feedback" value="4" />
+						<input type="radio" name="example" class="rating star-rating-show-feedback" value="5" />
+					</div>
 	    			<p>Feedback: <% if(alreadyCreatedFeedback.getDescription() != null) out.write(alreadyCreatedFeedback.getDescription()); %></p>
 	    		</div>
 	    	<% } %>
