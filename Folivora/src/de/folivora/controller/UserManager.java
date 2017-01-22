@@ -78,9 +78,16 @@ public class UserManager {
 	 */
 	public boolean isUniqueUser(User inputUser) {
 		for(User u : dC.getUserList()) {
-			if(u.getName().equals(inputUser.getName())
-					|| u.getEmail().equals(inputUser.getEmail())) {
-				return false;
+			if(Constants.USER_CHECK_UNIQUENESS_WITH_CASE_INSENSITIVE) {
+				if(u.getName().toUpperCase().equals(inputUser.getName().toUpperCase())
+						|| u.getEmail().toUpperCase().equals(inputUser.getEmail().toUpperCase())) {
+					return false;
+				}
+			} else {
+				if(u.getName().equals(inputUser.getName())
+						|| u.getEmail().equals(inputUser.getEmail())) {
+					return false;
+				}
 			}
 		}
 		

@@ -10,6 +10,8 @@ public class Constants {
 	public static final double VERSION = 1.1;
 	public static final long SERIAL_VERSION_UID = 1841986427873375189L;
 	
+	public static final boolean USER_CHECK_UNIQUENESS_WITH_CASE_INSENSITIVE = true;
+	
 	public static final boolean USERCREDIT_ENABLE_INITIAL_BALANCE = true;
 	public static final double USERCREDIT_INITIAL_BALANCE = 100.00;
 	
