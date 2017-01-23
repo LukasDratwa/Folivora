@@ -91,9 +91,9 @@
 				var credit = parseFloat(<% out.write("" + usr.getCredit().getBalance()); %>).toFixed(2);
 				if(window.location.href.indexOf("credit.jsp") != -1) {
 					$(".navbar-li-element").removeClass("active");
-					$("#navbar-left-ul").append("<li class='navbar-li-element active' id='navbar-li-element-credit'><a id='navbar-li-element-credit-link' href='credit.jsp'>Guthaben: " + credit + " €<span id='credit-animation-span'></span></a></li>");
+					$("#navbar-left-ul").append("<li class='navbar-li-element active' id='navbar-li-element-credit'><a id='navbar-li-element-credit-link' href='userSettings.jsp'>Guthaben: " + credit + " €<span id='credit-animation-span'></span></a></li>");
 				} else {
-					$("#navbar-left-ul").append("<li class='navbar-li-element' id='navbar-li-element-credit'><a id='navbar-li-element-credit-link' href='credit.jsp'>Guthaben: " + credit + " €<span id='credit-animation-span'></span></a></li>");
+					$("#navbar-left-ul").append("<li class='navbar-li-element' id='navbar-li-element-credit'><a id='navbar-li-element-credit-link' href='userSettings.jsp'>Guthaben: " + credit + " €<span id='credit-animation-span'></span></a></li>");
 				}
 				
 				// Navbar messages
