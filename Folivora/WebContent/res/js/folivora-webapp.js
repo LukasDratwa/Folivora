@@ -243,6 +243,12 @@ $(document).ready(function() {
 	});
 	
 	$("#srform").submit(function(e) {
+		if ($("#srform-address").val() === "") {
+			$.notify("Fehler beim Erstellen des Gesuchs - du hast noch keinen Lieferort bestimmt!", "error");
+			e.preventDefault();
+			return;
+		}
+		
 		webappDataObj.updateNewSrObj();
 		webappDataObj.newSrObj.token = $.cookie("token");
 		
