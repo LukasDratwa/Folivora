@@ -119,9 +119,9 @@
 				// Navbar userSettings
 				if(window.location.href.indexOf("userSettings.jsp") != -1) {
 					$(".navbar-li-element").removeClass("active");
-					$("#navbar-right-ul").append("<li class='navbar-li-element active' id='navbar-li-element-username'><a href='userSettings.jsp'>" + username + "</a></li>");
+					$("#navbar-right-ul").append("<li class='navbar-li-element active' id='navbar-li-element-username'><a href='user.jsp'>" + username + "</a></li>");
 				} else {
-					$("#navbar-right-ul").append("<li class='navbar-li-element' id='navbar-li-element-username'><a href='userSettings.jsp'>" + username + "</a></li>");
+					$("#navbar-right-ul").append("<li class='navbar-li-element' id='navbar-li-element-username'><a href='user.jsp'>" + username + "</a></li>");
 				}
 				
 				

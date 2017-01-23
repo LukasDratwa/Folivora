@@ -98,7 +98,7 @@
     <div class="container">
     	<div class="row">
     		<div class="col-md-12">
-    			<h4>Feedback für <a href="user.jsp?id<% out.write(userFeedbackReceiver.getId().toString());%>"><% out.write(userFeedbackReceiver.getName()); %></a>
+    			<h4>Feedback für <a href="user.jsp?id=<% out.write(userFeedbackReceiver.getId().toString());%>"><% out.write(userFeedbackReceiver.getName()); %></a>
     			 zum Gesuch "<% out.write(srFeedback.getTitle()); %>"</h4>
     		</div>
     		<% if(!userCreatedFeedbackAlready) {%>

@@ -8,4 +8,9 @@ package de.folivora.model;
  */
 public enum Gender {
 	MALE, FEMALE;
+	
+	@Override
+	public String toString() {
+		return name() == "MALE" ? "männlich" : "weiblich";
+	}
 }

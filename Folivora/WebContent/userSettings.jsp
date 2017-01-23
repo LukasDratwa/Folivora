@@ -32,10 +32,10 @@ User signedInUser = (User)request.getAttribute("user");
    						<label>Geschlecht:</label>
    						<div class="input-group">
 							<div class="input-group-btn">
-								<button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									<% out.write("" + signedInUser.getGender()); %> <span class="caret"></span>
+								<button type="button" class="btn btn-default btn-block dropdown-toggle text-left" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									<span class="pull-left"><% out.write(signedInUser.getGender() == null ? "Keine Angabe" : signedInUser.getGender().toString()); %>&nbsp;<span class="caret"></span></span>
 								</button>
-								<ul class="dropdown-menu">
+								<ul class="dropdown-menu dropdown-menu-left">
 									<li><a href="#">Keine Angabe</a></li>
 									<li><a href="#">Männlich</a></li>
 									<li><a href="#">Weiblich</a></li>
@@ -59,7 +59,7 @@ User signedInUser = (User)request.getAttribute("user");
 						<label for="hometown">Neues Passwort bestätigen:</label>
 						<input type="password" name="new-pass-confirm" class="form-control" />
 					</div>
-					<button type="submit" class="btn btn-success">Speichern</button>
+					<button type="submit" class="btn btn-success" onclick="alert('TODO')">Speichern</button>
     			</form>
     			<h4>Guthaben aufladen</h4>
 				<div class="form-group">
@@ -68,7 +68,7 @@ User signedInUser = (User)request.getAttribute("user");
 						<input type="text" class="form-control" value="<% out.write("" + signedInUser.getCredit().getBalance()); %>" />
 						<span class="input-group-addon">&euro;</span>
 						<span class="input-group-btn">
-							<button class="btn btn-default btn-primary" type="button">Aufladen…</button>
+							<button class="btn btn-default btn-primary" type="button" onclick="alert('TODO')">Aufladen…</button>
 						</span>
 					</div>
 				</div>

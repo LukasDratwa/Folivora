@@ -1,7 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="UTF-8" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html><head>
+
+<html>
   <%@ include file="webappHead.jsp" %>
   
   <body>
@@ -18,7 +19,7 @@
   				<form role="form" id="loginForm"  method="post">
   					<div>
 						<label for="loginform-username">Nutzername:</label>
-						<input name="username" class="form-control" id="loginform-username" placeholder="Nutzername oder Email eingeben" >
+						<input name="username" class="form-control" id="loginform-username" placeholder="Nutzername oder E-Mail eingeben" >
 					</div>
  					
 					<div>
@@ -49,8 +50,8 @@
 						<input name="forename" class="form-control" id="signupform-username" placeholder="Nutzername eingeben" required>
 					</div>
 					<div class="form-group">
-						<label for="email">Email:</label>
-						<input name="email" type="email" class="form-control" id="signupform-email" placeholder="Email eingeben" required>
+						<label for="email">E-Mail:</label>
+						<input name="email" type="email" class="form-control" id="signupform-email" placeholder="E-Mail eingeben" required>
 					</div>
 					<div class="form-group">
 						<label for="">Geschlecht:</label>
@@ -60,14 +61,14 @@
 					</div>
 					<div class="form-group">
 						<label for="birthday">Geburtsdatum:</label>
-						<input name="birthday" type="date" class="form-control" id="signupform-birthday" placeholder="" >
+						<input name="birthday" type="date" class="form-control" id="signupform-birthday" placeholder="">
 					</div>
 					<div class="form-group">
 						<label for="password">Password:</label>
 						<input name="password" type="password" class="form-control" id="signupform-password" placeholder="Enter password" required>
 					</div>
 					<div class="form-group">
-						<label for="confirm_password"> Confirm Password:</label>
+						<label for="confirm_password">Passwort bestätigen:</label>
 						<input name="confirm_password" type="password" class="form-control" id="signupform-confirm-password" placeholder="Passwort wiederholen" required>
 					</div>
 					<div class="form-group">
@@ -81,4 +82,5 @@
 		</div>
   </div>
 
-</body></html>
+</body>
+</html>
