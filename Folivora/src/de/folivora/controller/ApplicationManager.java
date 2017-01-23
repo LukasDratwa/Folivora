@@ -119,6 +119,11 @@ public class ApplicationManager {
 			User feedbackCreator, SearchRequest referencedSearchRequest) {
 		Feedback f = factory_createFeedback(rating, description, feedbackCreator, referencedSearchRequest);
 		
+		// Don't allow null descriptions
+		if(description == null) {
+			description = "";
+		}
+		
 		// Save the given feedback in the transaction and in the list of received feedbacks
 		User feedbackReceiver = null;
 		if(referencedSearchRequest.getUserCreator().equals(feedbackCreator)) {
