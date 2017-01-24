@@ -1,6 +1,6 @@
 package de.folivora.request;
 
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 
@@ -90,15 +90,16 @@ public class AccessLayer {
 	 * 
 	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
 	 * @param newUser - the data of the new user
-	 * @param session - the session of the request
+	 * @param request - the request
 	 */
-	public static void signUp(User newUser, HttpSession session) {
+	public static void signUp(User newUser, HttpServletRequest request) {
 		UserManager uManager = ApplicationManager.getApplicationManagerInstance().getuManager();
 		User user = uManager.createAndSaveUser(newUser.getName(), newUser.getPassword(), newUser.getBirthday(), newUser.getGender(),
 				newUser.getEmail(), Constants.USERCREDIT_ENABLE_INITIAL_BALANCE ? Constants.USERCREDIT_INITIAL_BALANCE : 0.0,
 						UserType.NORMAL, newUser.getHometown());
-		uManager.authenticate(user.getName(), user.getPassword()); // To generate a token for the user
-		user.setSession(session);
+		uManager.authenticate(user.getName(), user.getPassword(), request.getRemoteAddr()); // To generate a token for the user
+		user.setSession(request.getSession());
+		user.setRemoteAdress(request.getRemoteAddr());
 	}
 	
 	/**

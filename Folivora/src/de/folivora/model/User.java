@@ -63,6 +63,9 @@ public class User {
 	@Transient
 	private List<Message> relevantMessages = new ArrayList<Message>();
 	
+	@Transient
+	private String remoteAdress = null;
+	
 	public User(String name, String password, Date birthday, Gender gender,
 			String email, UserCredit userCredit, UserType userType, String hometown) {
 		this.name = name;
@@ -320,5 +323,19 @@ public class User {
 		jo.addProperty("credit", this.getCredit().getBalance());
 		
 		return jo;
+	}
+
+	/**
+	 * @return the remoteAdress
+	 */
+	public String getRemoteAdress() {
+		return remoteAdress;
+	}
+
+	/**
+	 * @param remoteAdress the remoteAdress to set
+	 */
+	public void setRemoteAdress(String remoteAdress) {
+		this.remoteAdress = remoteAdress;
 	}
 }

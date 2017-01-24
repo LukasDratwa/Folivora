@@ -76,9 +76,10 @@ public class SignInServlet extends HttpServlet {
 			signInInput = gson.fromJson(sB.toString(), SignInInput.class);
 			
 			String nameOrEmail = signInInput.getEmail() != null ? signInInput.getEmail() : signInInput.getName();
-			boolean signedIn = uManager.authenticate(nameOrEmail, signInInput.getPassword());
+			boolean signedIn = uManager.authenticate(nameOrEmail, signInInput.getPassword(), request.getRemoteAddr());
 			User user = uManager.getUserWithNameOrEmail(nameOrEmail);
 			if(signedIn) {
+				user.setRemoteAdress(request.getRemoteAddr());
 				user.setSession(httpSession);
 				ResponseObject ro = new ResponseObject(200, "Successfully signed in!", response);
 				ro.setToken(user.getTokenStorage().getToken());

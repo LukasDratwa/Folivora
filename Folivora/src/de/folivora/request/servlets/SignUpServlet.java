@@ -76,7 +76,7 @@ public class SignUpServlet extends HttpServlet {
 				ApplicationManager aManager = ApplicationManager.getApplicationManagerInstance();
 				UserManager uManager = aManager.getuManager();
 				if(uManager.isUniqueUser(user)) {
-					AccessLayer.signUp(user, request.getSession());
+					AccessLayer.signUp(user, request);
 					ResponseObject ro = new ResponseObject(200, "Successfully signed up!", response);
 					ro.setToken(uManager.getUserWithNameOrEmail(user.getName()).getTokenStorage().getToken());
 					ro.writeResponse();

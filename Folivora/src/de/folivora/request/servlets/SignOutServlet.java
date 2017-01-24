@@ -48,6 +48,7 @@ public class SignOutServlet extends HttpServlet {
 		User user = uManager.getUserWithSession(request.getSession());
 		if(user != null) {
 			user.setSession(null);
+			user.setRemoteAdress(null);
 		}
 		
 		response.setStatus(200);

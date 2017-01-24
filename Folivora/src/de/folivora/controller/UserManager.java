@@ -34,13 +34,20 @@ public class UserManager {
 	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
 	 * @param nameOrEmail - the name or email of the user
 	 * @param pwd - the password
+	 * @param remoteAdress - the remote adress of the request
 	 * @return true if the user could signed in, false if not
 	 */
-	public boolean authenticate(String nameOrEmail, String pwd) {
+	public boolean authenticate(String nameOrEmail, String pwd, String remoteAdress) {
 		for(User user : dC.getUserList()) {
 			if(user.getName().equals(nameOrEmail)
 					|| user.getEmail().equals(nameOrEmail)) {
 				if(user.getPassword().equals(pwd)) {
+					// If multiple log ins with the ip aren't allowed:
+					if(! Constants.USER_ALLOW_MULTIPLE_SESSIONS_WITH_SAME_IP
+							&& isRemoteAdressAlreadyInUsage(remoteAdress)) {
+						return false;
+					}
+					
 					user.refreshTokenStorage(Util.getTrimmedToken(false, Constants.TOKEN_SESSION_LENGTH, ""));
 					HibernateUpdate.updateObject(user.getTokenStorage());
 					return true;
@@ -92,6 +99,23 @@ public class UserManager {
 		}
 		
 		return true;
+	}
+	
+	/**
+	 * Check if there is already a signed in user with the given remote address
+	 * 
+	 * <hr>Created on 24.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param remoteAdress - the address
+	 * @return true if there is already a signed in user with the given ip
+	 */
+	public boolean isRemoteAdressAlreadyInUsage(String remoteAdress) {
+		for(User usr : dC.getUserList()) {
+			if(usr.getRemoteAdress() != null
+					&& usr.getRemoteAdress().equals(remoteAdress)) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	/**
