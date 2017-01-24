@@ -21,6 +21,7 @@
 		<mapping class="de.folivora.model.Transaction"></mapping>
 		<mapping class="de.folivora.model.SearchRequest"></mapping>
 		<mapping class="de.folivora.model.messenger.Message"></mapping>
+		<mapping class="de.folivora.model.AdditionalReward"></mapping>
 		<mapping class="de.folivora.model.TokenStorage"></mapping>
     </session-factory>
 </hibernate-configuration>

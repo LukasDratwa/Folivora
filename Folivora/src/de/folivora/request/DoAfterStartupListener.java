@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 import de.folivora.controller.ApplicationManager;
 import de.folivora.controller.DataContainer;
 import de.folivora.controller.UserManager;
+import de.folivora.model.AdditionalReward;
 import de.folivora.model.Feedback;
 import de.folivora.model.SearchRequest;
 import de.folivora.model.Transaction;
@@ -50,6 +51,13 @@ public class DoAfterStartupListener implements ServletContextListener {
 			// 6. Start update Thread
 			updateThread = new UpdateDaemon();
 			updateThread.start();
+			
+			/*long date = 1485283196437L;
+			User userCreator = aManager.getuManager().getFolivoraUser();
+			AdditionalReward ar = aManager.createSaveAndPublishAdditionalReward(new Date(date), userCreator, 2.0);
+			
+			User lukas = aManager.getuManager().getUserWithNameOrEmail("Lukas");
+			aManager.activateAddtionalReward(lukas, ar);*/
 		} catch(Exception e) {
 			logger.error("Error while startup!", e);
 		}
@@ -84,7 +92,13 @@ public class DoAfterStartupListener implements ServletContextListener {
 		List<Message> messages = HibernateLoad.loadMessageList();
 		if(messages != null && messages.size() > 0) {
 			aManager.getdC().setMessageList(messages);
-		}	
+		}
+		
+		// Load addtional rewards
+		List<AdditionalReward> additionalRewards = HibernateLoad.loadAdditionalRewardList();
+		if(additionalRewards != null && additionalRewards.size() > 0) {
+			aManager.getdC().setAdditionalRewardList(additionalRewards);
+		}
 	}
 	
 	/**

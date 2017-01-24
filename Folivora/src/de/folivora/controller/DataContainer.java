@@ -3,6 +3,7 @@ package de.folivora.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.folivora.model.AdditionalReward;
 import de.folivora.model.SearchRequest;
 import de.folivora.model.Transaction;
 import de.folivora.model.User;
@@ -19,12 +20,14 @@ public class DataContainer {
 	private List<SearchRequest> searchRequestList;
 	private List<Transaction> transactionList;
 	private List<Message> messageList;
+	private List<AdditionalReward> additionalRewardList;
 	
 	public DataContainer() {
 		this.userList = new ArrayList<User>();
 		this.searchRequestList = new ArrayList<SearchRequest>();
 		this.transactionList = new ArrayList<Transaction>();
 		this.messageList = new ArrayList<Message>();
+		this.additionalRewardList = new ArrayList<AdditionalReward>();
 	}
 	
 	/**
@@ -81,5 +84,19 @@ public class DataContainer {
 	 */
 	public void setMessageList(List<Message> messageList) {
 		this.messageList = messageList;
+	}
+
+	/**
+	 * @return the additionalRewardList
+	 */
+	public List<AdditionalReward> getAdditionalRewardList() {
+		return additionalRewardList;
+	}
+
+	/**
+	 * @param additionalRewardList the additionalRewardList to set
+	 */
+	public void setAdditionalRewardList(List<AdditionalReward> additionalRewardList) {
+		this.additionalRewardList = additionalRewardList;
 	}
 }

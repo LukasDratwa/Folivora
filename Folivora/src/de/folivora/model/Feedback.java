@@ -48,8 +48,7 @@ public class Feedback {
 	/**
 	 * Protected default constructor for hibernate mapping.
 	 */
-	public Feedback() {
-		
+	protected Feedback() {
 	}
 	
 	@Override

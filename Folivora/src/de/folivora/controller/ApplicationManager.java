@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 
 import com.google.gson.JsonArray;
 
+import de.folivora.model.AdditionalReward;
 import de.folivora.model.Feedback;
 import de.folivora.model.Rating;
 import de.folivora.model.SearchRequest;
@@ -594,6 +595,116 @@ public class ApplicationManager {
 	 */
 	private Message factory_createMessage(String title, String text, User sender, User receiver, SearchRequest referencedSr) {
 		return new Message(title, text, sender, receiver, referencedSr);
+	}
+	
+	/**
+	 * 
+	 * 
+	 * <hr>Created on 24.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param userReceiver
+	 * @param ar
+	 * @return true if the additional reward could be activated successfully
+	 */
+	public boolean activateAddtionalReward(User userReceiver, AdditionalReward ar) {
+		if(ar.isInValidTimeframe() && !ar.isActivated()) {
+			ar.setActivated(true);
+			ar.setActivatedTimestamp(new Date());
+			ar.setUserActivator(userReceiver);
+			HibernateUpdate.updateObject(ar);
+			
+			User folivora = getuManager().getFolivoraUser();
+			Transaction t = createAndSaveTransaction(ar.getValue(), 0.0, folivora, userReceiver, "", null);
+			executeTransaction("", t);
+			logger.info(userReceiver + " activated successfully the additional reward: " + ar);
+			return true;
+		}
+		
+		logger.info(userReceiver + " failed to activate the additional reward: " + ar);
+		return false;
+	}
+	
+	/**
+	 * Method to get the first found published valid additional reward.
+	 * 
+	 * <hr>Created on 24.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @return
+	 */
+	public AdditionalReward getOneValidPublishedAdditionalReward() {
+		for(AdditionalReward ar : dC.getAdditionalRewardList()) {
+			if(ar.isInValidTimeframe() && !ar.isActivated()) {
+				return ar;
+			}
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Method to count the actual published valid additional rewards.
+	 * 
+	 * <hr>Created on 24.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @return the amount of the actual published valid additional rewards
+	 */
+	public int countAmountOfValidPublishedAdditionalRewards() {
+		int result = 0;
+		
+		for(AdditionalReward ar : dC.getAdditionalRewardList()) {
+			if(ar.isInValidTimeframe() && !ar.isActivated()) {
+				result++;
+			}
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * Method to create, save and directly publish additional rewards
+	 * 
+	 * <hr>Created on 24.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param amount - the amount of the rewards
+	 * @param validTill - date till the additional rewards will be valid
+	 * @param userCreator - the creating user
+	 * @param value - the value of the rewards
+	 * @return the created additional reward list
+	 */
+	public List<AdditionalReward> createSaveAndPublishAdditionalRewards(int amount, Date validTill, User userCreator, double value) {
+		List<AdditionalReward> result = new ArrayList<AdditionalReward>();
+
+		for(int i=0; i<amount; i++) {
+			AdditionalReward ar = createSaveAndPublishAdditionalReward(validTill, userCreator, value);
+			result.add(ar);
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * Method to create, save and directly publish an additional reward
+	 * 
+	 * <hr>Created on 24.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param validTill - date till this additional reward will be valid
+	 * @param userCreator - the creating user
+	 * @param value - the value of the reward
+	 * @return the created additional reward
+	 */
+	public AdditionalReward createSaveAndPublishAdditionalReward(Date validTill, User userCreator, double value) {
+		AdditionalReward ar = factory_createAdditionalReward(new Date(), validTill, userCreator, value);
+		dC.getAdditionalRewardList().add(ar);
+		HibernateSave.saveOrUpdateObject(ar);
+		return ar;
+	}
+	
+	/**
+	 * Factory to create a {@link AdditionalReward}
+	 * 
+	 * <hr>Created on 24.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param validFrom
+	 * @param validTill
+	 * @param userCreator
+	 * @return
+	 */
+	private AdditionalReward factory_createAdditionalReward(Date validFrom, Date validTill, User userCreator, double value) {
+		return new AdditionalReward(validFrom, validTill, userCreator, value);
 	}
 	
 	/**

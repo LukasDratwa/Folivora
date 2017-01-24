@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 
+import de.folivora.model.AdditionalReward;
 import de.folivora.model.SearchRequest;
 import de.folivora.model.TokenStorage;
 import de.folivora.model.Transaction;
@@ -27,9 +28,9 @@ public class HibernateLoad {
 	 * 
 	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
 	 * @param id - the userId
-	 * @return - the loaded User or null, if there is no User with the given id in the database
+	 * @return the loaded User or null, if there is no User with the given id in the database
 	 */
-	public static User loadUser(long id) {
+	public static User loadUserWithId(String id) {
 		User usr = null;
 		
 		try {
@@ -56,7 +57,7 @@ public class HibernateLoad {
 	 * @param email - the email
 	 * @return loaded User or null, if there is no User with the given email in the database
 	 */
-	public static User loadUser(String email) {
+	public static User loadUserWithEmail(String email) {
 		User usr = null;
 		
 		try {
@@ -109,9 +110,9 @@ public class HibernateLoad {
 	 * 
 	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
 	 * @param id - the transaction id
-	 * @return - the loaded Transaction or null, if there is no Transaction with the given id in the database
+	 * @return the loaded Transaction or null, if there is no Transaction with the given id in the database
 	 */
-	public static Transaction loadTransaction(long id) {
+	public static Transaction loadTransaction(String id) {
 		Transaction t = null;
 		
 		try {
@@ -163,9 +164,9 @@ public class HibernateLoad {
 	 * 
 	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
 	 * @param id - the search request id
-	 * @return - the loaded SearchRequest or null, if there is no SearchRequest with the given id in the database
+	 * @return the loaded SearchRequest or null, if there is no SearchRequest with the given id in the database
 	 */
-	public static SearchRequest loadSearchRequest(long id) {
+	public static SearchRequest loadSearchRequest(String id) {
 		SearchRequest sr = null;
 		
 		try {
@@ -216,10 +217,10 @@ public class HibernateLoad {
 	 * Method to load a specific Message of the database
 	 * 
 	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
-	 * @param id - the transaction id
-	 * @return - the loaded Message or null, if there is no Message with the given id in the database
+	 * @param id - the message id
+	 * @return the loaded Message or null, if there is no Message with the given id in the database
 	 */
-	public static Message loadMessage(long id) {
+	public static Message loadMessage(String id) {
 		Message message = null;
 		
 		try {
@@ -271,9 +272,9 @@ public class HibernateLoad {
 	 * 
 	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
 	 * @param id - the TokenStorage id
-	 * @return - the loaded TokenStorage or null, if there is no TokenStorage with the given id in the database
+	 * @return the loaded TokenStorage or null, if there is no TokenStorage with the given id in the database
 	 */
-	public static TokenStorage loadTokenStorage(long id) {
+	public static TokenStorage loadTokenStorage(String id) {
 		TokenStorage ts = null;
 		
 		try {
@@ -291,5 +292,59 @@ public class HibernateLoad {
 		}
 		
 		return ts;
+	}
+	
+	/**
+	 * Method to load a specific AdditionalReward of the database
+	 * 
+	 * <hr>Created on 24.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param id - the additional reward id
+	 * @return the loaded AdditionalMessage or null, if there is no AdditionalMessage with the given id in the database
+	 */
+	public static AdditionalReward loadAdditionalMessage(String id) {
+		AdditionalReward additionalReward = null;
+		
+		try {
+			Session session = HibernateUtil.getSessionFactory().openSession();	
+			additionalReward = (AdditionalReward) session.createQuery("from AdditionalReward where id = '" + id + "'").uniqueResult();
+	        session.close();
+		} catch(HibernateException e) {
+			logger.error("Failed to load AdditionalReward with the id " + id + "!", e);
+		}
+		
+		if(additionalReward == null) {
+			logger.warn("AdditionalReward with ID " + id + " could not be loaded.");
+		} else {
+			logger.info("Loaded AdditionalReward: " + additionalReward);
+		}
+		
+		return additionalReward;
+	}
+	
+	/**
+	 * Method to load all AdditionalReward of the database
+	 * 
+	 * <hr>Created on 24.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @return the loaded AdditionalReward list
+	 */
+	@SuppressWarnings("unchecked")
+	public static List<AdditionalReward> loadAdditionalRewardList() {
+		ArrayList<AdditionalReward> additionalRewardList = null;
+		
+		try {
+			Session session = HibernateUtil.getSessionFactory().openSession();		      
+			additionalRewardList = (ArrayList<AdditionalReward>) session.createQuery("from AdditionalReward order by id asc").list();
+			session.close();
+			
+			if(additionalRewardList != null) {
+				for(AdditionalReward msg : additionalRewardList) {
+					logger.info("Loaded AdditionalReward: " + msg);
+				}
+			}
+		} catch(HibernateException e) {
+			logger.error("Failed to load AdditionalReward list!", e);
+		}
+		
+		return additionalRewardList;
 	}
 }
