@@ -89,7 +89,7 @@ public class FinishSrServlet extends HttpServlet {
 					ResponseObject ro = new ResponseObject(200, "Ok", response);
 					ro.setSr(sr.getAsJsonObject());
 					ro.writeResponse();
-					logger.warn("Successfully finished sr: " + sr);
+					logger.info("Successfully finished sr: " + sr);
 				} else {
 					new ResponseObject(400, "There is no SR with the id=" + input.getSrId() + "!", response).writeResponse();
 					logger.warn("Failed to finish SR! " + sr);

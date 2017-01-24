@@ -119,4 +119,11 @@ public class Feedback {
 	public Date getCreationTimestamp() {
 		return creationTimestamp;
 	}
+
+	/**
+	 * @return the id
+	 */
+	public ObjectId getId() {
+		return id;
+	}
 }

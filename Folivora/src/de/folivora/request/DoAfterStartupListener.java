@@ -14,11 +14,13 @@ import de.folivora.controller.UserManager;
 import de.folivora.model.AdditionalReward;
 import de.folivora.model.Feedback;
 import de.folivora.model.SearchRequest;
+import de.folivora.model.SearchRequestStatus;
 import de.folivora.model.Transaction;
 import de.folivora.model.User;
 import de.folivora.model.UserType;
 import de.folivora.model.messenger.Message;
 import de.folivora.storage.HibernateLoad;
+import de.folivora.storage.HibernateUpdate;
 
 /**
  * Listener to launch, init and shutdown the application.
@@ -46,18 +48,11 @@ public class DoAfterStartupListener implements ServletContextListener {
 			enrichLoadedDatabaseData(aManager);
 			
 			// 5. Check for corrupted data
-			// TODO
+			checkForCorruptedData();
 			
 			// 6. Start update Thread
 			updateThread = new UpdateDaemon();
 			updateThread.start();
-			
-			/*long date = 1485283196437L;
-			User userCreator = aManager.getuManager().getFolivoraUser();
-			AdditionalReward ar = aManager.createSaveAndPublishAdditionalReward(new Date(date), userCreator, 2.0);
-			
-			User lukas = aManager.getuManager().getUserWithNameOrEmail("Lukas");
-			aManager.activateAddtionalReward(lukas, ar);*/
 		} catch(Exception e) {
 			logger.error("Error while startup!", e);
 		}
@@ -178,6 +173,36 @@ public class DoAfterStartupListener implements ServletContextListener {
 		for(Message msg : dC.getMessageList()) {
 			uManager.getUserWithId(msg.getSender().getId().toString()).getRelevantMessages().add(msg);
 			uManager.getUserWithId(msg.getReceiver().getId().toString()).getRelevantMessages().add(msg);
+		}
+	}
+	
+	private void checkForCorruptedData() {
+		ApplicationManager aManager = ApplicationManager.getApplicationManagerInstance();
+		
+		
+		for(SearchRequest sr : aManager.getdC().getSearchRequestList()) {
+			// Check for duplicated feedback references
+			if(sr.getStatus() == SearchRequestStatus.STATISFIED
+					&& sr.getFeedbackOfSearchingUser() != null
+					&& sr.getFeedbackOfDeliveringUser() != null
+					&& sr.getFeedbackOfSearchingUser().getId().toString().equals(sr.getFeedbackOfDeliveringUser().getId().toString())) {
+				logger.warn("Found duplicated feedback in search request " + sr);
+				
+				String userCreatorIdFeedbackOfDelivering = sr.getFeedbackOfDeliveringUser().getFeedbackCreator().getId().toString();
+				String srCreatorId = sr.getUserCreator().getId().toString();
+				
+				// Determine if feedback of delivering or searching user is placed false
+				if(srCreatorId.equals(userCreatorIdFeedbackOfDelivering)) {
+					// Feeback of delivering user is wrong placed
+					logger.info("Deleted missplaced feedback (of delivering user) " + sr.getFeedbackOfDeliveringUser() + " in " + sr);
+					sr.setFeedbackOfDeliveringUser(null);
+				} else {
+					logger.info("Deleted missplaced feedback (of searching user) " + sr.getFeedbackOfSearchingUser() + " in " + sr);
+					sr.setFeedbackOfSearchingUser(null);
+				}
+				
+				HibernateUpdate.updateObject(sr);
+			}
 		}
 	}
 	

@@ -2,6 +2,8 @@ package de.folivora.request;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
+
 import com.google.gson.JsonArray;
 
 import de.folivora.controller.ApplicationManager;
@@ -24,6 +26,8 @@ import de.folivora.util.Util;
  * @author <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a>
  */
 public class AccessLayer {
+	private static Logger logger = Logger.getLogger(AccessLayer.class);
+	
 	/**
 	 * TODO
 	 * 
@@ -55,6 +59,7 @@ public class AccessLayer {
 		// Check if users already gave feedback for this sr
 		if(callingUser.getId().toString().equals(sr.getUserCreator().getId().toString()) && sr.getFeedbackOfSearchingUser() != null
 				|| callingUser.getId().toString().equals(sr.getUserStasisfier().getId().toString()) && sr.getFeedbackOfDeliveringUser() != null) {
+			logger.warn("Failed to create feedback, user aldready gave feedback for: " + sr);
 			return false;
 		}
 		
@@ -63,10 +68,13 @@ public class AccessLayer {
 		if(callingUser.getId().toString().equals(sr.getUserCreator().getId().toString())) {
 			sr.setFeedbackOfSearchingUser(f);
 			feedbackReceiver = sr.getUserStasisfier();
-		} else {
 			
+			logger.info("Set feedback of searching user in " + sr + ": " + f);
+		} else {
 			sr.setFeedbackOfDeliveringUser(f);
 			feedbackReceiver = sr.getUserCreator();
+			
+			logger.info("Set feedback of delivering user in " + sr + ": " + f);
 		}
 		HibernateUpdate.updateObject(sr);
 		
@@ -153,19 +161,24 @@ public class AccessLayer {
 				folivora, callingUser, Util.getSrUnlockToken(), sr);
 		
 		aManager.createAndSaveMessage("\"" + sr.getTitle() + "\" angenommen.",
-				"Das Gesuch \"" + sr.getTitle() + "\" von " + sr.getUserCreator().getName()
-				+ "wurde erfolgreich von Ihnen angenommen. Bitte setzen Sie sich mit "
+				"Das Gesuch \"" + sr.getTitle() + "\" von <a href='user.jsp?id=" + sr.getUserCreator().getId().toString() + "'>"
+				+ sr.getUserCreator().getName() + "</a> wurde erfolgreich von Ihnen angenommen. Bitte setzen Sie sich mit "
 				+ sr.getUserCreator().getName() + " bezüglich der Lieferdetails in Verbindung."
 				+ "Bei erfolgreichem Abschluss erwartet Sie eine Gutschrift über "
-				+ sr.getCostsAndReward() + "€.\n\n"
+				+ sr.getCostsAndReward() + "€.<br><br>"
 				+ "Vergessen Sie nicht nach erfolgreicher Lieferung nach dem Freischaltungscode "
-				+ "zu fragen, damit wir Ihnen die Kosten und die Belohnung gutschreiben können.", folivora, callingUser, sr);
+				+ "zu fragen, damit wir Ihnen die Kosten und die Belohnung gutschreiben können."
+				+ "<br><br>"
+				+ "Profil von " + sr.getUserCreator().getName() + ": <a href='user.jsp?id=" + sr.getUserCreator().getId().toString() + "'>link</a>",
+				folivora, callingUser, sr);
 		
 		aManager.createAndSaveMessage("\"" + sr.getTitle() + "\" angenommen.",
-				"Ihr Gesuch \"" + sr.getTitle() + "\" wurde erfolgreich von " + callingUser.getName()
-				+ " angenommen. \n\n"
+				"Ihr Gesuch \"" + sr.getTitle() + "\" wurde erfolgreich von <a href='user.jsp?id=" + callingUser.getId().toString() + "'>"
+				+ callingUser.getName() + "</a> angenommen.<br><br>"
 				+ "Bitte vergessen Sie nicht dem Lieferanten bei erfolgreicher Lieferung folgenden Code zu übergeben: "
-				+ "<b class='msg-transaction-unlock-token'>" + t.getUnlockToken() + "</b>",
+				+ "<b class='msg-transaction-unlock-token'>" + t.getUnlockToken() + "</b>"
+				+ "<br><br>"
+				+ "Profil von " + callingUser.getName() + ": <a href='user.jsp?id=" + callingUser.getId().toString() + "'>link</a>",
 				folivora, sr.getUserCreator(), sr);
 	}
 	
