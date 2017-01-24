@@ -573,6 +573,15 @@ function addMarker(sr, map) {
 		var sr = this.sr;
 		console.log("Marker clicked, referenced sr: ", sr);
 		
+		// Special event of additional rewards
+		var additionalRewardsEventAnnouncementString = "";
+		if(amountOfAdditionalRewards > 0) {
+			additionalRewardsEventAnnouncementString = "<hr>"
+				+ "<p><b>Event: </b> Liefern Sie zügig und Sie sichern sich eine zusätzliche €-Belohnung!"
+				+ " Noch " + amountOfAdditionalRewards + " zusätzliche Belohnungen stehen zur Verfügung.</p>"
+				+ "<hr>";
+		}
+		
 		var btn = "";
 		if(typeof webappDataObj.userData.id != "undefined" && webappDataObj.userData.id != -1) {
 			if(webappDataObj.userData.id != sr.userCreator.id) {
@@ -580,6 +589,7 @@ function addMarker(sr, map) {
 						+ "\"" + webappDataObj.userData.id + "\", \"" + sr.id + "\")'"+ (disableStatisfyBtn ? " disabled " : "")
 						+ "id='btn-map-infowindow-statisfy'>";
 			} else {
+				additionalRewardsEventAnnouncementString = ""; // Just show this information to not signed in users and not creators of the sr
 				btn = "<input type='button' class='btn btn-default' value='Zurückziehen' onclick='cancelSr("
 						+ "\"" + webappDataObj.userData.id + "\", \"" + sr.id + "\")'" + (disableCancelBtn ? " disabled " : "")
 						+ "id='btn-map-infowindow-cancel'>";
@@ -592,6 +602,7 @@ function addMarker(sr, map) {
 				+ "<p>Lieferung möglich bis " + formatLongDate(sr.possibleDelivery_to) + " an "
 				+ sr.address + "</p>"
 				+ "<p>Von \"" + sr.userCreator.name + "\"</p></div>"
+				+ additionalRewardsEventAnnouncementString
 				+ btn
 				+ (disableStatisfyBtn ? "<br><br><div><p>Sie wollen dieses Gesuch bereits befriedigen, setzten Sie sich mit X in Verbindung.</p></div>" : "")
 				+ (disableCancelBtn ? "<br><br><div><p>Jemand möchte bereits liefern, einfaches Zurückziehen ist leider nicht mehr möglich.</p></div>" : "")

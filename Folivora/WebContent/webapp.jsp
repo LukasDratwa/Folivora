@@ -8,6 +8,14 @@
 <html>
   <%@ include file="webappHead.jsp" %>
   
+  <script>
+	  <%
+	  	// Quick and dirty
+	  	int amountOfAdditionalRewards = ApplicationManager.getApplicationManagerInstance().countAmountOfValidPublishedAdditionalRewards();
+	  %>
+	  var amountOfAdditionalRewards = <%out.write("" + amountOfAdditionalRewards); %>;
+  </script>
+  
   <body>
   	<div id="login" class="modal fade" role="dialog">
 	<div class="modal-dialog">
