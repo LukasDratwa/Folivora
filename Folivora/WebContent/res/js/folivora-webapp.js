@@ -266,6 +266,10 @@ $(document).ready(function() {
 				
 				webappDataObj.resetNewSrObj();
 				document.getElementById("srform").reset();
+				
+				if(dummyMarker != null) {
+					dummyMarker.setMap(null);
+				}
 			} else {
 				$.notify("Fehler beim Erstellen des Gesuchs!", "error");
 			}
