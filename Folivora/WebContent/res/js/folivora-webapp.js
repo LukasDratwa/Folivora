@@ -342,6 +342,7 @@ function updatePossibleDelivery(h) {
 	$("#btn-possible-delivery-dropdown").text(h + "h - bis " + getTimeAsString(to) + " Uhr");
 }
 
+var dummyMarker = null;
 function updateGeoData(lat, lng, address) {
 	if(webappDataObj.newSearchRequestClicked) {
 		webappDataObj.newSearchRequestClicked = false;
@@ -352,6 +353,17 @@ function updateGeoData(lat, lng, address) {
 			webappDataObj.newSrObj.address = address;
 			$("#srform-address").val(address);
 		}
+		
+		// Dummy marker for visual impact of the place
+		if(dummyMarker != null) {
+			dummyMarker.setMap(null);
+		}
+		dummyMarker = new google.maps.Marker({
+			position: new google.maps.LatLng(lat, lng),
+			map: webappDataObj.mapData.map,
+			icon: "http://maps.google.com/mapfiles/ms/icons/yellow-dot.png",
+			title: "Neues Gesuch an: " + address,
+		});
 	}
 }
 
