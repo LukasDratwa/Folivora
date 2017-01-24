@@ -604,7 +604,8 @@ function addMarker(sr, map) {
 				+ "<p>Von \"" + sr.userCreator.name + "\"</p></div>"
 				+ additionalRewardsEventAnnouncementString
 				+ btn
-				+ (disableStatisfyBtn ? "<br><br><div><p>Sie wollen dieses Gesuch bereits befriedigen, setzten Sie sich mit X in Verbindung.</p></div>" : "")
+				+ (disableStatisfyBtn ? "<br><br><div><p>Sie wollen dieses Gesuch bereits befriedigen, setzten Sie sich mit "
+						+ sr.userCreator.name + " mithilfe des <a href='messages.jsp'>Messengers</a> in Verbindung.</p></div>" : "")
 				+ (disableCancelBtn ? "<br><br><div><p>Jemand möchte bereits liefern, einfaches Zurückziehen ist leider nicht mehr möglich.</p></div>" : "")
 		);
 	    infowindow.open(map, this);
