@@ -63,18 +63,39 @@ if (user != null) {
 	    			<!-- <p><strong>Guthaben:</strong> <span id="user-credit"></span></p> -->
 	    			<h3>Bewertungen</h3>
 	    			<%
-	    			for (Feedback feedback : feedbacks) {
+	    			if (feedbacks.size() == 0) {
 	    				%>
-	    				<p>
-	    					<% for (int i = 0; i != 5; i++) { %>
-	    						<i class="glyphicon glyphicon-star<% out.write(feedback.getRating().getVal() < (i + 1) ? "-empty" : ""); %>"></i>
-	    					<% } %>
-	    					<em><% out.write(feedback.getDescription()); %></em><br />
-	    					- <a href="user.jsp?id=<% out.write(feedback.getFeedbackCreator().getId().toHexString());%>"><% out.write(feedback.getFeedbackCreator().getName()); %></a>
-	    					am <% out.write(SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.SHORT, SimpleDateFormat.SHORT, Locale.GERMANY).format(feedback.getCreationTimestamp())); %>
-	    				</p>
+	    				<em>Bisher keine Bewertungen erhalten.</em>
 	    				<%
 	    			}
+	    			else {
+	    				int absRating = 0;
+		    			for (Feedback feedback : feedbacks) {
+		    				absRating += feedback.getRating().getVal();
+		    				%>
+		    				<p>
+		    					<% for (int i = 0; i != 5; i++) { %>
+		    						<i class="glyphicon glyphicon-star <% out.write(feedback.getRating().getVal() < (i + 1) ? "grey" : "yellow"); %>"></i>
+		    					<% } %>
+		    					<em><% out.write(feedback.getDescription()); %></em><br />
+		    					- <a href="user.jsp?id=<% out.write(feedback.getFeedbackCreator().getId().toHexString());%>"><% out.write(feedback.getFeedbackCreator().getName()); %></a>
+		    					am <% out.write(SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.SHORT, SimpleDateFormat.SHORT, Locale.GERMANY).format(feedback.getCreationTimestamp())); %>
+		    				</p>
+		    				<%
+		    			}
+		    			double avgRating = absRating / feedbacks.size();
+		    			double avgRatingRounded = Math.round(avgRating * 2) / 2.0;
+		    			%>
+		    			<hr />
+		    			<h4>
+		    				&Oslash;:
+		    				<% for (int i = 0; i != 5; i++) { %>
+		    					<i class="glyphicon glyphicon-star <% out.write(avgRatingRounded < (i + 1) ? (avgRatingRounded - i == 0.5 ? "yellow-half" : "grey") : "yellow"); %>"></i>
+		    				<% } %>
+		    				(<% out.write("" + avgRating); %>)
+		    			</h4>
+		    			<%
+    				}
     			}
 	    		%>
     		</div>
