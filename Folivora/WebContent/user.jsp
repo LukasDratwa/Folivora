@@ -50,7 +50,7 @@ if (user != null) {
     			else { %>
 	    			<% if (isMe) { %>
 	    				<h2>
-	    					<span>Dein Profil</span>
+	    					<span>Mein Profil</span>
 	    					<a href="userSettings.jsp" class="btn btn-primary">Profil bearbeiten</a>
 	    				</h2>
 	    			<% } else { %>

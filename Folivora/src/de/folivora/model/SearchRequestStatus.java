@@ -17,4 +17,48 @@ package de.folivora.model;
  */
 public enum SearchRequestStatus {
 	INACTIVE, ACTIVE, CANCELLED, IN_PROGRESS, STATISFIED, FAILED;
+	
+	@Override
+	public String toString() {
+		switch (this) {
+		case INACTIVE:
+			return "inaktiv";
+			
+		case ACTIVE:
+			return "aktiv";
+			
+		case CANCELLED:
+			return "abgebrochen";
+			
+		case IN_PROGRESS:
+			return "wird durchgeführt";
+			
+		case STATISFIED:
+			return "abgeschlossen";
+			
+		case FAILED:
+			return "fehlgeschlagen";
+		}
+		return super.toString();
+	}
+	
+	public String getColorClassString() {
+		switch (this) {			
+		case ACTIVE:
+			return "primary";
+			
+		case CANCELLED:
+			return "warning";
+			
+		case IN_PROGRESS:
+			return "info";
+			
+		case STATISFIED:
+			return "success";
+			
+		case FAILED:
+			return "danger";
+		}
+		return "default";
+	}
 }

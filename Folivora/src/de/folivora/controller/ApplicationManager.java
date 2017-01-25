@@ -314,6 +314,26 @@ public class ApplicationManager {
 	}
 	
 	/**
+	 * Get all {@link SearchRequest}s which were created by the user with the
+	 * input id as a List
+	 * 
+	 * @param userId - the id of the user
+	 * @return all created search requests
+	 */
+	public List<SearchRequest> getSearchRequestsCreatedByUser(String userId) {
+		User user = getuManager().getUserWithId(userId);
+		List<SearchRequest> result = new ArrayList<>();
+		if(user != null) {
+			for(SearchRequest sr : dC.getSearchRequestList()) {
+				if (sr.getUserCreator().getId().toString().equals(userId)) {
+					result.add(sr);
+				}
+			}
+		}
+		return result;
+	}
+	
+	/**
 	 * Get all active {@link SearchRequest}s as a JsonArray to return them to the client.
 	 * 
 	 * <hr>Created on 14.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>

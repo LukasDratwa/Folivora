@@ -249,6 +249,12 @@ $(document).ready(function() {
 			return;
 		}
 		
+		if ($("#btn-possible-delivery-dropdown").text().indexOf("Mögliche Lieferzeit") > -1) {
+			$.notify("Fehler beim Erstellen des Gesuchs - du hast noch keine Lieferzeit bestimmt!", "error");
+			e.preventDefault();
+			return;
+		}
+		
 		webappDataObj.updateNewSrObj();
 		webappDataObj.newSrObj.token = $.cookie("token");
 		
@@ -280,11 +286,13 @@ $(document).ready(function() {
 		e.preventDefault();
 	});
 	
+	/*
 	$("#btn-srform-submit").mouseover(function() {
 		if($("#btn-possible-delivery-dropdown").text() === "Mögliche Lieferzeit") {
 			updatePossibleDelivery(3);
 		}
 	});
+	*/
 });
 
 function stasifySr(signedInUserId, srId) {
