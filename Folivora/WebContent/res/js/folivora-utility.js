@@ -145,3 +145,8 @@ $.urlParam = function(name) {
     	return decodeURI(results[1]) || 0;
     }
 }
+
+$.dateFromString = function(string) {
+	var dateParts = string.split('.');
+	return new Date(dateParts[2], dateParts[1] - 1, dateParts[0]);
+}

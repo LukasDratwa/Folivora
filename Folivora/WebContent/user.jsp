@@ -24,7 +24,12 @@ String gender = "";
 String hometown = "";
 if (user != null) {
 	registered = SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT, Locale.GERMANY).format(user.getCreationTimestamp());
-	age = user.getBirthday() == null ? "keine Angabe" : "" + (System.currentTimeMillis() - user.getBirthday().getTime()) / (1000 * 60 * 60 * 24 * 365);
+	age = "keine Angabe";
+	if (user.getBirthday() != null) {
+		long timeBetween = System.currentTimeMillis() - user.getBirthday().getTime();
+		double yearsBetween = timeBetween / 3.156e+10;
+		age = "" + (int) Math.floor(yearsBetween);
+	}
 	feedbacks = user.getReceivedFeedbacks();
 	gender = user.getGender() == null ? "keine Angabe" : user.getGender().toString();
 	hometown = user.getHometown() == null ? "keine Angabe" : user.getHometown();

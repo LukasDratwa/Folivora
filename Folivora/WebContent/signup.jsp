@@ -43,7 +43,7 @@
   <div class="container">
   	<div class="row">
   		<div class="col-md-12">
-			<h2>Registration</h2>
+			<h2>Registrierung</h2>
 				<form role="form" id="signupForm"  method="post">
 					<div class="form-group">
 						<label for="forename">Nutzername:</label>
@@ -61,10 +61,10 @@
 					</div>
 					<div class="form-group">
 						<label for="birthday">Geburtsdatum:</label>
-						<input name="birthday" type="date" class="form-control" id="signupform-birthday" placeholder="">
+						<input name="birthday" type="text" class="form-control" id="signupform-birthday" pattern="(0[1-9]|1[0-9]|2[0-9]|3[01]).(0[1-9]|1[012]).[0-9]{4}" placeholder="z.B. 01.12.1993">
 					</div>
 					<div class="form-group">
-						<label for="password">Password:</label>
+						<label for="password">Passwort:</label>
 						<input name="password" type="password" class="form-control" id="signupform-password" placeholder="Enter password" required>
 					</div>
 					<div class="form-group">
@@ -76,7 +76,7 @@
 						<input name="hometown" class="form-control" id="signupform-hometown" placeholder="Wohnort eingeben">
 					</div>
 					
-					<button type="submit" id="submitButton" class="btn btn-default">Submit</button>
+					<button type="submit" id="submitButton" class="btn btn-default">Registrieren</button>
 				</form>
 			</div>
 		</div>
