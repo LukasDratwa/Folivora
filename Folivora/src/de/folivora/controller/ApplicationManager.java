@@ -88,8 +88,8 @@ public class ApplicationManager {
 	 * @param callingUser - the user
 	 * @return the star avg or -1, if the user received no feedbacks yet
 	 */
-	public int getAvgFeedbackRatingOfUser(User callingUser) {
-		int ratingSum = 0;
+	public double getAvgFeedbackRatingOfUser(User callingUser) {
+		double ratingSum = 0;
 		
 		for(Feedback f : callingUser.getReceivedFeedbacks()) {
 			ratingSum += f.getRating().getVal();

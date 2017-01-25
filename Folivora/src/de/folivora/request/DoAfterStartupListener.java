@@ -53,8 +53,6 @@ public class DoAfterStartupListener implements ServletContextListener {
 			// 6. Start update Thread
 			updateThread = new UpdateDaemon();
 			updateThread.start();
-			
-			aManager.createSaveAndPublishAdditionalRewards(50, new Date(1489283196437L), aManager.getuManager().getFolivoraUser(), 1.0);
 		} catch(Exception e) {
 			logger.error("Error while startup!", e);
 		}
