@@ -1,5 +1,7 @@
-#navbar-ex-collapse.navbar-collapse.collapse {
+@media(max-width: 765px) {
+	.nav.navbar-right.navbar-nav {
 	background-color: #fdf8f4;
+	}
 }
 
 .team-picture {
@@ -122,7 +124,7 @@
 }
 .glyphicon-star.yellow-half:before {
   position: relative;
-  z-index: 9;
+  z-index: 9;<z
   width: 47%;
   display: block;
   overflow: hidden;

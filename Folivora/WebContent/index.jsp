@@ -63,19 +63,17 @@
       <div class="container">
         <div class="row">
           <div class="col-md-6">
-            <img src="http://pingendo.github.io/pingendo-bootstrap/assets/placeholder.png" class="img-responsive">
+            <img src="res/img/index-closed.jpg" class="img-responsive">
           </div>
           <div class="col-md-6">
             <h1 class="text-primary">Wo wir ansetzen</h1>
-            <h3>Fixe Öffnungszeiten Vergesslichkeit &amp; Bequemlichkeit</h3>
-            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo
-              ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis
-              dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies
-              nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.
-              Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In
-              enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum
-              felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus
-              elementum semper nisi.</p>
+            <h3>Fixe Öffnungszeiten, Vergesslichkeit &amp; Bequemlichkeit</h3>
+            <p>Jeder befand sich gewiss schon einmal in der Situation, dass man bestimmte Verbrauchsgüter benötigt, 
+            diese aber nicht selbst besorgen kann, oder will. Das Bier auf der Party ist ausgegangen, aber alle Geschäfte
+            in der Umgebgung sind bereits geschlossen? Man hat bestimmte Produkte beim Einkaufen vergessen, hat aber keine Lust
+            noch einmal einkaufen zu gehen?!</p>
+            <p>Kein Problem! Mit Folivora bist Du nicht mehr auf die fixen Öffnungszeiten angeweisen und kannst passend zu den
+            heutig dynamischen Lebensstylen flexibel bleiben.</p>
           </div>
         </div>
       </div>
@@ -86,17 +84,14 @@
           <div class="col-md-6">
             <h1 class="text-primary">Was wir dagegen machen</h1>
             <h3>Eine Plattform die Dich mit netten Menschen aus Deiner Umgebung vernetzt</h3>
-            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo
-              ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis
-              dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies
-              nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.
-              Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In
-              enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum
-              felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus
-              elementum semper nisi.</p>
+            <p>Wir schaffen ein solche Plattform, auf der sich Suchende und Liefernde Personen
+            vernetzen können, um sich so gemeinsam das obig beschriebene Problem zu lösen.</p>
+            <p>Der Suchende erhält seine gesuchten Waren, der Liefernde kann sich etwas dazuverdienen,
+            hilft anderen und beide lernen endlich Leute in ihrer Umgebung kennen.</p>
+            <p>Für alle ein Gewinn.</p>
           </div>
           <div class="col-md-6">
-            <img src="http://pingendo.github.io/pingendo-bootstrap/assets/placeholder.png" class="img-responsive">
+            <img src="res/img/index-network.jpeg" class="img-responsive">
           </div>
         </div>
       </div>
@@ -105,19 +100,36 @@
       <div class="container">
         <div class="row">
           <div class="col-md-6">
-            <img src="http://pingendo.github.io/pingendo-bootstrap/assets/placeholder.png" class="img-responsive">
+            <img src="res/img/index-moneypig.jpg" class="img-responsive">
           </div>
           <div class="col-md-6">
             <h1 class="text-primary">Was wir bieten</h1>
-            <h3>...</h3>
-            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo
-              ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis
-              dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies
-              nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.
-              Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In
-              enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum
-              felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus
-              elementum semper nisi.</p>
+            <h3>Eine Handelsplattform für den kurzfristigen Bedarf von Verbrauchsgütern</h3>
+            <p>Mithilfe unserer Plattform kannst Du Gesuche einstellen, bei denen Du selbst definieren 
+            kannst wie viel diese Güter Dir zu dem speziellen Zeitpunkt wert sind und wie lange eine Lieferung
+            möglich ist, wobei der Maximalzeitraum 24 Stunden beträgt.</p>
+            <p>Der angegebene Preis enthält sowohl die Produktkosten, als auch die Belohnung für den Lieferantne, 
+            weswegen diese nicht zu niedrig gewählt werden sollte. Aufgeschlagen werden noch Gebühren von 10%,
+            die jedoch maximal einen Euro betragen können.</p>
+            <p>Neugierig geworden? Dann registriere Dich gleich kostenlos <a href="signup.jsp">hier</a> und
+            probiere unsere <a href="webapp.jsp">WebApp</a> aus! Wir freuen uns über jeden Nutzer!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="section" id="section-future">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6">
+            <h1 class="text-primary">Wo wir zukünftig stehen möchten</h1>
+            <h3>Deutschlandweite Nutzung, neue Features & Apps</h3>
+            <p>Zukünftig möchten wir die Nutzung von Folivora detuschlandweit etablieren. Dafür 
+            entwickeln wir weiter fleißig neue Features für die Plattform und führen Apps für Android 
+            und IOS ein, um noch die Nutzung über mobile Endgeräte zu optimieren. Bleibt gespannt was 
+            kommt!</p>
+          </div>
+          <div class="col-md-6">
+            <img src="res/img/index-coding.jpeg" class="img-responsive">
           </div>
         </div>
       </div>
@@ -130,21 +142,22 @@
             <p class="text-center">Eine Gruppe höchstmotiverter Masterstudenten der TU Darmstadt</p>
           </div>
         </div>
+        
         <div class="row">
+	        <div class="col-md-4">
+	            <img src="res\img\Benjamin.png" class="center-block img-circle img-responsive team-picture" width="300px">
+	            <h3 class="text-center">Benjamin M. Abdel-Karim</h3>
+	            <p class="text-center">Finanzen</p>
+	        </div>
           <div class="col-md-4">
             <img class="center-block img-circle img-responsive team-picture" src="res\img\Federico.jpg">
             <h3 class="text-center">Federico Andres Castro</h3>
-            <p class="text-center">Bereich</p>
-          </div>
-          <div class="col-md-4">
-            <img src="res\img\Benjamin.png" class="center-block img-circle img-responsive team-picture" width="300px">
-            <h3 class="text-center">Benjamin M. Abdel-Karim</h3>
-            <p class="text-center">Bereich</p>
+            <p class="text-center">Marketing & Vertrieb</p>
           </div>
           <div class="col-md-4">
             <img src="res\img\Lukas.png" class="center-block img-circle img-responsive team-picture">
             <h3 class="text-center">Lukas Dratwa</h3>
-            <p class="text-center">Developer</p>
+            <p class="text-center">Entwicklung</p>
           </div>
         </div>
         <br>
@@ -152,17 +165,17 @@
           <div class="col-md-4">
             <img class="center-block img-circle img-responsive team-picture" src="res\img\Patrick.png">
             <h3 class="text-center">Patrick Peeck</h3>
-            <p class="text-center">Bereich</p>
+            <p class="text-center">Marketing & Vertrieb</p>
           </div>
           <div class="col-md-4">
             <img src="res\img\Felix.png" class="center-block img-circle img-responsive team-picture">
             <h3 class="text-center">Felix Maximilian Heller</h3>
-            <p class="text-center">Bereich</p>
+            <p class="text-center">Entwicklung</p>
           </div>
           <div class="col-md-4">
             <img src="res\img\Friedrich.png" class="center-block img-circle img-responsive team-picture">
             <h3 class="text-center">Friedrich Henno Odin Köhler</h3>
-            <p class="text-center">Bereich</p>
+            <p class="text-center">Markt- & Wettbewerbsanalyse</p>
           </div>
         </div>
       </div>
