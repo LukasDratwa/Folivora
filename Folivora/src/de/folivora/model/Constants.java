@@ -13,6 +13,8 @@ public class Constants {
 	public static final boolean USER_CHECK_UNIQUENESS_WITH_CASE_INSENSITIVE = true;
 	public static final boolean USER_ALLOW_MULTIPLE_SESSIONS_WITH_SAME_IP = false;
 	
+	public static final boolean ADDITIONAL_REWARD_NOTFIY_STATISFIER_WITH_EMAIL = true;
+	
 	public static final boolean USERCREDIT_ENABLE_INITIAL_BALANCE = true;
 	public static final double USERCREDIT_INITIAL_BALANCE = 100.00;
 	

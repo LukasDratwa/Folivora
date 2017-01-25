@@ -8,6 +8,7 @@ import com.google.gson.JsonArray;
 
 import de.folivora.controller.ApplicationManager;
 import de.folivora.controller.UserManager;
+import de.folivora.model.AdditionalReward;
 import de.folivora.model.Constants;
 import de.folivora.model.Feedback;
 import de.folivora.model.SearchRequest;
@@ -162,18 +163,6 @@ public class AccessLayer {
 				folivora, callingUser, Util.getSrUnlockToken(), sr);
 		
 		aManager.createAndSaveMessage("\"" + sr.getTitle() + "\" angenommen.",
-				"Das Gesuch \"" + sr.getTitle() + "\" von <a href='user.jsp?id=" + sr.getUserCreator().getId().toString() + "'>"
-				+ sr.getUserCreator().getName() + "</a> wurde erfolgreich von Ihnen angenommen. Bitte setzen Sie sich mit "
-				+ sr.getUserCreator().getName() + " bezüglich der Lieferdetails in Verbindung."
-				+ "Bei erfolgreichem Abschluss erwartet Sie eine Gutschrift über "
-				+ sr.getCostsAndReward() + "€.<br><br>"
-				+ "Vergessen Sie nicht nach erfolgreicher Lieferung nach dem Freischaltungscode "
-				+ "zu fragen, damit wir Ihnen die Kosten und die Belohnung gutschreiben können."
-				+ "<br><br>"
-				+ "Profil von " + sr.getUserCreator().getName() + ": <a href='user.jsp?id=" + sr.getUserCreator().getId().toString() + "'>link</a>",
-				folivora, callingUser, sr);
-		
-		aManager.createAndSaveMessage("\"" + sr.getTitle() + "\" angenommen.",
 				"Ihr Gesuch \"" + sr.getTitle() + "\" wurde erfolgreich von <a href='user.jsp?id=" + callingUser.getId().toString() + "'>"
 				+ callingUser.getName() + "</a> angenommen.<br><br>"
 				+ "Bitte vergessen Sie nicht dem Lieferanten bei erfolgreicher Lieferung folgenden Code zu übergeben: "
@@ -181,6 +170,27 @@ public class AccessLayer {
 				+ "<br><br>"
 				+ "Profil von " + callingUser.getName() + ": <a href='user.jsp?id=" + callingUser.getId().toString() + "'>link</a>",
 				folivora, sr.getUserCreator(), sr);
+		
+		aManager.createAndSaveMessage("\"" + sr.getTitle() + "\" angenommen.",
+				"Das Gesuch \"" + sr.getTitle() + "\" von <a href='user.jsp?id=" + sr.getUserCreator().getId().toString() + "'>"
+				+ sr.getUserCreator().getName() + "</a> wurde erfolgreich von Ihnen angenommen. Bitte setzen Sie sich mit "
+				+ "a href='user.jsp?id=" + sr.getUserCreator().getId().toString() + "'>" + sr.getUserCreator().getName() + "</a>"
+				+ " bezüglich der Lieferdetails in Verbindung. Bei erfolgreichem Abschluss erwartet Sie eine Gutschrift über "
+				+ sr.getCostsAndReward() + "€.<br><br>"
+				+ "Vergessen Sie nicht nach erfolgreicher Lieferung nach dem Freischaltungscode "
+				+ "zu fragen, damit wir Ihnen die Kosten und die Belohnung gutschreiben können."
+				+ "<br><br>"
+				+ "Profil von " + sr.getUserCreator().getName() + ": <a href='user.jsp?id=" + sr.getUserCreator().getId().toString() + "'>link</a>",
+				folivora, callingUser, sr);
+		
+		// If there are additional active rewards and wished, notfiy statisfier
+		if(Constants.ADDITIONAL_REWARD_NOTFIY_STATISFIER_WITH_EMAIL && aManager.getOneValidPublishedAdditionalReward() != null) {
+			aManager.createAndSaveMessage("Event: Seien Sie schnell!",
+					"Derzeitig sind " + aManager.countAmountOfValidPublishedAdditionalRewards() + " zusätzliche Rewards "
+					+ " in Höhe von " + aManager.getOneValidPublishedAdditionalReward().getValue() + " € ausgeschüttet. "
+					+ "Befriedigen Sie das Gesuch schnellstmöglich und sichern Sie sich die zusätzliche Belohnung! "
+					+ "Nur so lange der Vorrat reicht.", folivora, callingUser, sr);
+		}
 	}
 	
 	/**
@@ -243,6 +253,19 @@ public class AccessLayer {
 					
 					aManager.createAndSaveMessage("Bitte Feedback geben", "Das Gesuch wurde erfolgreich befriedigt, bitte "
 							+ "geben Sie der anderen Partei noch Feedback: ", folivora, sr.getUserStasisfier(), sr);
+					
+					// Give the statisfier an additional reward
+					if(aManager.countAmountOfValidPublishedAdditionalRewards() > 0) {
+						AdditionalReward ar = aManager.getOneValidPublishedAdditionalReward();
+						aManager.createAndSaveTransaction(ar.getValue(), 0.0, folivora, sr.getUserStasisfier(), "", sr);
+						aManager.activateAddtionalReward(sr.getUserStasisfier(), ar);
+						
+						aManager.createAndSaveMessage("Herzlichen Glückwunsch",
+								"Herzlichen Glückwunsch! Sie waren schnell und hab sich einen zusätzliche Belohnung von "
+								+ ar.getValue() + " € verdient. Diese wird Ihnen nun gutgeschrieben.",
+								folivora, sr.getUserStasisfier(), sr);
+					}
+					
 					return true;
 				}
 			}

@@ -642,8 +642,8 @@ public class ApplicationManager {
 	 * 
 	 * 
 	 * <hr>Created on 24.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
-	 * @param userReceiver
-	 * @param ar
+	 * @param userReceiver - the receiving user
+	 * @param ar - the additional reward
 	 * @return true if the additional reward could be activated successfully
 	 */
 	public boolean activateAddtionalReward(User userReceiver, AdditionalReward ar) {
