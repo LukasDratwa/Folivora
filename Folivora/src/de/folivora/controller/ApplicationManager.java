@@ -82,6 +82,27 @@ public class ApplicationManager {
 	}
 	
 	/**
+	 * Method to calculate the avg stars over all received feedbacks of an user.
+	 * 
+	 * <hr>Created on 25.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
+	 * @param callingUser - the user
+	 * @return the star avg or -1, if the user received no feedbacks yet
+	 */
+	public int getAvgFeedbackRatingOfUser(User callingUser) {
+		int ratingSum = 0;
+		
+		for(Feedback f : callingUser.getReceivedFeedbacks()) {
+			ratingSum += f.getRating().getVal();
+		}
+		
+		if(callingUser.getReceivedFeedbacks().size() > 0) {
+			return ratingSum / callingUser.getReceivedFeedbacks().size();
+		} else {
+			return -1;
+		}
+	}
+	
+	/**
 	 * Method to check if the calling user already gave the other party already feedback for
 	 * the referenced statisfied search request.
 	 * 
