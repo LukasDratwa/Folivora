@@ -1,3 +1,4 @@
+<%@page import="java.text.DecimalFormat"%>
 <%@page import="java.util.Date"%>
 <%@page import="java.util.Comparator"%>
 <%@page import="java.util.ArrayList"%>
@@ -31,6 +32,7 @@ System.out.println(searchRequests);
     	<div class="row">
     		<h2>Meine Gesuche</h2>
     		<%
+    		int i = 0;
     		for (SearchRequest sr : searchRequests) {
     			boolean done = sr.getStatus() == SearchRequestStatus.STATISFIED && sr.getUserStasisfier() != null;
     			%>
@@ -39,6 +41,7 @@ System.out.println(searchRequests);
     					Am <% out.write(SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.SHORT, SimpleDateFormat.SHORT, Locale.GERMANY).format(sr.getCreationTimestamp())); %>
     				</small>
 	    			<h4>
+	    				<span class="badge"><% out.write(new DecimalFormat("#.##").format(sr.getCostsAndReward()) + "&euro;"); %></span>
 	    				<% out.write(sr.getTitle()); %>
 	    				<span class="label label-<% out.write(sr.getStatus().getColorClassString()); %>"><% out.write(sr.getStatus().toString()); %></span>
 	    			</h4>
@@ -71,7 +74,9 @@ System.out.println(searchRequests);
 	    					<button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span>&nbsp;</button>
 	    				<% } %>
 	    			</div>
-	    			<hr />
+	    			<% if (++i < searchRequests.size()) { %>
+	    				<hr />
+	    			<% } %>
     			</div>
     		<% } %>
     	</div>
