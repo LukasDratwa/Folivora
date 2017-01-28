@@ -56,8 +56,8 @@
 					<div class="form-group">
 						<label for="">Geschlecht:</label>
 						<br>
-						<label class="radio-inline"><input value="male" type="radio" id="signupform-gender-male" name="gender-male" checked>Männlich</label>
-						<label class="radio-inline"><input value="female" type="radio" id="signupform-gender-female" name="gender-female">Weiblich</label>
+						<label class="radio-inline"><input value="male" type="radio" id="signupform-gender-male" name="gender" checked>Männlich</label>
+						<label class="radio-inline"><input value="female" type="radio" id="signupform-gender-female" name="gender">Weiblich</label>
 					</div>
 					<div class="form-group">
 						<label for="birthday">Geburtsdatum:</label>

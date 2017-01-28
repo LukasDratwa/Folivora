@@ -6,6 +6,8 @@
 <head>
     <meta charset="utf-8">
     <title>Folivora - Webapp</title>
+    <link rel="shortcut icon" href="res/img/FolivoraIcon.ico"/>
+    
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script type="text/javascript" src="res/js/jquery-3.1.1.min.js"></script>
     <script type="text/javascript" src="res/js/jquery-ui-1.12.1.min.js"></script>

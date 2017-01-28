@@ -44,21 +44,23 @@ public enum SearchRequestStatus {
 	
 	public String getColorClassString() {
 		switch (this) {			
-		case ACTIVE:
-			return "primary";
-			
-		case CANCELLED:
-			return "warning";
-			
-		case IN_PROGRESS:
-			return "info";
-			
-		case STATISFIED:
-			return "success";
-			
-		case FAILED:
-			return "danger";
+			case ACTIVE:
+				return "primary";
+				
+			case CANCELLED:
+				return "warning";
+				
+			case IN_PROGRESS:
+				return "info";
+				
+			case STATISFIED:
+				return "success";
+				
+			case FAILED:
+				return "danger";
+				
+			default:
+				return "default";
 		}
-		return "default";
 	}
 }
