@@ -86,7 +86,7 @@
           <div class="col-md-6">
             <h1 class="text-primary">Was wir dagegen machen</h1>
             <h3>Eine Plattform die Dich mit netten Menschen aus Deiner Umgebung vernetzt</h3>
-            <p>Wir schaffen ein solche Plattform, auf der sich Suchende und Liefernde Personen
+            <p>Wir schaffen eine solche Plattform, auf der Suchende und Liefernde Personen
             vernetzen können, um sich so gemeinsam das obig beschriebene Problem zu lösen.</p>
             <p>Der Suchende erhält seine gesuchten Waren, der Liefernde kann sich etwas dazuverdienen,
             hilft anderen und beide lernen endlich Leute in ihrer Umgebung kennen.</p>
@@ -110,8 +110,8 @@
             <p>Mithilfe unserer Plattform kannst Du Gesuche einstellen, bei denen Du selbst definieren 
             kannst wie viel diese Güter Dir zu dem speziellen Zeitpunkt wert sind und wie lange eine Lieferung
             möglich ist, wobei der Maximalzeitraum 24 Stunden beträgt.</p>
-            <p>Der angegebene Preis enthält sowohl die Produktkosten, als auch die Belohnung für den Lieferantne, 
-            weswegen diese nicht zu niedrig gewählt werden sollte. Aufgeschlagen werden noch Gebühren von 10%,
+            <p>Der angegebene Preis enthält sowohl die Produktkosten, als auch die Belohnung für den Lieferanten, 
+            weswegen dieser nicht zu niedrig gewählt werden sollte. Aufgeschlagen werden noch Gebühren von 10%,
             die jedoch maximal einen Euro betragen können.</p>
             <p>Neugierig geworden? Dann registriere Dich gleich kostenlos <a href="signup.jsp">hier</a> und
             probiere unsere <a href="webapp.jsp">WebApp</a> aus! Wir freuen uns über jeden Nutzer!</p>

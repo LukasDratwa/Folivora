@@ -12,6 +12,7 @@ public class Constants {
 	
 	public static final boolean USER_CHECK_UNIQUENESS_WITH_CASE_INSENSITIVE = true;
 	public static final boolean USER_ALLOW_MULTIPLE_SESSIONS_WITH_SAME_IP = false;
+	public static final int 	USER_INACTIVE_SIGN_OUT_AFTER_MINUTES = 5;
 	
 	public static final boolean ADDITIONAL_REWARD_NOTFIY_STATISFIER_WITH_EMAIL = true;
 	

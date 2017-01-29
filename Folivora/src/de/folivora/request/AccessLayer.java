@@ -136,7 +136,7 @@ public class AccessLayer {
 			aManager.executeTransaction(null, t);
 			
 			aManager.createAndSaveMessage("\"" + sr.getTitle() + "\" erfolgreich erstellt",
-					"Ihr Gesuch wurde erfolgreich erstellt und es wurden die Kosten von " + (t.getFee() + t.getValue())
+					"Ihr Gesuch wurde erfolgreich erstellt und es wurden die Kosten von " + ("" + (t.getFee() + t.getValue())).replace('.', ',')
 					+ " € von Ihrem Guthaben abgebucht.", folivora, userCreator, sr); // TODO weitere infos
 			
 			return sr;
@@ -174,7 +174,7 @@ public class AccessLayer {
 		aManager.createAndSaveMessage("\"" + sr.getTitle() + "\" angenommen.",
 				"Das Gesuch \"" + sr.getTitle() + "\" von <a href='user.jsp?id=" + sr.getUserCreator().getId().toString() + "'>"
 				+ sr.getUserCreator().getName() + "</a> wurde erfolgreich von Ihnen angenommen. Bitte setzen Sie sich mit "
-				+ "a href='user.jsp?id=" + sr.getUserCreator().getId().toString() + "'>" + sr.getUserCreator().getName() + "</a>"
+				+ "<a href='user.jsp?id=" + sr.getUserCreator().getId().toString() + "'>" + sr.getUserCreator().getName() + "</a>"
 				+ " bezüglich der Lieferdetails in Verbindung. Bei erfolgreichem Abschluss erwartet Sie eine Gutschrift über "
 				+ sr.getCostsAndReward() + "€.<br><br>"
 				+ "Vergessen Sie nicht nach erfolgreicher Lieferung nach dem Freischaltungscode "

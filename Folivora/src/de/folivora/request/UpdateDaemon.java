@@ -60,13 +60,22 @@ public class UpdateDaemon extends Thread {
 			
 			// TODO 2. Check if transactions in progress should be finished or cancelled 
 			
-			
-			// 3. Check for remote addresses
+			// 3. Check for remote addresses and inactive session
 			for(User usr : aManager.getdC().getUserList()) {
-				if(usr.getSession() == null && usr.getRemoteAdress() == null) {
+				if(usr.getSession() == null && usr.getRemoteAdress() != null) {
 					usr.setRemoteAdress(null);
+				} else if(usr.getSession() != null) {
+					// Sing user out after x minutes
+					long inactiveMinutes = (System.currentTimeMillis() - usr.getSession().getLastAccessedTime()) / 60000;
+					if(inactiveMinutes > Constants.USER_INACTIVE_SIGN_OUT_AFTER_MINUTES) {
+						usr.getSession().invalidate();
+						usr.setSession(null);
+						usr.setRemoteAdress(null);
+						logger.info("Signed out " + usr + " due inactivity");
+					}
 				}
 			}
+			
 			try {
 				Thread.sleep(Constants.UPDATE_THREAD_INTERVAL);
 			} catch (InterruptedException e) {

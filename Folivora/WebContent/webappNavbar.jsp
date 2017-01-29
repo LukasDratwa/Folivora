@@ -61,6 +61,10 @@
 						<span class="notification-number" id="messages-notification-number"></span>
 					</div>
 				</li>
+				
+				<li class="navbar-li-element hidden" id="navbar-li-element-signup">
+					<a href="signup.jsp">Registrieren</a>
+				</li>
 	          	
 				<li>
 					<a href="" id="btn-show-loginform" class="" data-toggle="modal" data-target="#login">Login</a>
@@ -124,7 +128,6 @@
 					$("#navbar-right-ul").append("<li class='navbar-li-element' id='navbar-li-element-username'><a href='user.jsp'>" + username + "</a></li>");
 				}
 				
-				
 				// Navbar giving feedback and public user profile
 				if(window.location.href.indexOf("feedback.jsp") != -1 || window.location.href.indexOf("user.jsp") != -1) {
 					$(".navbar-li-element").removeClass("active");
@@ -132,6 +135,18 @@
 				
 				$("#navbar-right-ul").append("<li class='navbar-li-element' id='navbar-li-element-logout'><a href='webapp.jsp' onclick='signOut()'>Logout</a></li>");
 				$("#btn-show-loginform").css("display", "none");
+				<%
+			} else {
+				%>
+				// Navbar signup
+				if(window.location.href.indexOf("signup.jsp") != -1) {
+					$(".navbar-li-element").removeClass("active");
+					$("#navbar-li-element-signup").addClass("active");
+					$("#navbar-li-element-signup").removeClass("hidden")
+				} else {
+					$("#navbar-li-element-signup").removeClass("hidden");
+					$("#navbar-li-element-signup").removeClass("active");
+				}
 				<%
 			}
 		%>

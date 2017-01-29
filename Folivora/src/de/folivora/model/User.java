@@ -119,7 +119,21 @@ public class User {
 	@Override
 	public String toString() {
 		return "[name=\"" + this.getName() + "\", email=\"" + this.getEmail() + "\", "
-				+ "id=" + this.id + ", credit=" + this.credit + ", httpSession=" + this.session + "]";
+				+ "id=" + this.id + ", credit=" + this.credit + ", httpSession=" + this.session
+				+ ", trimmedRemoteAddress=" + getTrimmedRemoteAdress() + "]";
+	}
+	
+	/**
+	 * Method to get the half of the remote address of the user.
+	 * 
+	 * @return "null" or the half second half of the remote address of the user
+	 */
+	private String getTrimmedRemoteAdress() {
+		if(getRemoteAdress() != null) {
+			return getRemoteAdress().substring(new Integer(getRemoteAdress().length() / 2));
+		}
+			
+		return "null";
 	}
 	
 	/**
