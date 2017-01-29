@@ -65,10 +65,9 @@
 				srId: '<% out.write(srId); %>',
 				userCallingId: webappDataObj.userData.id,
 				stars: feedbackRating,
-				feedbackText: $("#feedback-text").val()
+				feedbackText: $("#feedback-text").val().htmlEntities()
 			}
-			console.log(payload);
-			console.log(JSON.stringify(payload));
+			console.log("Send payload for feedback-creation" , payload);
 			createRest("POST", "newfeedbackservlet", JSON.stringify(payload), function(responseText) {
 				if(lastRestStatus == 200) {
 					$.notify("Feedback erfolgreich gesendet, vielen Dank!", "success");

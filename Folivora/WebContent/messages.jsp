@@ -68,7 +68,7 @@
 						userCallingId: webappDataObj.userData.id,
 						userMsgReceiverId: "",
 						srId: "",
-						msgText: $("#" + textareaId).val()
+						msgText: $("#" + textareaId).val().htmlEntities()
 					}
 					payload.userMsgReceiverId = this.dataset.userreceiverid;
 					payload.srId = this.dataset.srid;

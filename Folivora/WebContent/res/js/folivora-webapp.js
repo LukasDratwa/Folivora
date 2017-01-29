@@ -6,6 +6,10 @@ var webappDataObj = {
 		this.newSrObj.description = $("#srform-description").val();
 		this.newSrObj.costsAndReward = $("#srform-maxcosts").val();
 		this.newSrObj.fee = $("#srform-charges").val();
+		
+		this.newSrObj.title = this.newSrObj.title.htmlEntities();
+		this.newSrObj.description = this.newSrObj.description.htmlEntities();
+		this.newSrObj.address = this.newSrObj.address.htmlEntities();
 	},
 	resetNewSrObj: function() {
 		this.newSrObj.title = "";

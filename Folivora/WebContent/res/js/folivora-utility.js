@@ -2,7 +2,6 @@
  * @author Lukas Dratwa
  */
 
-
 /**
  * A cache-variable to store the status-code of the last REST-Call
  */
@@ -114,6 +113,54 @@ function signOut() {
 	 
 	 http_request.open("POST", "signoutservlet");
 	 http_request.send(null);
+}
+
+/**
+ * From: https://forum.selfhtml.org/self/2005/jul/19/html-sonderzeichen-mit-javascript-umwandeln/841557
+ * 
+ * htmlEntities
+ *
+ * Convert all applicable characters to HTML entities
+ *
+ * object string
+ * return string
+ *
+ * example:
+ *   test = 'äöü'
+ *   test.htmlEntities() //returns '&auml;&ouml;&uuml;'
+ */
+String.prototype.htmlEntities = function() {
+  var chars = new Array ('&','à','á','â','ã','ä','å','æ','ç','è','é',
+                         'ê','ë','ì','í','î','ï','ð','ñ','ò','ó','ô',
+                         'õ','ö','ø','ù','ú','û','ü','ý','þ','ÿ','À',
+                         'Á','Â','Ã','Ä','Å','Æ','Ç','È','É','Ê','Ë',
+                         'Ì','Í','Î','Ï','Ð','Ñ','Ò','Ó','Ô','Õ','Ö',
+                         'Ø','Ù','Ú','Û','Ü','Ý','Þ','€','"','ß','<',
+                         '>','¢','£','¤','¥','¦','§','¨','©','ª','«',
+                         '¬','­','®','¯','°','±','²','³','´','µ','¶',
+                         '·','¸','¹','º','»','¼','½','¾');
+
+  var entities = new Array ('amp','agrave','aacute','acirc','atilde','auml','aring',
+                            'aelig','ccedil','egrave','eacute','ecirc','euml','igrave',
+                            'iacute','icirc','iuml','eth','ntilde','ograve','oacute',
+                            'ocirc','otilde','ouml','oslash','ugrave','uacute','ucirc',
+                            'uuml','yacute','thorn','yuml','Agrave','Aacute','Acirc',
+                            'Atilde','Auml','Aring','AElig','Ccedil','Egrave','Eacute',
+                            'Ecirc','Euml','Igrave','Iacute','Icirc','Iuml','ETH','Ntilde',
+                            'Ograve','Oacute','Ocirc','Otilde','Ouml','Oslash','Ugrave',
+                            'Uacute','Ucirc','Uuml','Yacute','THORN','euro','quot','szlig',
+                            'lt','gt','cent','pound','curren','yen','brvbar','sect','uml',
+                            'copy','ordf','laquo','not','shy','reg','macr','deg','plusmn',
+                            'sup2','sup3','acute','micro','para','middot','cedil','sup1',
+                            'ordm','raquo','frac14','frac12','frac34');
+
+  newString = this;
+  for (var i = 0; i < chars.length; i++) {
+    myRegExp = new RegExp();
+    myRegExp.compile(chars[i],'g')
+    newString = newString.replace (myRegExp, '&' + entities[i] + ';');
+  }
+  return newString;
 }
 
 // From: http://cwestblog.com/2011/07/25/javascript-string-prototype-replaceall/

@@ -11,6 +11,6 @@ public enum Gender {
 	
 	@Override
 	public String toString() {
-		return name() == "MALE" ? "männlich" : "weiblich";
+		return name() == "MALE" ? "m&auml;nnlich" : "weiblich";
 	}
 }

@@ -43,6 +43,28 @@ public class AccessLayer {
 	}
 	
 	/**
+	 * Method to replace the german Umlauts with their utf-8 representation.
+	 * 
+	 * @param input - the input
+	 * @return the encoded input string
+	 */
+	private static String encodeUTF8(String input) {
+		if(input == null) {
+			return null;
+		}
+		
+		input = input.replace("ä", "\u00e4");
+		input = input.replace("Ä", "\u00c4");
+		input = input.replace("ö", "\u00f6");
+		input = input.replace("Ö", "\u00d6");
+		input = input.replace("ü", "\u00fc");
+		input = input.replace("Ü", "\u00dc");
+		input = input.replace("ß", "\u00df");
+		
+		return input;
+	}
+	
+	/**
 	 * Method to create a new feedback.
 	 * 
 	 * <hr>Created on 22.01.2017 by <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a><hr>
@@ -56,6 +78,8 @@ public class AccessLayer {
 		ApplicationManager aManager = ApplicationManager.getApplicationManagerInstance();
 		User folivora = aManager.getuManager().getFolivoraUser();
 		User feedbackReceiver = null;
+		
+		feedbackText = encodeUTF8(feedbackText);
 		
 		// Check if users already gave feedback for this sr
 		if(callingUser.getId().toString().equals(sr.getUserCreator().getId().toString()) && sr.getFeedbackOfSearchingUser() != null
@@ -127,6 +151,10 @@ public class AccessLayer {
 			Double lat, Double lng, String address, User userCreator, String token) {
 		
 		if(isValidToken(userCreator, token)) {
+			title = encodeUTF8(title);
+			description = encodeUTF8(description);
+			address = encodeUTF8(address);
+			
 			ApplicationManager aManager = ApplicationManager.getApplicationManagerInstance();
 			SearchRequest sr = aManager.createAndSaveSearchRequest(title, description, pathToDefaultImg,
 					possibleDelivery_from, possibleDelivery_to, costsAndReward, fee, lat, lng, address, userCreator);
@@ -322,6 +350,9 @@ public class AccessLayer {
 	 * @return the created and send message
 	 */
 	public static Message sendMsg(String title, String text, User sender, User receiver, SearchRequest referencedSr) {
+		title = encodeUTF8(title);
+		text = encodeUTF8(text);
+		
 		return ApplicationManager.getApplicationManagerInstance().createAndSaveMessage(title, text, sender, receiver, referencedSr);
 	}
 }
