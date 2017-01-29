@@ -7,7 +7,7 @@ package de.folivora.model;
  * @author <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a>
  */
 public class Constants {
-	public static final double VERSION = 1.3;
+	public static final double VERSION = 1.4;
 	public static final long SERIAL_VERSION_UID = 1841986427873375189L;
 	
 	public static final boolean USER_CHECK_UNIQUENESS_WITH_CASE_INSENSITIVE = true;
