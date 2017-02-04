@@ -43,7 +43,7 @@ System.out.println(searchRequests);
 	    			<h4>
 	    				<span class="badge"><% out.write(new DecimalFormat("#.##").format(sr.getCostsAndReward()) + "&euro;"); %></span>
 	    				<% out.write(sr.getTitle()); %>
-	    				<span class="label label-<% out.write(sr.getStatus().getColorClassString()); %>"><% out.write(sr.getStatus().toString()); %></span>
+	    				<span class="label label-<% out.write(sr.getStatus().getColorClassString()); %>"><% out.write(sr.getStatus().getTextInView()); %></span>
 	    			</h4>
 	    			<p><% out.write(sr.getDescription()); %></p>
 	    			<%

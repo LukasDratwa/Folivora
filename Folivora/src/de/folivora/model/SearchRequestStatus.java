@@ -16,32 +16,20 @@ package de.folivora.model;
  * @author <a href="mailto:lukasdratwa@yahoo.de">Lukas Dratwa</a>
  */
 public enum SearchRequestStatus {
-	INACTIVE, ACTIVE, CANCELLED, IN_PROGRESS, STATISFIED, FAILED;
+	INACTIVE("inaktiv"), ACTIVE("aktiv"), CANCELLED("abgebrochen"),
+	IN_PROGRESS("wird durchgeführt"), STATISFIED("abgeschlossen"),
+	FAILED("fehlgeschlagen");
 	
-	@Override
-	public String toString() {
-		switch (this) {
-		case INACTIVE:
-			return "inaktiv";
-			
-		case ACTIVE:
-			return "aktiv";
-			
-		case CANCELLED:
-			return "abgebrochen";
-			
-		case IN_PROGRESS:
-			return "wird durchgefÃ¼hrt";
-			
-		case STATISFIED:
-			return "abgeschlossen";
-			
-		case FAILED:
-			return "fehlgeschlagen";
-		}
-		return super.toString();
+	final String textInView;
+	
+	private SearchRequestStatus (String textInView) {
+		this.textInView = textInView;
 	}
 	
+	public String getTextInView() {
+		return this.textInView;
+	}
+		
 	public String getColorClassString() {
 		switch (this) {			
 			case ACTIVE:
