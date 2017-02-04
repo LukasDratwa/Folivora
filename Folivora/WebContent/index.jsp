@@ -74,7 +74,7 @@
             diese aber nicht selbst besorgen kann, oder will. Das Bier auf der Party ist ausgegangen, aber alle Geschäfte
             in der Umgebgung sind bereits geschlossen? Man hat bestimmte Produkte beim Einkaufen vergessen, hat aber keine Lust
             noch einmal einkaufen zu gehen?!</p>
-            <p>Kein Problem! Mit Folivora bist Du nicht mehr auf die fixen Öffnungszeiten angeweisen und kannst passend zu den
+            <p>Kein Problem! Mit Folivora bist du nicht mehr auf die fixen Öffnungszeiten angeweisen und kannst passend zu den
             heutig dynamischen Lebensstylen flexibel bleiben.</p>
           </div>
         </div>
@@ -85,11 +85,11 @@
         <div class="row">
           <div class="col-md-6">
             <h1 class="text-primary">Was wir dagegen machen</h1>
-            <h3>Eine Plattform die Dich mit netten Menschen aus Deiner Umgebung vernetzt</h3>
-            <p>Wir schaffen eine solche Plattform, auf der Suchende und Liefernde Personen
-            vernetzen können, um sich so gemeinsam das obig beschriebene Problem zu lösen.</p>
+            <h3>Eine Plattform die dich mit netten Menschen aus deiner Umgebung vernetzt</h3>
+            <p>Wir schaffen eine solche Plattform, auf der sich Suchende und Liefernde Personen
+            vernetzen können, um so gemeinsam das obig beschriebene Problem zu lösen.</p>
             <p>Der Suchende erhält seine gesuchten Waren, der Liefernde kann sich etwas dazuverdienen,
-            hilft anderen und beide lernen endlich Leute in ihrer Umgebung kennen.</p>
+            hilft anderen und beide lernen nette Leute in ihrer Umgebung kennen.</p>
             <p>Für alle ein Gewinn.</p>
           </div>
           <div class="col-md-6">
@@ -127,7 +127,7 @@
             <h3>Deutschlandweite Nutzung, neue Features & Apps</h3>
             <p>Zukünftig möchten wir die Nutzung von Folivora detuschlandweit etablieren. Dafür 
             entwickeln wir weiter fleißig neue Features für die Plattform und führen Apps für Android 
-            und IOS ein, um noch die Nutzung über mobile Endgeräte zu optimieren. Bleibt gespannt was 
+            und IOS ein, um die Nutzung über mobile Endgeräte zu optimieren. Bleibt gespannt was 
             kommt!</p>
           </div>
           <div class="col-md-6">
