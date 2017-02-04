@@ -28,18 +28,30 @@ function formatLongDate(longDate) {
 /**
  * Method to calculate the left possible delivery time for a search request.
  * 
- * @param longDate - the date (end date)
+ * @param dd - the date (end date)
  * @returns {String} - the left time
  */
-function getTimeLeftAsString(longDate) {
-	var d = new Date(longDate);
-	var actual = new Date();
-	var diffMs = (d - actual);
-	var diffDays = Math.round(diffMs / 86400000);
-	var diffHrs = Math.round((diffMs % 86400000) / 3600000);
-	var diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000);
+function getTimeLeftAsString(dd) {
+	var d = new Date();
 	
-	return diffHrs + ":" + diffMins;
+	var minute = 60 * 1000,
+	    hour = minute * 60,
+	    day = hour * 24,
+	    month = day * 30,
+	    ms = Math.abs(d - dd);
+
+	var months = parseInt(ms / month, 10);
+    ms -= months * month;
+
+    var days = parseInt(ms / day, 10);
+    ms -= days * day;
+
+    var hours = parseInt(ms / hour, 10);
+    ms -= hours * hour;
+    
+    var minutes = parseInt(ms / minute, 10);
+
+    return hours + ":" + minutes;
 }
 
 /**
