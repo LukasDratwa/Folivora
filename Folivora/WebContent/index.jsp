@@ -53,7 +53,7 @@
       <div class="container">
         <div class="row">
           <div class="col-md-12 text-center">
-            <h1 class="text-inverse">Folivora</h1>
+            <h1 class="text-inverse">Folivora - Jenkins powered</h1>
             <p class="text-inverse">Got it? Share and sell it!</p>
             <br>
             <a class="btn btn-lg btn-primary" id="startTheTour" onclick="scrollTo('#section-problem', 2000)">Starte die Tour</a>
